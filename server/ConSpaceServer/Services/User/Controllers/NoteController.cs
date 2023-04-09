@@ -1,0 +1,59 @@
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections;
+using User.DTO;
+
+namespace User.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class NoteController : ControllerBase
+{
+
+    private readonly ILogger<NoteController> _logger;
+
+    public NoteController(ILogger<NoteController> logger)
+    {
+        _logger = logger;
+    }
+
+    [Route("[action]")]
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public void CreateNote(NoteDto note)
+    {
+        throw new NotImplementedException();
+    }
+
+    [Route("[action]/{id}")]
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public void DeleteNote(string id)
+    {
+        throw new NotImplementedException();
+    }
+
+    [Route("[action]")]
+    [HttpPatch]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public void EditNote(NoteDto updatedNote)
+    {
+        throw new NotImplementedException();
+    }
+
+    [Route("[action]")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IEnumerable<NoteDto> GetNotes()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Route("[action]/{id}")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public NoteDto GetNote(string id)
+    {
+        throw new NotImplementedException();
+    }
+}
