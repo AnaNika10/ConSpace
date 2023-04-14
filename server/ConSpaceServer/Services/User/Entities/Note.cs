@@ -23,4 +23,11 @@ public class Note
     [Column("deleted")]
     [Required]
     public bool deleted { get; set; } = false;
+
+    [Column("created")]
+    [Required]
+    public DateTimeOffset created { get; set; }
+
+    [Column("updated")]
+    public DateTimeOffset? updated { get; set; }
 }

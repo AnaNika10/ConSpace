@@ -24,6 +24,9 @@ public class UserContext : DbContext, IUserContext
         modelBuilder.Entity<Note>()
             .Property(note => note.deleted)
             .HasDefaultValue(false);
+        modelBuilder.Entity<Note>()
+            .Property(note => note.created)
+            .HasDefaultValueSql("now()");
     }
 
 
