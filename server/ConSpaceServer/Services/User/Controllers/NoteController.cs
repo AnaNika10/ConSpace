@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections;
 using User.DTO;
+using User.Repositories;
 
 namespace User.Controllers;
 
@@ -11,10 +12,12 @@ public class NoteController : ControllerBase
 {
 
     private readonly ILogger<NoteController> _logger;
+    private readonly INoteRepository _repository;
 
-    public NoteController(ILogger<NoteController> logger)
+    public NoteController(ILogger<NoteController> logger, INoteRepository repository)
     {
         _logger = logger;
+        _repository = repository;
     }
 
     [Route("[action]")]
@@ -22,7 +25,7 @@ public class NoteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public void CreateNote(NoteDto note)
     {
-        throw new NotImplementedException();
+        _repository.CreateNote(note);
     }
 
     [Route("[action]/{id}")]

@@ -4,11 +4,11 @@ namespace User.DTO
 {
     public class NoteDto
     {
-        public string id { get; set;}
+        public Guid id { get; set;}
         public string title { get; set;}
         public string content {get; set;}
         public NoteDto(
-            string id, 
+            Guid id, 
             string title,
             string content
         ){
