@@ -6,7 +6,7 @@ namespace User.Repositories;
 
 public interface INoteRepository {
     void CreateNote(NoteDto note);
-    void DeleteNote(string id);
+    void DeleteNote(Guid id);
     void UpdateNote(NoteDto updatedNote);
     Task<IEnumerable<NoteDto>> FindAll();
     Task<NoteDto> FindOne(string id);

@@ -31,9 +31,9 @@ public class NoteController : ControllerBase
     [Route("[action]/{id}")]
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public void DeleteNote(string id)
+    public void DeleteNote(Guid id)
     {
-        throw new NotImplementedException();
+        _repository.DeleteNote(id);
     }
 
     [Route("[action]")]

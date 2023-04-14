@@ -8,14 +8,11 @@ namespace User.Repositories;
 public class NoteRepository : INoteRepository {
     
     private readonly IUserContext _context;
-    // private readonly IMapper _mapper;
 
     public NoteRepository(IUserContext context
-    // , IMapper mapper
     )
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
-        // _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
     
     public async void CreateNote(NoteDto note) {
@@ -29,8 +26,13 @@ public class NoteRepository : INoteRepository {
         }
     }
 
-    public void DeleteNote(string id) {
-
+    public async void DeleteNote(Guid id) {
+        using var dataSource = _context.GetDataSource();
+        await using (var cmd = dataSource.CreateCommand("DELETE FROM Notes where id=(@id)"))
+        {
+            cmd.Parameters.AddWithValue("id",id);
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
     public void UpdateNote(NoteDto updatedNote) {
         
