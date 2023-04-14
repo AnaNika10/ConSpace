@@ -12,8 +12,8 @@ using User.Data;
 namespace User.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20230414192105_AddUpdateTrigger")]
-    partial class AddUpdateTrigger
+    [Migration("20230414203245_CreateUpdatedTrigger")]
+    partial class CreateUpdatedTrigger
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
