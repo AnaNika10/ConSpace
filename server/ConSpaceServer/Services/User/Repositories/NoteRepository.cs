@@ -28,14 +28,21 @@ public class NoteRepository : INoteRepository {
 
     public async void DeleteNote(Guid id) {
         using var dataSource = _context.GetDataSource();
-        await using (var cmd = dataSource.CreateCommand("DELETE FROM Notes where id=(@id)"))
+        await using (var cmd = dataSource.CreateCommand("DELETE FROM Notes WHERE id=(@id)"))
         {
             cmd.Parameters.AddWithValue("id",id);
             await cmd.ExecuteNonQueryAsync();
         }
     }
-    public void UpdateNote(NoteDto updatedNote) {
-        
+    public async void UpdateNote(NoteDto updatedNote) {
+        using var dataSource = _context.GetDataSource();
+        await using (var cmd = dataSource.CreateCommand("UPDATE Notes SET title=@title, content=@content WHERE id=(@id)"))
+        {
+            cmd.Parameters.AddWithValue("id", updatedNote.id);
+            cmd.Parameters.AddWithValue("title", updatedNote.title);
+            cmd.Parameters.AddWithValue("content", updatedNote.content);
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
     public Task<IEnumerable<NoteDto>> FindAll() {
         throw new NotImplementedException();

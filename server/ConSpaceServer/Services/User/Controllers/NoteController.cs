@@ -41,7 +41,7 @@ public class NoteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public void EditNote(NoteDto updatedNote)
     {
-        throw new NotImplementedException();
+        _repository.UpdateNote(updatedNote);
     }
 
     [Route("[action]")]
