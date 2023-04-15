@@ -15,4 +15,73 @@
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Services\User\Controllers\InternalController.cs" />
+    <Compile Include="Services\User\Controllers\NoteController.cs" />
+    <Compile Include="Services\User\Controllers\ScheduleController.cs" />
+    <Compile Include="Services\User\Data\IUserContext.cs" />
+    <Compile Include="Services\User\Data\UserContext.cs" />
+    <Compile Include="Services\User\DTO\NoteDto.cs" />
+    <Compile Include="Services\User\DTO\ReminderDto.cs" />
+    <Compile Include="Services\User\DTO\SeminarDto.cs" />
+    <Compile Include="Services\User\Entities\Note.cs" />
+    <Compile Include="Services\User\Extensions\UserExtensions.cs" />
+    <Compile Include="Services\User\Migrations\20230414182155_initNotes.cs" />
+    <Compile Include="Services\User\Migrations\20230414182155_initNotes.Designer.cs" />
+    <Compile Include="Services\User\Migrations\20230414190658_AddCreatedColumnInNotes.cs" />
+    <Compile Include="Services\User\Migrations\20230414190658_AddCreatedColumnInNotes.Designer.cs" />
+    <Compile Include="Services\User\Migrations\20230414203245_CreateUpdatedTrigger.cs" />
+    <Compile Include="Services\User\Migrations\20230414203245_CreateUpdatedTrigger.Designer.cs" />
+    <Compile Include="Services\User\Migrations\UserContextModelSnapshot.cs" />
+    <Compile Include="Services\User\Program.cs" />
+    <Compile Include="Services\User\Repositories\Interfaces\INoteRepository.cs" />
+    <Compile Include="Services\User\Repositories\NoteRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache" />
+    <Content Include="obj\Debug\docker-compose.dcproj.FileListAbsolute.txt" />
+    <Content Include="Services\User\appsettings.Development.json" />
+    <Content Include="Services\User\appsettings.json" />
+    <Content Include="Services\User\bin\Debug\net6.0\appsettings.Development.json" />
+    <Content Include="Services\User\bin\Debug\net6.0\appsettings.json" />
+    <Content Include="Services\User\bin\Debug\net6.0\AutoMapper.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Humanizer.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.Extensions.Caching.Abstractions.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.Extensions.Options.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Microsoft.OpenApi.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Mono.TextTemplating.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Npgsql.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\ref\User.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\System.CodeDom.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\System.Text.Encodings.Web.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\System.Text.Json.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\User" />
+    <Content Include="Services\User\bin\Debug\net6.0\User.deps.json" />
+    <Content Include="Services\User\bin\Debug\net6.0\User.dll" />
+    <Content Include="Services\User\bin\Debug\net6.0\User.pdb" />
+    <Content Include="Services\User\bin\Debug\net6.0\User.runtimeconfig.json" />
+    <Content Include="Services\User\Properties\launchSettings.json" />
+    <Content Include="Services\User\User.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
+  </ItemGroup>
 </Project>
