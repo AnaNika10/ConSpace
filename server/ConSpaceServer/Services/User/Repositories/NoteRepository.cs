@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using User.Data;
 using User.DTO;
@@ -17,15 +18,16 @@ public class NoteRepository : INoteRepository {
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
     
-    public async void CreateNote(NoteDto note) {
-        using var dataSource = _context.GetDataSource();
-        await using (var cmd = dataSource.CreateCommand("INSERT INTO Notes (id, title, content, deleted) VALUES (@id, @title, @content, DEFAULT)" ))
-        {
-            cmd.Parameters.AddWithValue("id",note.id);
-            cmd.Parameters.AddWithValue("title", note.title);
-            cmd.Parameters.AddWithValue("content", note.content);
-            await cmd.ExecuteNonQueryAsync();
-        }
+    public async Task<bool> CreateNote(NoteDto note) {
+        await _context.Notes.AddAsync(new Note(note.title, note.content));
+        return await _context.SaveChangesAsync() > 0 ? true:false;
+        // await using (var cmd = dataSource.CreateCommand("INSERT INTO Notes (id, title, content, deleted) VALUES (@id, @title, @content, DEFAULT)" ))
+        // {
+        //     cmd.Parameters.AddWithValue("id",note.id);
+        //     cmd.Parameters.AddWithValue("title", note.title);
+        //     cmd.Parameters.AddWithValue("content", note.content);
+        //     await cmd.ExecuteNonQueryAsync();
+        // }
     }
 
     public async void DeleteNote(Guid id) {

@@ -25,9 +25,9 @@ public class NoteController : ControllerBase
     [Route("[action]")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public void CreateNote(NoteDto note)
+    public async Task<ActionResult<bool>> CreateNote(NoteDto note)
     {
-        _repository.CreateNote(note);
+        return await _repository.CreateNote(note);
     }
 
     [Route("[action]/{id}")]
@@ -60,6 +60,6 @@ public class NoteController : ControllerBase
     public async Task<ActionResult<NoteDto>> GetNote(Guid id)
     {
         Note note = await _repository.FindOne(id);
-        return new NoteDto(note.id, note.title, note.content);
+        return new NoteDto(note.id, note.Title, note.Content);
     }
 }

@@ -6,7 +6,7 @@ using User.Entities;
 namespace User.Repositories;
 
 public interface INoteRepository {
-    void CreateNote(NoteDto note);
+    Task<bool> CreateNote(NoteDto note);
     void DeleteNote(Guid id);
     void UpdateNote(NoteDto updatedNote);
     Task<IEnumerable<NoteDto>> FindAll();
