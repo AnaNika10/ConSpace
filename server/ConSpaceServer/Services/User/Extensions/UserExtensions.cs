@@ -10,7 +10,6 @@ public static class UserExtensions
 {
     public static void RegisterServices(this IServiceCollection services)
     {
-        services.AddScoped<IUserContext, UserContext>();
         services.AddScoped<INoteRepository, NoteRepository>();
         services.AddAutoMapper(configuration =>
             {

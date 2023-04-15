@@ -1,15 +1,17 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 using User.Data;
 using User.DTO;
 using Npgsql;
+using User.Entities;
 
 namespace User.Repositories;
 
 public class NoteRepository : INoteRepository {
     
-    private readonly IUserContext _context;
+    private readonly UserContext _context;
 
-    public NoteRepository(IUserContext context
+    public NoteRepository(UserContext context
     )
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -47,7 +49,8 @@ public class NoteRepository : INoteRepository {
     public Task<IEnumerable<NoteDto>> FindAll() {
         throw new NotImplementedException();
     }
-    public Task<NoteDto> FindOne(string id) {
-        throw new NotImplementedException();
+
+    public async Task<Note> FindOne(Guid id) {
+        return await _context.Notes.Where(note => note.id==id).FirstOrDefaultAsync();
     }
 }

@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using User.DTO;
 using User.Repositories;
+using User.Entities;
+using Microsoft.AspNetCore.Mvc.Core;
 
 namespace User.Controllers;
 
@@ -55,8 +57,9 @@ public class NoteController : ControllerBase
     [Route("[action]/{id}")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public NoteDto GetNote(string id)
+    public async Task<ActionResult<NoteDto>> GetNote(Guid id)
     {
-        throw new NotImplementedException();
+        Note note = await _repository.FindOne(id);
+        return new NoteDto(note.id, note.title, note.content);
     }
 }
