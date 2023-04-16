@@ -7,8 +7,8 @@ namespace User.Repositories;
 
 public interface INoteRepository {
     Task<bool> CreateNote(NoteDto note);
-    void DeleteNote(Guid id);
-    void UpdateNote(NoteDto updatedNote);
+    Task<bool> DeleteNote(Guid id);
+    Task<bool> UpdateNote(NoteDto updatedNote);
     Task<IEnumerable<NoteDto>> FindAll();
     Task<Note> FindOne(Guid id);
 }

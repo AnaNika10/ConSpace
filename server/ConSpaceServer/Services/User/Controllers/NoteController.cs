@@ -33,17 +33,17 @@ public class NoteController : ControllerBase
     [Route("[action]/{id}")]
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public void DeleteNote(Guid id)
+    public async Task<ActionResult<bool>> DeleteNote(Guid id)
     {
-        _repository.DeleteNote(id);
+        return await _repository.DeleteNote(id);
     }
 
     [Route("[action]")]
     [HttpPatch]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public void EditNote(NoteDto updatedNote)
+    public async Task<ActionResult<bool>> EditNote(NoteDto updatedNote)
     {
-        _repository.UpdateNote(updatedNote);
+        return await _repository.UpdateNote(updatedNote);
     }
 
     [Route("[action]")]

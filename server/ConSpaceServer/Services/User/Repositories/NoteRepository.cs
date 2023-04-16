@@ -20,33 +20,19 @@ public class NoteRepository : INoteRepository {
     
     public async Task<bool> CreateNote(NoteDto note) {
         await _context.Notes.AddAsync(new Note(note.title, note.content));
-        return await _context.SaveChangesAsync() > 0 ? true:false;
-        // await using (var cmd = dataSource.CreateCommand("INSERT INTO Notes (id, title, content, deleted) VALUES (@id, @title, @content, DEFAULT)" ))
-        // {
-        //     cmd.Parameters.AddWithValue("id",note.id);
-        //     cmd.Parameters.AddWithValue("title", note.title);
-        //     cmd.Parameters.AddWithValue("content", note.content);
-        //     await cmd.ExecuteNonQueryAsync();
-        // }
+        return await _context.SaveChangesAsync() > 0;
     }
 
-    public async void DeleteNote(Guid id) {
-        using var dataSource = _context.GetDataSource();
-        await using (var cmd = dataSource.CreateCommand("DELETE FROM Notes WHERE id=(@id)"))
-        {
-            cmd.Parameters.AddWithValue("id",id);
-            await cmd.ExecuteNonQueryAsync();
-        }
+    public async Task<bool> DeleteNote(Guid id) {
+        var note = await _context.Notes.SingleAsync(note => note.id == id);
+        _context.Notes.Remove(note);
+        return await _context.SaveChangesAsync() > 0;
     }
-    public async void UpdateNote(NoteDto updatedNote) {
-        using var dataSource = _context.GetDataSource();
-        await using (var cmd = dataSource.CreateCommand("UPDATE Notes SET title=@title, content=@content WHERE id=(@id)"))
-        {
-            cmd.Parameters.AddWithValue("id", updatedNote.id);
-            cmd.Parameters.AddWithValue("title", updatedNote.title);
-            cmd.Parameters.AddWithValue("content", updatedNote.content);
-            await cmd.ExecuteNonQueryAsync();
-        }
+    public async Task<bool> UpdateNote(NoteDto updatedNote) {
+        var note = await _context.Notes.SingleAsync(note => note.id == updatedNote.id);
+        note.Title = updatedNote.title;
+        note.Content = updatedNote.content;
+        return await _context.SaveChangesAsync() > 0;
     }
     public Task<IEnumerable<NoteDto>> FindAll() {
         throw new NotImplementedException();
