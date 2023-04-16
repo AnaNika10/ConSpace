@@ -5,7 +5,7 @@ using User.Entities;
 
 namespace User.Data;
 
-public class UserContext : DbContext, IUserContext
+public class UserContext : DbContext
 {
     private readonly IConfiguration _configuration;
     public DbSet<Note> Notes {get; set;}

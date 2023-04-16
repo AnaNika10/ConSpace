@@ -13,7 +13,9 @@ public class Note
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid id { get; set; }
 
-    // public string userId { get; set; }
+    // [Column("user_id")]
+    // public Guid UserId { get; set; }
+    
     [Column("content", TypeName="text")]
     public string? Content { get; set; }
 
@@ -23,7 +25,7 @@ public class Note
 
     [Column("deleted")]
     [Required]
-    public bool deleted { get; set; } = false;
+    public bool deleted { get; set; }
 
     [Column("created")]
     [Required]

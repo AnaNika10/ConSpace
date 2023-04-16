@@ -1,9 +1,6 @@
-using System;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using User.Data;
 using User.DTO;
-using Npgsql;
 using User.Entities;
 
 namespace User.Repositories;
@@ -25,11 +22,16 @@ public class NoteRepository : INoteRepository {
 
     public async Task<bool> DeleteNote(Guid id) {
         var note = await _context.Notes.SingleAsync(note => note.id == id);
-        _context.Notes.Remove(note);
+        note.deleted = true;
         return await _context.SaveChangesAsync() > 0;
     }
     public async Task<bool> UpdateNote(NoteDto updatedNote) {
         var note = await _context.Notes.SingleAsync(note => note.id == updatedNote.id);
+        if (note.deleted)
+        {
+            throw new InvalidProgramException();
+        }
+
         note.Title = updatedNote.title;
         note.Content = updatedNote.content;
         return await _context.SaveChangesAsync() > 0;
@@ -39,6 +41,6 @@ public class NoteRepository : INoteRepository {
     }
 
     public async Task<Note> FindOne(Guid id) {
-        return await _context.Notes.Where(note => note.id==id).FirstOrDefaultAsync();
+        return await _context.Notes.Where(note => note.id==id && !note.deleted).FirstOrDefaultAsync();
     }
 }
