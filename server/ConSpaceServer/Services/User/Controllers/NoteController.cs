@@ -89,6 +89,7 @@ public class NoteController : ControllerBase
             ?.Value;
         if (userId==null)
         {
+            _logger.LogError("User id could not be extracted from authorization header.");
             throw new Exception("Can't retrieve user claims"); 
         }
         return Guid.Parse(userId);
