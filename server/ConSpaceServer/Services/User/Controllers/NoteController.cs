@@ -30,31 +30,28 @@ public class NoteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<bool>> CreateNote(NoteDto note)
     {
-        var userId= User.Claims.FirstOrDefault(x => 
-            x.Type.Equals(ClaimTypes.NameIdentifier, StringComparison.OrdinalIgnoreCase)
-            )
-            ?.Value;
-        if (userId==null)
-        {
-            throw new Exception("Can't retrieve user claims"); 
-        }
-        return await _repository.CreateNote(note, Guid.Parse(userId));
+        Guid userId = ExtractUserId();
+        return await _repository.CreateNote(note, userId);
     }
 
     [Route("[action]/{id}")]
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [Authorize]
     public async Task<ActionResult<bool>> DeleteNote(Guid id)
     {
-        return await _repository.DeleteNote(id);
+        Guid userId = ExtractUserId();
+        return await _repository.DeleteNote(id, userId);
     }
 
     [Route("[action]")]
     [HttpPatch]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [Authorize]
     public async Task<ActionResult<bool>> EditNote(NoteDto updatedNote)
     {
-        return await _repository.UpdateNote(updatedNote);
+        Guid userId = ExtractUserId();
+        return await _repository.UpdateNote(updatedNote, userId);
     }
 
     [Route("[action]")]
@@ -63,16 +60,8 @@ public class NoteController : ControllerBase
     [Authorize]
     public async Task<ActionResult<IEnumerable<NoteDto>>> GetNotes()
     {
-        var userId= User.Claims.FirstOrDefault(x => 
-                x.Type.Equals(ClaimTypes.NameIdentifier, StringComparison.OrdinalIgnoreCase)
-            )
-            ?.Value;
-        if (userId==null)
-        {
-            throw new Exception("Can't retrieve user claims"); 
-        }
-
-        var notes = await _repository.FindAll(Guid.Parse(userId));
+        Guid userId = ExtractUserId();
+        var notes = await _repository.FindAll(userId);
         var result = new List<NoteDto>();
         foreach (var note in notes)
         {
@@ -84,9 +73,24 @@ public class NoteController : ControllerBase
     [Route("[action]/{id}")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [Authorize]
     public async Task<ActionResult<NoteDto>> GetNote(Guid id)
     {
-        Note note = await _repository.FindOne(id);
+        Guid userId = ExtractUserId();
+        Note note = await _repository.FindOne(id, userId);
         return new NoteDto(note.id, note.Title, note.Content);
+    }
+
+    private Guid ExtractUserId()
+    {
+        var userId= User.Claims.FirstOrDefault(x => 
+                x.Type.Equals(ClaimTypes.NameIdentifier, StringComparison.OrdinalIgnoreCase)
+            )
+            ?.Value;
+        if (userId==null)
+        {
+            throw new Exception("Can't retrieve user claims"); 
+        }
+        return Guid.Parse(userId);
     }
 }

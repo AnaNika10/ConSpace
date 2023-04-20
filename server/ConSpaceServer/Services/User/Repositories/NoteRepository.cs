@@ -20,13 +20,13 @@ public class NoteRepository : INoteRepository {
         return await _context.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool> DeleteNote(Guid id) {
-        var note = await _context.Notes.SingleAsync(note => note.id == id);
+    public async Task<bool> DeleteNote(Guid id, Guid userId) {
+        var note = await _context.Notes.SingleAsync(note => note.id == id && note.UserId == userId);
         note.deleted = true;
         return await _context.SaveChangesAsync() > 0;
     }
-    public async Task<bool> UpdateNote(NoteDto updatedNote) {
-        var note = await _context.Notes.SingleAsync(note => note.id == updatedNote.id);
+    public async Task<bool> UpdateNote(NoteDto updatedNote, Guid userId) {
+        var note = await _context.Notes.SingleAsync(note => note.id == updatedNote.id && note.UserId == userId);
         if (note.deleted)
         {
             throw new InvalidProgramException();
@@ -41,7 +41,8 @@ public class NoteRepository : INoteRepository {
         return await _context.Notes.Where(note => note.UserId == userId).ToListAsync();
     }
 
-    public async Task<Note> FindOne(Guid id) {
-        return await _context.Notes.Where(note => note.id==id && !note.deleted).FirstOrDefaultAsync();
+    public async Task<Note> FindOne(Guid id, Guid userId) {
+        return await _context.Notes.Where(note => note.id==id && note.UserId == userId && !note.deleted)
+            .FirstOrDefaultAsync();
     }
 }
