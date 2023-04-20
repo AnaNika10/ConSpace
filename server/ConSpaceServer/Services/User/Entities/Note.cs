@@ -13,8 +13,8 @@ public class Note
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid id { get; set; }
 
-    // [Column("user_id")]
-    // public Guid UserId { get; set; }
+    [Column("user_id")]
+    public Guid UserId { get; set; }
     
     [Column("content", TypeName="text")]
     public string? Content { get; set; }
@@ -34,9 +34,10 @@ public class Note
     [Column("updated")]
     public DateTimeOffset? updated { get; set; }
 
-    public Note(string title, string content)
+    public Note(string title, string content, Guid userId)
     {
         Title = title;
         Content = content;
+        UserId = userId;
     }
 }

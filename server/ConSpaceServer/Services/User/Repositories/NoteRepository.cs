@@ -15,8 +15,8 @@ public class NoteRepository : INoteRepository {
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
     
-    public async Task<bool> CreateNote(NoteDto note) {
-        await _context.Notes.AddAsync(new Note(note.title, note.content));
+    public async Task<bool> CreateNote(NoteDto note, Guid userId) {
+        await _context.Notes.AddAsync(new Note(note.title, note.content, userId));
         return await _context.SaveChangesAsync() > 0;
     }
 
@@ -36,8 +36,9 @@ public class NoteRepository : INoteRepository {
         note.Content = updatedNote.content;
         return await _context.SaveChangesAsync() > 0;
     }
-    public Task<IEnumerable<NoteDto>> FindAll() {
-        throw new NotImplementedException();
+    public async Task<IEnumerable<Note>> FindAll(Guid userId)
+    {
+        return await _context.Notes.Where(note => note.UserId == userId).ToListAsync();
     }
 
     public async Task<Note> FindOne(Guid id) {

@@ -6,7 +6,7 @@ namespace User.DTO
     {
         public Guid id { get; set;}
         public string title { get; set;}
-        public string content {get; set;}
+        public string? content {get; set;}
         public NoteDto(
             Guid id, 
             string title,

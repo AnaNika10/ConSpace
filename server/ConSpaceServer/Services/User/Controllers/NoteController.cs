@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using User.DTO;
 using User.Repositories;
 using User.Entities;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Core;
 namespace User.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class NoteController : ControllerBase
 {
@@ -27,7 +30,15 @@ public class NoteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<bool>> CreateNote(NoteDto note)
     {
-        return await _repository.CreateNote(note);
+        var userId= User.Claims.FirstOrDefault(x => 
+            x.Type.Equals(ClaimTypes.NameIdentifier, StringComparison.OrdinalIgnoreCase)
+            )
+            ?.Value;
+        if (userId==null)
+        {
+            throw new Exception("Can't retrieve user claims"); 
+        }
+        return await _repository.CreateNote(note, Guid.Parse(userId));
     }
 
     [Route("[action]/{id}")]
@@ -49,9 +60,25 @@ public class NoteController : ControllerBase
     [Route("[action]")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IEnumerable<NoteDto> GetNotes()
+    [Authorize]
+    public async Task<ActionResult<IEnumerable<NoteDto>>> GetNotes()
     {
-        throw new NotImplementedException();
+        var userId= User.Claims.FirstOrDefault(x => 
+                x.Type.Equals(ClaimTypes.NameIdentifier, StringComparison.OrdinalIgnoreCase)
+            )
+            ?.Value;
+        if (userId==null)
+        {
+            throw new Exception("Can't retrieve user claims"); 
+        }
+
+        var notes = await _repository.FindAll(Guid.Parse(userId));
+        var result = new List<NoteDto>();
+        foreach (var note in notes)
+        {
+            result.Add(new NoteDto(note.id, note.Title, note.Content));
+        }
+        return result;
     }
 
     [Route("[action]/{id}")]
