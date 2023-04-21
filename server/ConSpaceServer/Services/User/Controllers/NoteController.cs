@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using User.Controllers.Exceptions;
 using User.DTO;
 using User.Repositories;
 using User.Entities;
-using Microsoft.AspNetCore.Mvc.Core;
 
 namespace User.Controllers;
 
@@ -28,6 +26,8 @@ public class NoteController : ControllerBase
     [Route("[action]")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<bool>> CreateNote(NoteDto note)
     {
         Guid userId = ExtractUserId();
@@ -37,6 +37,8 @@ public class NoteController : ControllerBase
     [Route("[action]/{id}")]
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize]
     public async Task<ActionResult<bool>> DeleteNote(Guid id)
     {
@@ -47,6 +49,8 @@ public class NoteController : ControllerBase
     [Route("[action]")]
     [HttpPatch]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize]
     public async Task<ActionResult<bool>> EditNote(NoteDto updatedNote)
     {
@@ -57,6 +61,8 @@ public class NoteController : ControllerBase
     [Route("[action]")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize]
     public async Task<ActionResult<IEnumerable<NoteDto>>> GetNotes()
     {
@@ -73,6 +79,8 @@ public class NoteController : ControllerBase
     [Route("[action]/{id}")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize]
     public async Task<ActionResult<NoteDto>> GetNote(Guid id)
     {
@@ -90,7 +98,7 @@ public class NoteController : ControllerBase
         if (userId==null)
         {
             _logger.LogError("User id could not be extracted from authorization header.");
-            throw new Exception("Can't retrieve user claims"); 
+            throw new MissingClaimException("Can't retrieve user claims"); 
         }
         return Guid.Parse(userId);
     }

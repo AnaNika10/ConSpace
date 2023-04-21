@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using User.Controllers.Exceptions;
 using User.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,6 +49,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<GlobalExceptionHandler>();
 app.UseAuthentication();
 app.UseAuthorization();
 
