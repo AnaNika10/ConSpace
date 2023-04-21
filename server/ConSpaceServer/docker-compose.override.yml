@@ -35,11 +35,21 @@ services:
     pgadmin:
         container_name: pgadmin
         environment:
-        - PGADMIN_DEFAULT_EMAIL=lakic.marija98@gmail.com
+        - PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com
         - PGADMIN_DEFAULT_PASSWORD=pgadmin
         restart: always
         ports:
         - "5050:80"
         volumes:
         - pgadmin_data:/root/.pgadmin
+    userservice:
+        container_name: userservice
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - "DatabaseSettings:ConnectionString=Server=localhost;Port=5432;Database=UserDb;Id=postgres;Password=postgres;"
+        depends_on:
+            - userdb
+            - pgadmin
+        ports:
+            - "8080:80"
 
