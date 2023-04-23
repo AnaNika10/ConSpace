@@ -17,6 +17,7 @@ public class UserContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder options) {
         options.UseNpgsql(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
+        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,12 +29,5 @@ public class UserContext : DbContext
             .Property(note => note.created)
             .HasDefaultValueSql("now()");
     }
-
-
-    public NpgsqlDataSource GetDataSource()
-    {
-        var connStr = _configuration.GetValue<string>("DatabaseSettings:ConnectionString");
     
-        return NpgsqlDataSource.Create(connStr);
-    }
 }
