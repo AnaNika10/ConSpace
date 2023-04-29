@@ -15,12 +15,17 @@ public class InternalController : ControllerBase
 {
 
     private readonly ILogger<InternalController> _logger;
-    private readonly IRemindersRepository _repository;
+    private readonly IRemindersRepository _remindersRepository;
+    private readonly IAttendeeRepository _attendeesRepository;
 
-    public InternalController(ILogger<InternalController> logger, IRemindersRepository repository)
+    public InternalController(
+        ILogger<InternalController> logger, 
+        IRemindersRepository remindersRepository,
+        IAttendeeRepository attendeeRepository)
     {
         _logger = logger;
-        _repository = repository;
+        _remindersRepository = remindersRepository;
+        _attendeesRepository = attendeeRepository;
     }
 
     [Route("[action]")]
@@ -32,7 +37,7 @@ public class InternalController : ControllerBase
     public async Task<ActionResult<IEnumerable<ReminderDto>>> ListAllReminders(ReminderType typeFilter)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
-        var reminders = await _repository.findAll(userId); 
+        var reminders = await _remindersRepository.findAll(userId); 
         
         return MapToDto(reminders);
     }
@@ -47,7 +52,7 @@ public class InternalController : ControllerBase
     public async Task<ActionResult<IEnumerable<ReminderDto>>> GetRemindersByEventId(Guid eventId)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
-        var reminders = await _repository.findByEventId(userId, eventId);
+        var reminders = await _remindersRepository.findByEventId(userId, eventId);
         
         return MapToDto(reminders);
     }
@@ -62,9 +67,19 @@ public class InternalController : ControllerBase
     public async Task<ActionResult<IEnumerable<ReminderDto>>> GetRemindersByType(ReminderType type)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
-        var reminders = await _repository.findByType(userId, type);
+        var reminders = await _remindersRepository.findByType(userId, type);
 
         return MapToDto(reminders);
+    }
+    
+    [Route("[action]")]
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<bool>> CreateUser(AttendeeDto attendee)
+    {
+        return await _attendeesRepository.create(attendee);
     }
 
     private List<ReminderDto> MapToDto(IEnumerable<Reminder> reminders)
@@ -75,7 +90,7 @@ public class InternalController : ControllerBase
             response.Add(
                 new ReminderDto(
                     reminder.id, 
-                    ReminderTypeExtension.mapToDto(reminder.type), 
+                    EnumConversionExtension.mapToDto(reminder.type), 
                     reminder.timestamp, 
                     reminder.content,
                     reminder.eventId)

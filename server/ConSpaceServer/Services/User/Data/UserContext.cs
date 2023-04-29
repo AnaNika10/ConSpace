@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Configuration;
-using Npgsql;
 using Microsoft.EntityFrameworkCore;
 using User.Entities;
 
@@ -10,6 +8,7 @@ public class UserContext : DbContext
     private readonly IConfiguration _configuration;
     public DbSet<Note> Notes {get; set;}
     public DbSet<Reminder> Reminders {get; set;}
+    public DbSet<Attendee> Attendees {get; set;}
 
     public UserContext(IConfiguration configuration)
     {
@@ -34,6 +33,14 @@ public class UserContext : DbContext
             .HasDefaultValueSql("now()");
         modelBuilder.Entity<Reminder>()
             .Property(reminder => reminder.type)
+            .HasConversion<string>();
+        modelBuilder.Entity<Attendee>()
+            .HasMany(attendee => attendee.Notes)
+            .WithOne(note => note.user)
+            .HasForeignKey(note => note.UserId)
+            .HasPrincipalKey(attendee => attendee.Id);
+        modelBuilder.Entity<Attendee>()
+            .Property(attendee => attendee.Type)
             .HasConversion<string>();
     }
     

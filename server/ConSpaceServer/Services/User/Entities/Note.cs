@@ -15,7 +15,9 @@ public class Note
 
     [Column("user_id")]
     public Guid UserId { get; set; }
-    
+
+    public Attendee user { get; set; }
+
     [Column("content", TypeName="text")]
     public string? Content { get; set; }
 

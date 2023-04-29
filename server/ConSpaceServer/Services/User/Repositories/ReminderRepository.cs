@@ -34,7 +34,7 @@ public class ReminderRepository : IRemindersRepository
     {
         _logger.LogInformation("Fetching all reminders with type {} for user with userId: {}", type, userId);
         return await _context.Reminders
-            .Where(reminder => reminder.userId == userId && reminder.type == ReminderTypeExtension.mapToEntity(type))
+            .Where(reminder => reminder.userId == userId && reminder.type == EnumConversionExtension.mapToEntity(type))
             .ToListAsync();
     }
 }

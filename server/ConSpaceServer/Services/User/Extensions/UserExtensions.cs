@@ -16,6 +16,7 @@ public static class UserExtensions
     {
         services.AddScoped<INoteRepository, NoteRepository>();
         services.AddScoped<IRemindersRepository, ReminderRepository>();
+        services.AddScoped<IAttendeeRepository, AttendeeRepository>();
         services.AddAutoMapper(configuration =>
             {
                 configuration.CreateMap<NoteDto, Note>().ReverseMap();
