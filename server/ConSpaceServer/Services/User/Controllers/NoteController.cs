@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using User.Controllers.Exceptions;
+using User.Controllers.Authorization;
 using User.DTO;
 using User.Repositories;
 using User.Entities;
@@ -30,7 +29,7 @@ public class NoteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<bool>> CreateNote(NoteDto note)
     {
-        Guid userId = ExtractUserId();
+        Guid userId = ClaimExtractor.ExtractUserId(User.Claims);
         return await _repository.CreateNote(note, userId);
     }
 
@@ -42,7 +41,7 @@ public class NoteController : ControllerBase
     [Authorize]
     public async Task<ActionResult<bool>> DeleteNote(Guid id)
     {
-        Guid userId = ExtractUserId();
+        Guid userId = ClaimExtractor.ExtractUserId(User.Claims);
         return await _repository.DeleteNote(id, userId);
     }
 
@@ -54,7 +53,7 @@ public class NoteController : ControllerBase
     [Authorize]
     public async Task<ActionResult<bool>> EditNote(NoteDto updatedNote)
     {
-        Guid userId = ExtractUserId();
+        Guid userId = ClaimExtractor.ExtractUserId(User.Claims);
         return await _repository.UpdateNote(updatedNote, userId);
     }
 
@@ -66,7 +65,7 @@ public class NoteController : ControllerBase
     [Authorize]
     public async Task<ActionResult<IEnumerable<NoteDto>>> GetNotes()
     {
-        Guid userId = ExtractUserId();
+        Guid userId = ClaimExtractor.ExtractUserId(User.Claims);
         var notes = await _repository.FindAll(userId);
         var result = new List<NoteDto>();
         foreach (var note in notes)
@@ -84,22 +83,9 @@ public class NoteController : ControllerBase
     [Authorize]
     public async Task<ActionResult<NoteDto>> GetNote(Guid id)
     {
-        Guid userId = ExtractUserId();
+        Guid userId = ClaimExtractor.ExtractUserId(User.Claims);
         Note note = await _repository.FindOne(id, userId);
         return new NoteDto(note.id, note.Title, note.Content);
     }
-
-    private Guid ExtractUserId()
-    {
-        var userId= User.Claims.FirstOrDefault(x => 
-                x.Type.Equals(ClaimTypes.NameIdentifier, StringComparison.OrdinalIgnoreCase)
-            )
-            ?.Value;
-        if (userId==null)
-        {
-            _logger.LogError("User id could not be extracted from authorization header.");
-            throw new MissingClaimException("Can't retrieve user claims"); 
-        }
-        return Guid.Parse(userId);
-    }
+    
 }
