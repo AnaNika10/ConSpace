@@ -17,10 +17,11 @@ public class ReminderRepository : IRemindersRepository
         _logger = logger;
     }
 
-    public async Task<IEnumerable<Reminder>> findAll(Guid userId)
+    public async Task<IEnumerable<Reminder>> findAllFilterByType(ReminderType type)
     {
-        _logger.LogInformation("Fetching all reminders for user with userId: {}", userId);
-        return await _context.Reminders.Where(reminder => reminder.userId == userId).ToListAsync();
+        _logger.LogInformation($"Fetching all {type} reminders");
+        return await _context.Reminders
+            .Where(reminder => reminder.type == EnumConversionExtension.mapToEntity(type)).ToListAsync();
     }
 
     public async Task<IEnumerable<Reminder>> findByEventId(Guid userId, Guid eventId)
