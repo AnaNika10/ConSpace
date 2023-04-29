@@ -9,6 +9,7 @@ public class UserContext : DbContext
 {
     private readonly IConfiguration _configuration;
     public DbSet<Note> Notes {get; set;}
+    public DbSet<Reminder> Reminders {get; set;}
 
     public UserContext(IConfiguration configuration)
     {
@@ -28,6 +29,12 @@ public class UserContext : DbContext
         modelBuilder.Entity<Note>()
             .Property(note => note.created)
             .HasDefaultValueSql("now()");
+        modelBuilder.Entity<Reminder>()
+            .Property(reminder => reminder.timestamp)
+            .HasDefaultValueSql("now()");
+        modelBuilder.Entity<Reminder>()
+            .Property(reminder => reminder.type)
+            .HasConversion<string>();
     }
     
 }

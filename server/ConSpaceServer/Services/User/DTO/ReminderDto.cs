@@ -4,21 +4,25 @@ namespace User.DTO
 {
     public class ReminderDto
     {
-        public string id { get; set;}
+        public Guid id { get; set;}
         public ReminderType type;
-        public DateTime timestamp {get; set;}
+        public DateTimeOffset timestamp {get; set;}
         public string content {get; set;}
 
+        public Guid eventId { get; set; }
+
         public ReminderDto(
-            string id,
+            Guid id,
             ReminderType type,
-            DateTime timestamp,
-            string content
+            DateTimeOffset timestamp,
+            string content,
+            Guid eventId
         ){
             this.id  = id ;
             this.type = type;
             this.timestamp = timestamp;
             this.content = content;
+            this.eventId = eventId;
         }
     }
 

@@ -1,0 +1,11 @@
+using User.Entities;
+using ReminderType = User.DTO.ReminderType;
+
+namespace User.Repositories;
+
+public interface IRemindersRepository
+{
+    Task<IEnumerable<Reminder>> findAll(Guid userId);
+    Task<IEnumerable<Reminder>> findByEventId(Guid userId, Guid eventId);
+    Task<IEnumerable<Reminder>> findByType(Guid userId, ReminderType type);
+}

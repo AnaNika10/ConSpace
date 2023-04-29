@@ -15,6 +15,7 @@ public static class UserExtensions
     public static void RegisterServices(this IServiceCollection services)
     {
         services.AddScoped<INoteRepository, NoteRepository>();
+        services.AddScoped<IRemindersRepository, ReminderRepository>();
         services.AddAutoMapper(configuration =>
             {
                 configuration.CreateMap<NoteDto, Note>().ReverseMap();
