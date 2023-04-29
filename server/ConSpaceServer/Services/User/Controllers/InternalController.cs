@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using User.Controllers.Authorization;
 using User.DTO;
 using User.Entities;
 using User.Extensions;
@@ -33,40 +31,34 @@ public class InternalController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
     public async Task<ActionResult<IEnumerable<ReminderDto>>> ListAllReminders(ReminderType typeFilter)
     {
-        var userId = ClaimExtractor.ExtractUserId(User.Claims);
-        var reminders = await _remindersRepository.findAll(userId); 
+        var reminders = await _remindersRepository.findAllFilterByType(typeFilter); 
         
         return MapToDto(reminders);
     }
 
-    [Route("[action]/{eventId}")]
+    [Route("[action]/{userId}/{eventId}")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
     // returns list of reminders for a specific seminar or meet up
-    public async Task<ActionResult<IEnumerable<ReminderDto>>> GetRemindersByEventId(Guid eventId)
+    public async Task<ActionResult<IEnumerable<ReminderDto>>> GetRemindersByEventId(Guid userId, Guid eventId)
     {
-        var userId = ClaimExtractor.ExtractUserId(User.Claims);
         var reminders = await _remindersRepository.findByEventId(userId, eventId);
         
         return MapToDto(reminders);
     }
     
-    [Route("[action]/{type}")]
+    [Route("[action]/{userId}/{type}")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
     // returns list of reminders for a specific seminar or meet up
-    public async Task<ActionResult<IEnumerable<ReminderDto>>> GetRemindersByType(ReminderType type)
+    public async Task<ActionResult<IEnumerable<ReminderDto>>> GetRemindersByType(Guid userId, ReminderType type)
     {
-        var userId = ClaimExtractor.ExtractUserId(User.Claims);
         var reminders = await _remindersRepository.findByType(userId, type);
 
         return MapToDto(reminders);
