@@ -6,19 +6,19 @@ namespace User.Data;
 public class UserContext : DbContext
 {
     private readonly IConfiguration _configuration;
-    public DbSet<Note> Notes {get; set;}
-    public DbSet<Reminder> Reminders {get; set;}
-    public DbSet<Attendee> Attendees {get; set;}
-    public DbSet<Seminar> Seminars {get; set;}
+    public DbSet<Note> Notes { get; set; }
+    public DbSet<Reminder> Reminders { get; set; }
+    public DbSet<Attendee> Attendees { get; set; }
+    public DbSet<Seminar> Seminars { get; set; }
 
     public UserContext(IConfiguration configuration)
     {
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder options) {
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    {
         options.UseNpgsql(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
-        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,5 +49,4 @@ public class UserContext : DbContext
             .HasForeignKey(seminar => seminar.UserId)
             .HasPrincipalKey(attendee => attendee.Id);
     }
-    
 }

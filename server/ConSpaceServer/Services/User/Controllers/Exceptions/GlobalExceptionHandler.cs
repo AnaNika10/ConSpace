@@ -23,7 +23,7 @@ public class GlobalExceptionHandler
             var response = context.Response;
             response.ContentType = "application/json";
 
-            switch(error)
+            switch (error)
             {
                 case MissingClaimException e:
                     // custom application error

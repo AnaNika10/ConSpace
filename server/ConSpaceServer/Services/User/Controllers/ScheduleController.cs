@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using System;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using User.Controllers.Authorization;
 using User.DTO;
-using User.Entities;
 using User.Repositories;
 
 namespace User.Controllers;
@@ -12,11 +10,10 @@ namespace User.Controllers;
 [Route("api/[controller]")]
 public class ScheduleController : ControllerBase
 {
-
     private readonly ILogger<ScheduleController> _logger;
     private readonly IScheduleRepository _scheduleRepository;
 
-    public ScheduleController(ILogger<ScheduleController> logger,  IScheduleRepository scheduleRepository)
+    public ScheduleController(ILogger<ScheduleController> logger, IScheduleRepository scheduleRepository)
     {
         _logger = logger;
         _scheduleRepository = scheduleRepository;

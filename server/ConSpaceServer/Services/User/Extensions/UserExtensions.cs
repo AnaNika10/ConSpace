@@ -18,13 +18,9 @@ public static class UserExtensions
         services.AddScoped<IRemindersRepository, ReminderRepository>();
         services.AddScoped<IAttendeeRepository, AttendeeRepository>();
         services.AddScoped<IScheduleRepository, ScheduleRepository>();
-        services.AddAutoMapper(configuration =>
-            {
-                configuration.CreateMap<NoteDto, Note>().ReverseMap();
-            }
+        services.AddAutoMapper(configuration => { configuration.CreateMap<NoteDto, Note>().ReverseMap(); }
         );
         services.AddEntityFrameworkNpgsql().AddDbContext<UserContext>();
-
     }
 
     public static void MigrateDatabase(this IApplicationBuilder app)

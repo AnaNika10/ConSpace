@@ -17,7 +17,7 @@ public static class EnumConversionExtension
                 throw new ArgumentException("Illegal argument when mapping ReminderType");
         }
     }
-    
+
     public static DTO.ReminderType mapToDto(ReminderType type)
     {
         switch (type)
@@ -30,8 +30,8 @@ public static class EnumConversionExtension
                 throw new ArgumentException("Illegal argument when mapping ReminderType");
         }
     }
-    
-    
+
+
     public static AttendeeType mapToEntity(DTO.AttendeeType type)
     {
         switch (type)
@@ -44,7 +44,7 @@ public static class EnumConversionExtension
                 throw new ArgumentException("Illegal argument when mapping AttendeeType");
         }
     }
-    
+
     public static DTO.AttendeeType mapToDto(AttendeeType type)
     {
         switch (type)

@@ -15,10 +15,11 @@ public class ScheduleRepository : IScheduleRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _logger = logger;
     }
-    
+
     public async Task<bool> create(Guid userId, SeminarDto seminar)
     {
-        await _context.Seminars.AddAsync(new Seminar(seminar.id, userId, seminar.speakers, seminar.conferenceRoomId, seminar.dateTime));
+        await _context.Seminars.AddAsync(new Seminar(seminar.id, userId, seminar.speakers, seminar.conferenceRoomId,
+            seminar.dateTime));
         _logger.LogInformation($"Creating seminar for user with userId:{userId}");
         return await _context.SaveChangesAsync() > 0;
     }

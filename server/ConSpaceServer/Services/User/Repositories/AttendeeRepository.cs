@@ -20,7 +20,7 @@ public class AttendeeRepository : IAttendeeRepository
     {
         _context.Attendees.AddAsync(
             new Attendee(attendee.Id, attendee.Name, EnumConversionExtension.mapToEntity(attendee.Type))
-            );
+        );
         _logger.LogInformation($"Creating note for user: {attendee.Id}");
         return await _context.SaveChangesAsync() > 0;
     }

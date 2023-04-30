@@ -10,7 +10,7 @@ public class ReminderRepository : IRemindersRepository
 {
     private readonly UserContext _context;
     private readonly ILogger<ReminderRepository> _logger;
-    
+
     public ReminderRepository(UserContext context, ILogger<ReminderRepository> logger)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));

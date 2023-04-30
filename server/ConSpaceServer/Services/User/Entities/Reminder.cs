@@ -11,26 +11,19 @@ public class Reminder
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid id { get; set; }
 
-    [Column("user_id")] 
-    public Guid userId { get; set; }
+    [Column("user_id")] public Guid userId { get; set; }
 
-    [Column("type")] 
-    public ReminderType type { get; set; }
+    [Column("type")] public ReminderType type { get; set; }
 
-    [Column("timestamp")] 
-    public DateTimeOffset timestamp { get; set; }
+    [Column("timestamp")] public DateTimeOffset timestamp { get; set; }
 
-    [Column("content")] 
-    public string content { get; set; }
+    [Column("content")] public string content { get; set; }
 
-    [Column("eventId")] 
-    public Guid eventId { get; set; }
-
+    [Column("eventId")] public Guid eventId { get; set; }
 }
 
 public enum ReminderType
 {
     MEET_UP,
     SEMINAR
-
 }
