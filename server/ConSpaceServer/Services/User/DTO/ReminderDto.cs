@@ -1,30 +1,33 @@
-using System;
+namespace User.DTO;
 
-namespace User.DTO
+public class ReminderDto
 {
-    public class ReminderDto
-    {
-        public string id { get; set;}
-        public ReminderType type;
-        public DateTime timestamp {get; set;}
-        public string content {get; set;}
+    public ReminderType type;
 
-        public ReminderDto(
-            string id,
-            ReminderType type,
-            DateTime timestamp,
-            string content
-        ){
-            this.id  = id ;
-            this.type = type;
-            this.timestamp = timestamp;
-            this.content = content;
-        }
+    public ReminderDto(
+        Guid id,
+        ReminderType type,
+        DateTimeOffset timestamp,
+        string content,
+        Guid eventId
+    )
+    {
+        this.id = id;
+        this.type = type;
+        this.timestamp = timestamp;
+        this.content = content;
+        this.eventId = eventId;
     }
 
-    public enum ReminderType
-    {
-        SEMINAR,
-        MEET_UP       
-    }
+    public Guid id { get; set; }
+    public DateTimeOffset timestamp { get; set; }
+    public string content { get; set; }
+
+    public Guid eventId { get; set; }
+}
+
+public enum ReminderType
+{
+    SEMINAR,
+    MEET_UP
 }
