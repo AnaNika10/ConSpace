@@ -10,6 +10,7 @@ public class UserContext : DbContext
     public DbSet<Reminder> Reminders { get; set; }
     public DbSet<Attendee> Attendees { get; set; }
     public DbSet<Seminar> Seminars { get; set; }
+    public DbSet<Invite> Invites { get; set; }
 
     public UserContext(IConfiguration configuration)
     {
@@ -48,5 +49,11 @@ public class UserContext : DbContext
             .WithOne(seminar => seminar.User)
             .HasForeignKey(seminar => seminar.UserId)
             .HasPrincipalKey(attendee => attendee.Id);
+        modelBuilder.Entity<Invite>()
+            .Property(invite => invite.timestamp)
+            .HasDefaultValueSql("now()");
+        modelBuilder.Entity<Invite>()
+            .Property(invite => invite.status)
+            .HasConversion<string>();
     }
 }
