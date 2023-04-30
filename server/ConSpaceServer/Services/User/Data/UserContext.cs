@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using User.Data.Helpers;
 using User.Entities;
 
 namespace User.Data;
@@ -9,6 +11,7 @@ public class UserContext : DbContext
     public DbSet<Note> Notes {get; set;}
     public DbSet<Reminder> Reminders {get; set;}
     public DbSet<Attendee> Attendees {get; set;}
+    public DbSet<Seminar> Seminars {get; set;}
 
     public UserContext(IConfiguration configuration)
     {
@@ -42,6 +45,11 @@ public class UserContext : DbContext
         modelBuilder.Entity<Attendee>()
             .Property(attendee => attendee.Type)
             .HasConversion<string>();
+        modelBuilder.Entity<Attendee>()
+            .HasMany(attendee => attendee.Seminars)
+            .WithOne(seminar => seminar.User)
+            .HasForeignKey(seminar => seminar.UserId)
+            .HasPrincipalKey(attendee => attendee.Id);
     }
     
 }

@@ -16,8 +16,8 @@ public class Attendee
     [Column("attendee_type")] 
     public AttendeeType Type { get; set; }
     
-    // [Column("seminar_id")]
-    // public Guid seminarId { get; set; }
+    [Column("seminars")]
+    public IEnumerable<Seminar>? Seminars { get; set; }
     
     [Column("notes")]
     public IEnumerable<Note>? Notes { get; set; }
