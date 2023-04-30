@@ -1,15 +1,8 @@
-using System;
-
 namespace User.DTO;
 
 public class ReminderDto
 {
-    public Guid id { get; set; }
     public ReminderType type;
-    public DateTimeOffset timestamp { get; set; }
-    public string content { get; set; }
-
-    public Guid eventId { get; set; }
 
     public ReminderDto(
         Guid id,
@@ -25,6 +18,12 @@ public class ReminderDto
         this.content = content;
         this.eventId = eventId;
     }
+
+    public Guid id { get; set; }
+    public DateTimeOffset timestamp { get; set; }
+    public string content { get; set; }
+
+    public Guid eventId { get; set; }
 }
 
 public enum ReminderType

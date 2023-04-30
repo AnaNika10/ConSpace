@@ -1,5 +1,8 @@
+#region
+
 using User.Entities;
-using AttendeeType = User.Entities.AttendeeType;
+
+#endregion
 
 namespace User.Extensions;
 

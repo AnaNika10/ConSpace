@@ -1,5 +1,9 @@
+#region
+
 using User.DTO;
 using User.Entities;
+
+#endregion
 
 namespace User.Repositories;
 

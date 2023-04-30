@@ -1,11 +1,22 @@
+#region
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+#endregion
 
 namespace User.Entities;
 
 [Table("notes")]
 public class Note
 {
+    public Note(string title, string content, Guid userId)
+    {
+        Title = title;
+        Content = content;
+        UserId = userId;
+    }
+
     [Column("id")]
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -26,11 +37,4 @@ public class Note
     [Column("created")] [Required] public DateTimeOffset created { get; set; }
 
     [Column("updated")] public DateTimeOffset? updated { get; set; }
-
-    public Note(string title, string content, Guid userId)
-    {
-        Title = title;
-        Content = content;
-        UserId = userId;
-    }
 }

@@ -1,7 +1,11 @@
+#region
+
 using Microsoft.EntityFrameworkCore;
 using User.Data;
 using User.DTO;
 using User.Entities;
+
+#endregion
 
 namespace User.Repositories;
 

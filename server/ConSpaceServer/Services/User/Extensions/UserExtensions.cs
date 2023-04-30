@@ -1,12 +1,15 @@
+#region
+
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using User.Data;
 using User.DTO;
 using User.Entities;
 using User.Repositories;
-using Microsoft.IdentityModel.Tokens;
-using IHostingEnvironment = Microsoft.Extensions.Hosting.IHostingEnvironment;
+
+#endregion
 
 namespace User.Extensions;
 

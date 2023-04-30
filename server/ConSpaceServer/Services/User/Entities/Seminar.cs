@@ -1,11 +1,24 @@
+#region
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+#endregion
 
 namespace User.Entities;
 
 [Table("seminar")]
 public class Seminar
 {
+    public Seminar(Guid id, Guid userId, List<string> speakers, Guid conferenceRoomId, DateTimeOffset dateTimeOfSeminar)
+    {
+        Id = id;
+        UserId = userId;
+        Speakers = speakers;
+        ConferenceRoomId = conferenceRoomId;
+        DateTimeOfSeminar = dateTimeOfSeminar;
+    }
+
     [Column("id")] [Key] public Guid Id { get; set; }
 
     [Column("user_id")] public Guid UserId { get; set; }
@@ -18,13 +31,4 @@ public class Seminar
     [Column("date_time_of_seminar")] public DateTimeOffset DateTimeOfSeminar { get; set; }
 
     public Attendee User { get; set; }
-
-    public Seminar(Guid id, Guid userId, List<string> speakers, Guid conferenceRoomId, DateTimeOffset dateTimeOfSeminar)
-    {
-        Id = id;
-        UserId = userId;
-        Speakers = speakers;
-        ConferenceRoomId = conferenceRoomId;
-        DateTimeOfSeminar = dateTimeOfSeminar;
-    }
 }

@@ -1,13 +1,7 @@
-using System;
-
 namespace User.DTO;
 
 public class NoteDto
 {
-    public Guid id { get; set; }
-    public string title { get; set; }
-    public string? content { get; set; }
-
     public NoteDto(
         Guid id,
         string title,
@@ -18,4 +12,8 @@ public class NoteDto
         this.title = title;
         this.content = content;
     }
+
+    public Guid id { get; set; }
+    public string title { get; set; }
+    public string? content { get; set; }
 }

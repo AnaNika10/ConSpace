@@ -1,3 +1,5 @@
+#region
+
 using Microsoft.AspNetCore.Mvc;
 using User.DTO;
 using User.Entities;
@@ -5,15 +7,17 @@ using User.Extensions;
 using User.Repositories;
 using ReminderType = User.DTO.ReminderType;
 
+#endregion
+
 namespace User.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class InternalController : ControllerBase
 {
+    private readonly IAttendeeRepository _attendeesRepository;
     private readonly ILogger<InternalController> _logger;
     private readonly IRemindersRepository _remindersRepository;
-    private readonly IAttendeeRepository _attendeesRepository;
 
     public InternalController(
         ILogger<InternalController> logger,

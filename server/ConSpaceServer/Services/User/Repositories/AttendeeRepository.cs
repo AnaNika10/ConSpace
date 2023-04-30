@@ -1,7 +1,11 @@
+#region
+
 using User.Data;
 using User.DTO;
 using User.Entities;
 using User.Extensions;
+
+#endregion
 
 namespace User.Repositories;
 

@@ -1,5 +1,9 @@
+#region
+
 using System.Security.Claims;
 using User.Controllers.Exceptions;
+
+#endregion
 
 namespace User.Controllers.Authorization;
 

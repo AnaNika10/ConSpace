@@ -1,7 +1,11 @@
+#region
+
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using User.Controllers.Exceptions;
 using User.Extensions;
+
+#endregion
 
 var builder = WebApplication.CreateBuilder(args);
 

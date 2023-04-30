@@ -1,21 +1,26 @@
+#region
+
 using Microsoft.EntityFrameworkCore;
 using User.Entities;
+
+#endregion
 
 namespace User.Data;
 
 public class UserContext : DbContext
 {
     private readonly IConfiguration _configuration;
-    public DbSet<Note> Notes { get; set; }
-    public DbSet<Reminder> Reminders { get; set; }
-    public DbSet<Attendee> Attendees { get; set; }
-    public DbSet<Seminar> Seminars { get; set; }
-    public DbSet<Invite> Invites { get; set; }
 
     public UserContext(IConfiguration configuration)
     {
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
+
+    public DbSet<Note> Notes { get; set; }
+    public DbSet<Reminder> Reminders { get; set; }
+    public DbSet<Attendee> Attendees { get; set; }
+    public DbSet<Seminar> Seminars { get; set; }
+    public DbSet<Invite> Invites { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
