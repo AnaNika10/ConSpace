@@ -1,6 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using User.Data.Helpers;
 using User.Entities;
 
 namespace User.Data;
