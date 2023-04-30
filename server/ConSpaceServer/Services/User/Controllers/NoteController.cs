@@ -27,6 +27,7 @@ public class NoteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize]
     public async Task<ActionResult<bool>> CreateNote(NoteDto note)
     {
         Guid userId = ClaimExtractor.ExtractUserId(User.Claims);
