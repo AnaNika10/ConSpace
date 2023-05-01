@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: Security/IdentityServer/Dockerfile
   userdb:
-    image: postgres
+    image: postgres  
   pgadmin:
     image: dpage/pgadmin4
   userservice:
@@ -27,6 +27,6 @@ services:
       dockerfile: Services/Conference/Conference.Api/Dockerfile 
 volumes:
   mssql_data:
-  postgres_data_user:
   postgres_data_conference:
+  postgres_data_user:
   pgadmin_data:

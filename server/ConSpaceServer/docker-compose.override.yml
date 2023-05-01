@@ -24,9 +24,9 @@ services:
     userdb:
         container_name: userdb
         environment:
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=postgres
-        - POSTGRES_DB=UserDb
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=UserDb
         restart: always
         ports:
         - "5432:5432"
@@ -47,6 +47,7 @@ services:
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - "DatabaseSettings:ConnectionString=Server=localhost;Port=5432;Database=UserDb;Id=postgres;Password=postgres;"
+            - "DatabaseSettings:ConnectionString=Server=userdb;Port=5432;Database=UserDb;User Id=postgres;Password=postgres;"
         depends_on:
             - userdb
         ports:
@@ -59,14 +60,14 @@ services:
             - POSTGRES_DB=ConferenceDb
         restart: always
         ports:
-          - "5430:5430"
+          - "5430:5432"
         volumes:
           - postgres_data_conference:/var/lib/postgresql/data/
     conference:
         container_name: conference
         environment:
           - ASPNETCORE_ENVIRONMENT=Development
-          - "DatabaseSettings:ConnectionString=Server=conferencedb;Port=5430;Database=ConferenceDb;User Id=admin;Password=admin1234;"
+          - "DatabaseSettings:ConnectionString=Server=conferencedb;Port=5432;Database=ConferenceDb;User Id=admin;Password=admin1234;"
         depends_on:
           - conferencedb
         ports:
