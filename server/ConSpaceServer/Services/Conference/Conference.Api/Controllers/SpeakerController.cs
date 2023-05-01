@@ -25,10 +25,10 @@ namespace Conference.Api.Controllers
             }
             return Ok(conferences);
         }
-        [HttpGet("{speakerId}", Name = nameof(GetById))]
+        [HttpGet("{speakerId}", Name = nameof(GetSpeakerById))]
         [ProducesResponseType(typeof(SpeakerDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<SpeakerDTO>> GetById(int speakerId)
+        public async Task<ActionResult<SpeakerDTO>> GetSpeakerById(int speakerId)
         {
             var conference = await _repository.GetSpeaker(speakerId);
             if (conference == null)
