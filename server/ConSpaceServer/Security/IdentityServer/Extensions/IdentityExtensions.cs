@@ -2,6 +2,7 @@
 using IdentityServer.Entities;
 using IdentityServer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +24,14 @@ public static class IdentityExtensions
 
         return services;
     }
-
+    public static void MigrateDatabase(this IApplicationBuilder app)
+    {
+        using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+        {
+            scope.ServiceProvider.GetService<IdentityContext>().Database.Migrate();
+        }
+    }
+ 
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
         services.AddIdentity<User, IdentityRole>(options =>

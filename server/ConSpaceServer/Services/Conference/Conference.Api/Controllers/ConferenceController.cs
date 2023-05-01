@@ -26,10 +26,10 @@ namespace Conference.Api.Controllers
             }
             return Ok(conferences);
         }
-        [HttpGet("{ConferenceId}", Name = nameof(GetById))]
+        [HttpGet("{ConferenceId}", Name = nameof(GetConferenceById))]
         [ProducesResponseType(typeof(ConferenceDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ConferenceDTO>> GetById(int ConferenceId)
+        public async Task<ActionResult<ConferenceDTO>> GetConferenceById(int ConferenceId)
         {
             var conference = await _repository.GetConference(ConferenceId);
             if (conference == null)
