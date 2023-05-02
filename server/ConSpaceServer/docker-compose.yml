@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   mssql:
-        image: mcr.microsoft.com/mssql/server:2017-latest
+    image: mcr.microsoft.com/mssql/server:2017-latest
 
   identityserver:
     image: ${DOCKER_REGISTRY-}identityserver
@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: Security/IdentityServer/Dockerfile
   userdb:
-    image: postgres
+    image: postgres  
   pgadmin:
     image: dpage/pgadmin4
   userservice:
@@ -18,7 +18,15 @@ services:
     build:
       context: .
       dockerfile: Services/User/Dockerfile
+  conferencedb:
+    image: postgres
+  conference:
+    image: ${DOCKER_REGISTRY-}conference
+    build:
+      context: .
+      dockerfile: Services/Conference/Conference.Api/Dockerfile 
 volumes:
   mssql_data:
-  postgres_data:
+  postgres_data_conference:
+  postgres_data_user:
   pgadmin_data:
