@@ -46,7 +46,7 @@ services:
         container_name: userservice
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
-            - "DatabaseSettings:ConnectionString=Server=localhost;Port=5432;Database=UserDb;Id=postgres;Password=postgres;"
+            - "DatabaseSettings:ConnectionString=Server=userdb;Port=5432;Database=UserDb;User Id=postgres;Password=postgres;"
         depends_on:
             - userdb
             - pgadmin
