@@ -30,7 +30,7 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<User> ValidateUser(UserCredentialsDto userCredentials)
     {
-        var user = await _userManager.FindByNameAsync(userCredentials.UserName);
+        var user = await _userManager.FindByEmailAsync(userCredentials.Email);
         if (user == null || !await _userManager.CheckPasswordAsync(user, userCredentials.Password))
         {
             return null;

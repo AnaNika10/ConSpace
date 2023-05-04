@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IdentityServer.Migrations
 {
-    public partial class CreatingIdentityTables : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -178,12 +178,12 @@ namespace IdentityServer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "c9af8bd0-1230-46de-ab33-753782579ce9", "26b8f5ab-90e3-4253-bfca-c9d4649f7917", "User", "USER" });
+                values: new object[] { "174cc2d4-b3d6-48aa-9876-d86d3a63b6e4", "0e4e443d-f892-4bf7-bb7f-af3162d8d3c9", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "fd3e6ba0-ac8c-4de6-8dc1-7113b8b336b7", "3c170b2e-6c03-443a-84cb-4c3021111c07", "Administrator", "ADMINISTRATOR" });
+                values: new object[] { "b979f20e-7be1-440a-8d3f-e7499773e477", "ba61feea-8c00-487a-a35f-387ec774e5c1", "Administrator", "ADMINISTRATOR" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
