@@ -41,7 +41,7 @@ public class RegistrationControllerBase : ControllerBase
             return BadRequest(ModelState);
         }
 
-        _logger.LogInformation($"Successfully registered user: {user.UserName}.");
+        _logger.LogInformation($"Successfully registered user: {user.Email}.");
 
         foreach (var role in roles)
         {
@@ -49,7 +49,7 @@ public class RegistrationControllerBase : ControllerBase
             if (roleExists)
             {
                 await _userManager.AddToRoleAsync(user, role);
-                _logger.LogInformation($"Added a role {role} to user: {user.UserName}.");
+                _logger.LogInformation($"Added a role {role} to user: {user.Email}.");
             }
             else
             {

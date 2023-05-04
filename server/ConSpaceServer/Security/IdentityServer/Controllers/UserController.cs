@@ -39,11 +39,11 @@ public class UserController : ControllerBase
     }
 
     [Authorize(Roles = "Administrator,User")]
-    [HttpGet("{username}")]
+    [HttpGet("{email}")]
     [ProducesResponseType(typeof(UserDetails), StatusCodes.Status200OK)]
-    public async Task<ActionResult<UserDetails>> GetUser(string username)
+    public async Task<ActionResult<UserDetails>> GetUser(string email)
     {
-        var user = await _userManager.Users.FirstOrDefaultAsync(user => user.UserName == username);
+        var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Email == email);
 
         return Ok(_mapper.Map<UserDetails>(user));
     }

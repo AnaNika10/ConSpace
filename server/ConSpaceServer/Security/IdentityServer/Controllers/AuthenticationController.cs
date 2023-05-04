@@ -50,7 +50,7 @@ public class AuthenticationController : RegistrationControllerBase
         var user = await _authService.ValidateUser(userCredentials);
         if (user == null)
         {
-            _logger.LogWarning($"{nameof(Login)}: Authentication failed. Wrong username or password.");
+            _logger.LogWarning($"{nameof(Login)}: Authentication failed. Wrong email or password.");
             return Unauthorized();
         }
 
@@ -63,10 +63,10 @@ public class AuthenticationController : RegistrationControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<AuthenticationModel>> Refresh([FromBody] RefreshTokenModel refreshTokenCredentials)
     {
-        var user = await _userManager.FindByNameAsync(refreshTokenCredentials.UserName);
+        var user = await _userManager.FindByEmailAsync(refreshTokenCredentials.Email);
         if (user == null)
         {
-            _logger.LogWarning($"{nameof(Refresh)}: Refreshing token failed. Unknown username {refreshTokenCredentials.UserName}.");
+            _logger.LogWarning($"{nameof(Refresh)}: Refreshing token failed. Unknown email {refreshTokenCredentials.Email}.");
             return Forbid();
         }
 
@@ -92,10 +92,10 @@ public class AuthenticationController : RegistrationControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Logout([FromBody] RefreshTokenModel refreshTokenCredentials)
     {
-        var user = await _userManager.FindByNameAsync(refreshTokenCredentials.UserName);
+        var user = await _userManager.FindByEmailAsync(refreshTokenCredentials.Email);
         if (user == null)
         {
-            _logger.LogWarning($"{nameof(Logout)}: Logout failed. Unknown username {refreshTokenCredentials.UserName}.");
+            _logger.LogWarning($"{nameof(Logout)}: Logout failed. Unknown email {refreshTokenCredentials.Email}.");
             return Forbid();
         }
 
