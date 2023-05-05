@@ -17,6 +17,11 @@ public class RoleConfiguration : IEntityTypeConfiguration<IdentityRole>
             },
             new IdentityRole
             {
+                Name = "Speaker",
+                NormalizedName = "SPEAKER"
+            },
+            new IdentityRole
+            {
                 Name = "Administrator",
                 NormalizedName = "ADMINISTRATOR"
             }

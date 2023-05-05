@@ -38,7 +38,7 @@ public class UserController : ControllerBase
         return Ok(_mapper.Map<IEnumerable<UserDetails>>(users));
     }
 
-    [Authorize(Roles = "Administrator,User")]
+    [Authorize(Roles = "Administrator,Speaker,User")]
     [HttpGet]
     [ProducesResponseType(typeof(UserDetails), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -38,6 +38,14 @@ public class AuthenticationController : RegistrationControllerBase
     [HttpPost("[action]")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> RegisterSpeaker([FromBody] NewUserDto newUser)
+    {
+        return await RegisterNewUserWithRoles(newUser, new string[] { "Speaker" });
+    }
+
+    [HttpPost("[action]")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterAdministrator([FromBody] NewUserDto newUser)
     {
         return await RegisterNewUserWithRoles(newUser, new string[] { "Administrator" });
