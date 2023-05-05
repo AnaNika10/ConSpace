@@ -3,6 +3,7 @@ using IdentityServer.Controllers.Base;
 using IdentityServer.DTOs;
 using IdentityServer.Entities;
 using IdentityServer.Services;
+using IdentityServer.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -20,8 +21,8 @@ public class AuthenticationController : RegistrationControllerBase
 {
     private readonly IAuthenticationService _authService;
 
-    public AuthenticationController(ILogger<AuthenticationController> logger, IMapper mapper, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IAuthenticationService authService)
-        : base(logger, mapper, userManager, roleManager)
+    public AuthenticationController(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService)
+            : base(logger, mapper, repository)
     {
         _authService = authService ?? throw new ArgumentNullException(nameof(authService));
     }
@@ -63,7 +64,7 @@ public class AuthenticationController : RegistrationControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<AuthenticationModel>> Refresh([FromBody] RefreshTokenModel refreshTokenCredentials)
     {
-        var user = await _userManager.FindByEmailAsync(refreshTokenCredentials.Email);
+        var user = await _repository.GetUserByEmail(refreshTokenCredentials.Email);
         if (user == null)
         {
             _logger.LogWarning($"{nameof(Refresh)}: Refreshing token failed. Unknown email {refreshTokenCredentials.Email}.");
@@ -92,7 +93,7 @@ public class AuthenticationController : RegistrationControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Logout([FromBody] RefreshTokenModel refreshTokenCredentials)
     {
-        var user = await _userManager.FindByEmailAsync(refreshTokenCredentials.Email);
+        var user = await _repository.GetUserByEmail(refreshTokenCredentials.Email);
         if (user == null)
         {
             _logger.LogWarning($"{nameof(Logout)}: Logout failed. Unknown email {refreshTokenCredentials.Email}.");

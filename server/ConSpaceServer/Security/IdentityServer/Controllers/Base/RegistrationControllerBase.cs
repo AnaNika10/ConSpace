@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using IdentityServer.DTOs;
 using IdentityServer.Entities;
+using IdentityServer.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,22 +16,20 @@ public class RegistrationControllerBase : ControllerBase
 {
     protected readonly ILogger<AuthenticationController> _logger;
     protected readonly IMapper _mapper;
-    protected readonly UserManager<User> _userManager;
-    protected readonly RoleManager<IdentityRole> _roleManager;
+    protected readonly IIdentityRepository _repository;
 
-    public RegistrationControllerBase(ILogger<AuthenticationController> logger, IMapper mapper, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+    public RegistrationControllerBase(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-        _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     protected async Task<IActionResult> RegisterNewUserWithRoles(NewUserDto newUser, IEnumerable<string> roles)
     {
         var user = _mapper.Map<User>(newUser);
 
-        var result = await _userManager.CreateAsync(user, newUser.Password);
+        var result = await _repository.CreateUser(user, newUser.Password);
         if (!result.Succeeded)
         {
             foreach (var error in result.Errors)
@@ -40,15 +39,12 @@ public class RegistrationControllerBase : ControllerBase
 
             return BadRequest(ModelState);
         }
-
         _logger.LogInformation($"Successfully registered user: {user.Email}.");
 
         foreach (var role in roles)
         {
-            var roleExists = await _roleManager.RoleExistsAsync(role);
-            if (roleExists)
+            if (await _repository.AddRoleToUser(user, role))
             {
-                await _userManager.AddToRoleAsync(user, role);
                 _logger.LogInformation($"Added a role {role} to user: {user.Email}.");
             }
             else

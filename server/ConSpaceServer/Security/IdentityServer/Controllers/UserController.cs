@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using IdentityServer.DTOs;
 using IdentityServer.Entities;
+using IdentityServer.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace IdentityServer.Controllers;
@@ -18,33 +20,36 @@ namespace IdentityServer.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IMapper _mapper;
+    private readonly IIdentityRepository _repository;
 
-    public UserController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
+    public UserController(IMapper mapper, IIdentityRepository repository)
     {
-        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-        _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     [Authorize(Roles = "Administrator")]
-    [HttpGet]
+    [HttpGet("[action]")]
     [ProducesResponseType(typeof(IEnumerable<UserDetails>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<UserDetails>>> GetAllUsers()
     {
-        var users = await _userManager.Users.ToListAsync();
+        var users = await _repository.GetAllUsers();
         return Ok(_mapper.Map<IEnumerable<UserDetails>>(users));
     }
 
     [Authorize(Roles = "Administrator,User")]
-    [HttpGet("{email}")]
+    [HttpGet]
     [ProducesResponseType(typeof(UserDetails), StatusCodes.Status200OK)]
-    public async Task<ActionResult<UserDetails>> GetUser(string email)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UserDetails>> GetUser()
     {
-        var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Email == email);
-
-        return Ok(_mapper.Map<UserDetails>(user));
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var user = await _repository.GetUserByEmail(email);
+        if (user != null)
+        {
+            return Ok(_mapper.Map<UserDetails>(user));
+        }
+        return NotFound();
     }
 }

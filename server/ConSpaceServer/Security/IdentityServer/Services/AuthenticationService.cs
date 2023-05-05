@@ -1,8 +1,11 @@
 ﻿using IdentityServer.Data;
 using IdentityServer.DTOs;
 using IdentityServer.Entities;
+using IdentityServer.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -17,21 +20,21 @@ namespace IdentityServer.Services;
 
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly UserManager<User> _userManager;
+    private readonly ILogger<AuthenticationService> _logger;
     private readonly IConfiguration _configuration;
-    private readonly IdentityContext _dbContext;
+    private readonly IIdentityRepository _repository;
 
-    public AuthenticationService(UserManager<User> userManager, IConfiguration configuration, IdentityContext dbContext)
+    public AuthenticationService(ILogger<AuthenticationService> logger, IConfiguration configuration, IIdentityRepository repository)
     {
-        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     public async Task<User> ValidateUser(UserCredentialsDto userCredentials)
     {
-        var user = await _userManager.FindByEmailAsync(userCredentials.Email);
-        if (user == null || !await _userManager.CheckPasswordAsync(user, userCredentials.Password))
+        var user = await _repository.GetUserByEmail(userCredentials.Email);
+        if (user == null || !await _repository.CheckUserPassword(user, userCredentials.Password))
         {
             return null;
         }
@@ -44,24 +47,9 @@ public class AuthenticationService : IAuthenticationService
         var refreshToken = await CreateRefreshToken();
 
         user.RefreshTokens.Add(refreshToken);
-        await _userManager.UpdateAsync(user);
+        await _repository.UpdateUser(user);
 
         return new AuthenticationModel { AccessToken = accessToken, RefreshToken = refreshToken.Token };
-    }
-
-    public async Task RemoveRefreshToken(User user, string refreshToken)
-    {
-        user.RefreshTokens.RemoveAll(r => r.Token == refreshToken);
-        await _userManager.UpdateAsync(user);
-
-        var token = _dbContext.RefreshTokens.FirstOrDefault(r => r.Token == refreshToken);
-        if (token == null)
-        {
-            return;
-        }
-
-        _dbContext.RefreshTokens.Remove(token);
-        await _dbContext.SaveChangesAsync();
     }
 
     private async Task<string> CreateAccessToken(User user)
@@ -85,10 +73,13 @@ public class AuthenticationService : IAuthenticationService
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id)
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.GivenName, user.FirstName),
+            new Claim(ClaimTypes.Surname, user.LastName)
         };
 
-        var roles = await _userManager.GetRolesAsync(user);
+        var roles = await _repository.GetUserRoles(user);
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
@@ -125,9 +116,22 @@ public class AuthenticationService : IAuthenticationService
             ExpiryTime = DateTime.Now.AddDays(Convert.ToDouble(_configuration.GetValue<string>("RefreshTokenExpires")))
         };
 
-        _dbContext.RefreshTokens.Add(token);
-        await _dbContext.SaveChangesAsync();
+        await _repository.CreateRefreshToken(token);
 
         return token;
+    }
+
+    public async Task RemoveRefreshToken(User user, string refreshToken)
+    {
+        user.RefreshTokens.RemoveAll(r => r.Token == refreshToken);
+        await _repository.UpdateUser(user);
+
+        var token = await _repository.FindRefreshToken(refreshToken);
+        if (token == null)
+        {
+            return;
+        }
+
+        await _repository.DeleteRefreshToken(token);
     }
 }
