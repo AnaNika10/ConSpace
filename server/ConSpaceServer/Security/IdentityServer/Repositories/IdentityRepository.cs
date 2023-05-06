@@ -32,6 +32,26 @@ public class IdentityRepository : IIdentityRepository
     {
         return await _userManager.UpdateAsync(user);
     }
+    public async Task DeleteUser(User user)
+    {
+        await _userManager.DeleteAsync(user);
+    }
+    public async Task UpdateUserName(User user, string firstName, string lastName)
+    {
+        user.FirstName = firstName;
+        user.LastName = lastName;
+        await _userManager.UpdateAsync(user);
+    }
+
+    public async Task<bool> UpdateUserPassword(User user, string currentPassword, string newPassword)
+    {
+        var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        return result.Succeeded;
+    }
+    public async Task<bool> CheckUserPassword(User user, string password)
+    {
+        return await _userManager.CheckPasswordAsync(user, password);
+    }
     public async Task<bool> AddRoleToUser(User user, string role)
     {
         var roleExists = await _roleManager.RoleExistsAsync(role);
@@ -54,9 +74,70 @@ public class IdentityRepository : IIdentityRepository
     {
         return await _userManager.Users.ToListAsync();
     }
-    public async Task<bool> CheckUserPassword(User user, string password)
+    public async Task<(int, IEnumerable<User>)> GetUsers(string searchString, int page, int pageSize)
     {
-        return await _userManager.CheckPasswordAsync(user, password);
+        var customerRole = await _roleManager.FindByNameAsync("User");
+
+        var count = await _dbContext.UserRoles
+            .Where(ur => ur.RoleId == customerRole.Id)
+            .Join(_dbContext.Users.AsQueryable(), ur => ur.UserId, u => u.Id, (ur, u) => u)
+            .Where(u => u.Email.Contains(searchString))
+            .CountAsync();
+
+        var users = await _dbContext.UserRoles
+            .Where(ur => ur.RoleId == customerRole.Id)
+            .Join(_dbContext.Users.AsQueryable(), ur => ur.UserId, u => u.Id, (ur, u) => u)
+            .Where(u => u.Email.Contains(searchString))
+            .OrderBy(u => u.Email)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (count, users);
+    }
+
+    public async Task<(int, IEnumerable<User>)> GetSpeakers(string searchString, int page, int pageSize)
+    {
+        var customerRole = await _roleManager.FindByNameAsync("Speaker");
+
+        var count = await _dbContext.UserRoles
+            .Where(ur => ur.RoleId == customerRole.Id)
+            .Join(_dbContext.Users.AsQueryable(), ur => ur.UserId, u => u.Id, (ur, u) => u)
+            .Where(u => u.Email.Contains(searchString))
+            .CountAsync();
+
+        var users = await _dbContext.UserRoles
+            .Where(ur => ur.RoleId == customerRole.Id)
+            .Join(_dbContext.Users.AsQueryable(), ur => ur.UserId, u => u.Id, (ur, u) => u)
+            .Where(u => u.Email.Contains(searchString))
+            .OrderBy(u => u.Email)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (count, users);
+    }
+
+    public async Task<(int, IEnumerable<User>)> GetAdministrators(string searchString, int page, int pageSize)
+    {
+        var administratorRole = await _roleManager.FindByNameAsync("Administrator");
+
+        var count = await _dbContext.UserRoles
+            .Where(ur => ur.RoleId == administratorRole.Id)
+            .Join(_dbContext.Users.AsQueryable(), ur => ur.UserId, u => u.Id, (ur, u) => u)
+            .Where(u => u.Email.Contains(searchString))
+            .CountAsync();
+
+        var users = await _dbContext.UserRoles
+            .Where(ur => ur.RoleId == administratorRole.Id)
+            .Join(_dbContext.Users.AsQueryable(), ur => ur.UserId, u => u.Id, (ur, u) => u)
+            .Where(u => u.Email.Contains(searchString))
+            .OrderBy(u => u.Email)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (count, users);
     }
     public async Task CreateRefreshToken(RefreshToken refreshToken)
     {
@@ -71,5 +152,9 @@ public class IdentityRepository : IIdentityRepository
     {
         _dbContext.RefreshTokens.Remove(refreshToken);
         await _dbContext.SaveChangesAsync();
+    }
+    public async Task DeleteAllRefreshTokens()
+    {
+        await _dbContext.Database.ExecuteSqlRawAsync("TRUNCATE TABLE RefreshTokens");
     }
 } 

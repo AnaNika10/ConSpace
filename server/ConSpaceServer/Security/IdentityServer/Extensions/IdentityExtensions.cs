@@ -1,5 +1,6 @@
 ﻿using IdentityServer.Data;
 using IdentityServer.Entities;
+using IdentityServer.Repositories;
 using IdentityServer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -108,7 +109,8 @@ public static class IdentityExtensions
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IIdentityRepository, IdentityRepository>()
+                .AddScoped<IAuthenticationService, AuthenticationService>();
 
         return services;
     }

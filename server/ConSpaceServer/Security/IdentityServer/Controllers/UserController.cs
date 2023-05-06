@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -29,16 +30,7 @@ public class UserController : ControllerBase
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
-    [Authorize(Roles = "Administrator")]
-    [HttpGet("[action]")]
-    [ProducesResponseType(typeof(IEnumerable<UserDetails>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<UserDetails>>> GetAllUsers()
-    {
-        var users = await _repository.GetAllUsers();
-        return Ok(_mapper.Map<IEnumerable<UserDetails>>(users));
-    }
-
-    [Authorize(Roles = "Administrator,Speaker,User")]
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(UserDetails), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -51,5 +43,64 @@ public class UserController : ControllerBase
             return Ok(_mapper.Map<UserDetails>(user));
         }
         return NotFound();
+    }
+
+    [Authorize(Roles = "User")]
+    [HttpPut("[action]")]
+    [ProducesResponseType(typeof(UserDetails), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UserDetails>> UpdateName([FromBody] UpdateNameDto newName)
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var user = await _repository.GetUserByEmail(email);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        await _repository.UpdateUserName(user, newName.FirstName, newName.LastName);
+        return Ok(_mapper.Map<UserDetails>(user));
+    }
+
+    [Authorize]
+    [HttpPut("[action]")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UserDetails>> UpdatePassword([FromBody] UpdatePasswordDto request)
+    {
+        if (request.CurrentPassword == request.NewPassword)
+        {
+            ModelState.TryAddModelError(nameof(request.NewPassword), "New password can't be the same as old password");
+            return ValidationProblem();
+        }
+
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var user = await _repository.GetUserByEmail(email);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var changed = await _repository.UpdateUserPassword(user, request.CurrentPassword, request.NewPassword);
+        if (changed)
+            return Ok();
+        else
+            return Unauthorized();
+    }
+
+    [Authorize(Roles = "User")]
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> DeleteUser()
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var user = await _repository.GetUserByEmail(email);
+        if (user != null)
+        {
+            await _repository.DeleteUser(user);
+        }
+        return Ok();
     }
 }

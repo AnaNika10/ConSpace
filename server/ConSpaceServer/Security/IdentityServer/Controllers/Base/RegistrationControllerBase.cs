@@ -2,6 +2,7 @@
 using IdentityServer.DTOs;
 using IdentityServer.Entities;
 using IdentityServer.Repositories;
+using IdentityServer.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +18,14 @@ public class RegistrationControllerBase : ControllerBase
     protected readonly ILogger<AuthenticationController> _logger;
     protected readonly IMapper _mapper;
     protected readonly IIdentityRepository _repository;
+    protected readonly IAuthenticationService _authService;
 
-    public RegistrationControllerBase(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository)
+    public RegistrationControllerBase(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _authService = authService ?? throw new ArgumentNullException(nameof(authService));
     }
 
     protected async Task<IActionResult> RegisterNewUserWithRoles(NewUserDto newUser, IEnumerable<string> roles)
