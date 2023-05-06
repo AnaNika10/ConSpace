@@ -134,4 +134,9 @@ public class AuthenticationService : IAuthenticationService
 
         await _repository.DeleteRefreshToken(token);
     }
+
+    public async Task RevokeAllRefreshTokens()
+    {
+        await _repository.DeleteAllRefreshTokens();
+    }
 }

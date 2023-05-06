@@ -15,16 +15,9 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-//builder.Services.AddAuthentication();
-
 builder.Services.ConfigurePersistence(builder.Configuration);
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
-
-//builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
-builder.Services.AddScoped<IIdentityRepository, IdentityRepository>()
-                .AddScoped<IAuthenticationService, AuthenticationService>();
 
 builder.Services.ConfigureMiscellaneousServices();
 

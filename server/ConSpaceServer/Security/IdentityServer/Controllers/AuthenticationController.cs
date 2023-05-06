@@ -19,12 +19,9 @@ namespace IdentityServer.Controllers;
 [ApiController]
 public class AuthenticationController : RegistrationControllerBase
 {
-    private readonly IAuthenticationService _authService;
-
-    public AuthenticationController(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService)
-            : base(logger, mapper, repository)
+    public AuthenticationController(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService) 
+        : base(logger, mapper, repository, authService)
     {
-        _authService = authService ?? throw new ArgumentNullException(nameof(authService));
     }
 
     [HttpPost("[action]")]
@@ -33,22 +30,6 @@ public class AuthenticationController : RegistrationControllerBase
     public async Task<IActionResult> RegisterUser([FromBody] NewUserDto newUser)
     {
         return await RegisterNewUserWithRoles(newUser, new string[] { "User" });
-    }
-
-    [HttpPost("[action]")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> RegisterSpeaker([FromBody] NewUserDto newUser)
-    {
-        return await RegisterNewUserWithRoles(newUser, new string[] { "Speaker" });
-    }
-
-    [HttpPost("[action]")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> RegisterAdministrator([FromBody] NewUserDto newUser)
-    {
-        return await RegisterNewUserWithRoles(newUser, new string[] { "Administrator" });
     }
 
     [HttpPost("[action]")]
