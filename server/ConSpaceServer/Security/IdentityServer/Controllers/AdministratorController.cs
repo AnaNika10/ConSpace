@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Common.Security;
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Claims;
@@ -16,7 +17,7 @@ namespace IdentityServer.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-[Authorize(Roles = "Administrator")]
+[Authorize(Roles = Roles.ADMINISTRATOR)]
 public class AdministratorController : RegistrationControllerBase
 {
     public AdministratorController(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService) 
@@ -29,7 +30,7 @@ public class AdministratorController : RegistrationControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterAdministrator([FromBody] NewUserDto newUser)
     {
-        return await RegisterNewUserWithRoles(newUser, new string[] { "Administrator" });
+        return await RegisterNewUserWithRoles(newUser, new string[] { Roles.ADMINISTRATOR });
     }
 
     [HttpPost("[action]")]
@@ -37,7 +38,7 @@ public class AdministratorController : RegistrationControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterSpeaker([FromBody] NewUserDto newUser)
     {
-        return await RegisterNewUserWithRoles(newUser, new string[] { "Speaker" });
+        return await RegisterNewUserWithRoles(newUser, new string[] { Roles.SPEAKER });
     }
 
     [HttpGet("[action]")]

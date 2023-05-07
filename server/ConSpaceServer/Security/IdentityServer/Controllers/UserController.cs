@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Security;
 using IdentityServer.DTOs;
 using IdentityServer.Entities;
 using IdentityServer.Repositories;
@@ -45,7 +46,7 @@ public class UserController : ControllerBase
         return NotFound();
     }
 
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = Roles.USER)]
     [HttpPut("[action]")]
     [ProducesResponseType(typeof(UserDetails), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -90,7 +91,7 @@ public class UserController : ControllerBase
             return Unauthorized();
     }
 
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = Roles.USER)]
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> DeleteUser()

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Common.Security;
 
 namespace IdentityServer.Repositories;
 
@@ -76,7 +77,7 @@ public class IdentityRepository : IIdentityRepository
     }
     public async Task<(int, IEnumerable<User>)> GetUsers(string searchString, int page, int pageSize)
     {
-        var customerRole = await _roleManager.FindByNameAsync("User");
+        var customerRole = await _roleManager.FindByNameAsync(Roles.USER);
 
         var count = await _dbContext.UserRoles
             .Where(ur => ur.RoleId == customerRole.Id)
@@ -98,7 +99,7 @@ public class IdentityRepository : IIdentityRepository
 
     public async Task<(int, IEnumerable<User>)> GetSpeakers(string searchString, int page, int pageSize)
     {
-        var customerRole = await _roleManager.FindByNameAsync("Speaker");
+        var customerRole = await _roleManager.FindByNameAsync(Roles.SPEAKER);
 
         var count = await _dbContext.UserRoles
             .Where(ur => ur.RoleId == customerRole.Id)
@@ -120,7 +121,7 @@ public class IdentityRepository : IIdentityRepository
 
     public async Task<(int, IEnumerable<User>)> GetAdministrators(string searchString, int page, int pageSize)
     {
-        var administratorRole = await _roleManager.FindByNameAsync("Administrator");
+        var administratorRole = await _roleManager.FindByNameAsync(Roles.ADMINISTRATOR);
 
         var count = await _dbContext.UserRoles
             .Where(ur => ur.RoleId == administratorRole.Id)

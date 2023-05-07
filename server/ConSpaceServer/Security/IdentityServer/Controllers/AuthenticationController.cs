@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Security;
 
 namespace IdentityServer.Controllers;
 
@@ -29,7 +30,7 @@ public class AuthenticationController : RegistrationControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterUser([FromBody] NewUserDto newUser)
     {
-        return await RegisterNewUserWithRoles(newUser, new string[] { "User" });
+        return await RegisterNewUserWithRoles(newUser, new string[] { Roles.USER });
     }
 
     [HttpPost("[action]")]

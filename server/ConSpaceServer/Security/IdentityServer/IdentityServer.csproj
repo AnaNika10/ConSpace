@@ -49,4 +49,7 @@
     <Folder Include="Services\" />
     <Folder Include="Controllers\Base\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Security\Security.csproj" />
+  </ItemGroup>
 </Project>
