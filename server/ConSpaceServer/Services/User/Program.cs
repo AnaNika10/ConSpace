@@ -1,6 +1,7 @@
 #region
 
 using System.Text.Json.Serialization;
+using Common.Security.Extensions;
 using Microsoft.OpenApi.Models;
 using User.Controllers.Exceptions;
 using User.Extensions;
@@ -45,7 +46,7 @@ builder.Services.AddSwaggerGen(option =>
     }
 );
 builder.Services.RegisterServices();
-builder.Services.SetupJwt(builder.Configuration);
+builder.Services.ConfigureJWT(builder.Configuration);
 
 var app = builder.Build();
 

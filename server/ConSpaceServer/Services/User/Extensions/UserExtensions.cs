@@ -58,29 +58,4 @@ public static class UserExtensions
             logger.LogError(e, "An error occured while migrating the database used on context UserContext");
         }
     }
-
-    public static void SetupJwt(this IServiceCollection services, IConfiguration configuration)
-    {
-        // JWT Security
-        var jwtSettings = configuration.GetSection("JwtSettings");
-        var secretKey = jwtSettings.GetSection("secretKey").Value;
-        services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
-                    ValidAudience = jwtSettings.GetSection("validAudience").Value,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-                };
-            });
-    }
 }
