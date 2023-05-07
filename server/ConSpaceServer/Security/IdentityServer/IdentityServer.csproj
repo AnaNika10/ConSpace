@@ -41,14 +41,15 @@
     <None Remove="Controllers\Base\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Entities\" />
     <Folder Include="Data\" />
     <Folder Include="Extensions\" />
     <Folder Include="Data\EntityTypeConfigurations\" />
-    <Folder Include="DTOs\" />
     <Folder Include="Mapper\" />
     <Folder Include="Services\" />
     <Folder Include="Controllers\Base\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Security\Security.csproj" />
   </ItemGroup>
 </Project>

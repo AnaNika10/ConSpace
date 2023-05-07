@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityServer.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20230409172915_CreatingIdentityTables")]
-    partial class CreatingIdentityTables
+    [Migration("20230504133118_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -146,15 +146,15 @@ namespace IdentityServer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c9af8bd0-1230-46de-ab33-753782579ce9",
-                            ConcurrencyStamp = "26b8f5ab-90e3-4253-bfca-c9d4649f7917",
+                            Id = "174cc2d4-b3d6-48aa-9876-d86d3a63b6e4",
+                            ConcurrencyStamp = "0e4e443d-f892-4bf7-bb7f-af3162d8d3c9",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "fd3e6ba0-ac8c-4de6-8dc1-7113b8b336b7",
-                            ConcurrencyStamp = "3c170b2e-6c03-443a-84cb-4c3021111c07",
+                            Id = "b979f20e-7be1-440a-8d3f-e7499773e477",
+                            ConcurrencyStamp = "ba61feea-8c00-487a-a35f-387ec774e5c1",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

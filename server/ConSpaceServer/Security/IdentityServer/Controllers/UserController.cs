@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Common.Security;
 using IdentityServer.DTOs;
 using IdentityServer.Entities;
+using IdentityServer.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace IdentityServer.Controllers;
@@ -18,33 +22,86 @@ namespace IdentityServer.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IMapper _mapper;
+    private readonly IIdentityRepository _repository;
 
-    public UserController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
+    public UserController(IMapper mapper, IIdentityRepository repository)
     {
-        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-        _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
-    [Authorize(Roles = "Administrator")]
+    [Authorize]
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<UserDetails>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<UserDetails>>> GetAllUsers()
+    [ProducesResponseType(typeof(UserDetails), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UserDetails>> GetUser()
     {
-        var users = await _userManager.Users.ToListAsync();
-        return Ok(_mapper.Map<IEnumerable<UserDetails>>(users));
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var user = await _repository.GetUserByEmail(email);
+        if (user != null)
+        {
+            return Ok(_mapper.Map<UserDetails>(user));
+        }
+        return NotFound();
     }
 
-    [Authorize(Roles = "Administrator,User")]
-    [HttpGet("{username}")]
+    [Authorize(Roles = Roles.USER)]
+    [HttpPut("[action]")]
     [ProducesResponseType(typeof(UserDetails), StatusCodes.Status200OK)]
-    public async Task<ActionResult<UserDetails>> GetUser(string username)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UserDetails>> UpdateName([FromBody] UpdateNameDto newName)
     {
-        var user = await _userManager.Users.FirstOrDefaultAsync(user => user.UserName == username);
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var user = await _repository.GetUserByEmail(email);
+        if (user == null)
+        {
+            return NotFound();
+        }
 
+        await _repository.UpdateUserName(user, newName.FirstName, newName.LastName);
         return Ok(_mapper.Map<UserDetails>(user));
+    }
+
+    [Authorize]
+    [HttpPut("[action]")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UserDetails>> UpdatePassword([FromBody] UpdatePasswordDto request)
+    {
+        if (request.CurrentPassword == request.NewPassword)
+        {
+            ModelState.TryAddModelError(nameof(request.NewPassword), "New password can't be the same as old password");
+            return ValidationProblem();
+        }
+
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var user = await _repository.GetUserByEmail(email);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var changed = await _repository.UpdateUserPassword(user, request.CurrentPassword, request.NewPassword);
+        if (changed)
+            return Ok();
+        else
+            return Unauthorized();
+    }
+
+    [Authorize(Roles = Roles.USER)]
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> DeleteUser()
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var user = await _repository.GetUserByEmail(email);
+        if (user != null)
+        {
+            await _repository.DeleteUser(user);
+        }
+        return Ok();
     }
 }
