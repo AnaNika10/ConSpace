@@ -4,7 +4,7 @@
 
 namespace IdentityServer.Migrations
 {
-    public partial class AddNewRoleForSpeaker : Migration
+    public partial class AddRoleForSpeaker : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,17 +21,17 @@ namespace IdentityServer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "688ccc28-2e78-437b-b8bb-4e97cc48df38", "a25aaca9-cc48-4e6a-a86a-2fe0bd9a606a", "Speaker", "SPEAKER" });
+                values: new object[] { "3a38c6d2-018b-4d21-aee3-1526c503e158", "20c8f845-03a5-468e-938a-4191dc08a614", "Speaker", "SPEAKER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "cd3818e9-d8fb-4f2b-9ee4-6c27be3819b4", "d223bb2b-f3c7-4d72-a093-3dfd1ae0505f", "User", "USER" });
+                values: new object[] { "402f13d0-a4a1-4f1f-a150-7d85edfb28d9", "c081219a-2a28-4975-b85b-87a89947152f", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "de230606-f782-4669-a1a0-b5d189139ce3", "eab7af84-ad27-4be6-8f49-5d8059ef8ad4", "Administrator", "ADMINISTRATOR" });
+                values: new object[] { "9bfd7a21-f2be-4619-92f8-640d89a00437", "f02bc9b4-6bcd-48d0-8128-fc92ebffa8cb", "Administrator", "ADMINISTRATOR" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -39,17 +39,17 @@ namespace IdentityServer.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "688ccc28-2e78-437b-b8bb-4e97cc48df38");
+                keyValue: "3a38c6d2-018b-4d21-aee3-1526c503e158");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "cd3818e9-d8fb-4f2b-9ee4-6c27be3819b4");
+                keyValue: "402f13d0-a4a1-4f1f-a150-7d85edfb28d9");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "de230606-f782-4669-a1a0-b5d189139ce3");
+                keyValue: "9bfd7a21-f2be-4619-92f8-640d89a00437");
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
