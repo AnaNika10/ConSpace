@@ -6,6 +6,9 @@ public static class OcelotExtension
 {
     public static void ConfigureServices(this IServiceCollection services)
     {
-        services.AddOcelot();
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddJsonFile($"ocelot.json", true, true)
+            .Build();
+        services.AddOcelot(configuration);
     }
 }
