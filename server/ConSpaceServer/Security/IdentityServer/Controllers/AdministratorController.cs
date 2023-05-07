@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Common.Security;
 using System.Collections.Generic;
-using System.Data;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -17,7 +16,7 @@ namespace IdentityServer.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-[Authorize(Roles = Roles.ADMINISTRATOR)]
+[Authorize(Policy = RolePolicy.ADMINISTRATOR)]
 public class AdministratorController : RegistrationControllerBase
 {
     public AdministratorController(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService) 
@@ -110,7 +109,7 @@ public class AdministratorController : RegistrationControllerBase
             return NotFound();
         }
 
-        if (user.Email == User.FindFirstValue(ClaimTypes.Email))
+        if (user.Email == User.FindFirstValue(CustomClaimTypes.Email))
         {
             return BadRequest("Administrator can't delete his account");
         }

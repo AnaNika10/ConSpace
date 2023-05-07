@@ -37,6 +37,24 @@ public static class SecurityExtensions
                 };
             });
 
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(RolePolicy.ADMINISTRATOR, policy =>
+            {
+                policy.RequireClaim(CustomClaimTypes.Role, Roles.ADMINISTRATOR);
+            });
+
+            options.AddPolicy(RolePolicy.USER, policy =>
+            {
+                policy.RequireClaim(CustomClaimTypes.Role, Roles.USER);
+            });
+
+            options.AddPolicy(RolePolicy.SPEAKER, policy =>
+            {
+                policy.RequireClaim(CustomClaimTypes.Role, Roles.SPEAKER);
+            });
+        });
+
         return services;
     }
 }

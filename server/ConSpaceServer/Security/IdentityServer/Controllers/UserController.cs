@@ -37,7 +37,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserDetails>> GetUser()
     {
-        var email = User.FindFirstValue(ClaimTypes.Email);
+        var email = User.FindFirstValue(CustomClaimTypes.Email);
         var user = await _repository.GetUserByEmail(email);
         if (user != null)
         {
@@ -46,13 +46,13 @@ public class UserController : ControllerBase
         return NotFound();
     }
 
-    [Authorize(Roles = Roles.USER)]
+    [Authorize(Policy = RolePolicy.USER)]
     [HttpPut("[action]")]
     [ProducesResponseType(typeof(UserDetails), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserDetails>> UpdateName([FromBody] UpdateNameDto newName)
     {
-        var email = User.FindFirstValue(ClaimTypes.Email);
+        var email = User.FindFirstValue(CustomClaimTypes.Email);
         var user = await _repository.GetUserByEmail(email);
         if (user == null)
         {
@@ -77,7 +77,7 @@ public class UserController : ControllerBase
             return ValidationProblem();
         }
 
-        var email = User.FindFirstValue(ClaimTypes.Email);
+        var email = User.FindFirstValue(CustomClaimTypes.Email);
         var user = await _repository.GetUserByEmail(email);
         if (user == null)
         {
@@ -91,12 +91,12 @@ public class UserController : ControllerBase
             return Unauthorized();
     }
 
-    [Authorize(Roles = Roles.USER)]
+    [Authorize(Policy = RolePolicy.USER)]
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> DeleteUser()
     {
-        var email = User.FindFirstValue(ClaimTypes.Email);
+        var email = User.FindFirstValue(CustomClaimTypes.Email);
         var user = await _repository.GetUserByEmail(email);
         if (user != null)
         {
