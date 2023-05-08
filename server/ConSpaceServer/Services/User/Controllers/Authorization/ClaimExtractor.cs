@@ -19,7 +19,7 @@ public class ClaimExtractor
     public static Guid ExtractUserId(IEnumerable<Claim> claims)
     {
         var userId = claims.FirstOrDefault(x =>
-                x.Type.Equals(ClaimTypes.NameIdentifier, StringComparison.OrdinalIgnoreCase)
+                x.Type.Equals("Id", StringComparison.OrdinalIgnoreCase)
             )
             ?.Value;
         if (userId == null)
