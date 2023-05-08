@@ -11,4 +11,5 @@ public class RolePolicy
     public const string ADMINISTRATOR = "RequireAdministratorRole";
     public const string USER = "RequireUserRole";
     public const string SPEAKER = "RequireSpeakerRole";
+    public const string SpeakerOrUser = "RequireSpeakerOrUserRole";
 }
