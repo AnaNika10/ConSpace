@@ -15,6 +15,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Security;
 
 namespace IdentityServer.Services;
 
@@ -73,16 +74,16 @@ public class AuthenticationService : IAuthenticationService
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.GivenName, user.FirstName),
-            new Claim(ClaimTypes.Surname, user.LastName)
+            new Claim(CustomClaimTypes.Id, user.Id),
+            new Claim(CustomClaimTypes.Email, user.Email),
+            new Claim(CustomClaimTypes.Name, user.FirstName),
+            new Claim(CustomClaimTypes.Surname, user.LastName)
         };
 
         var roles = await _repository.GetUserRoles(user);
         foreach (var role in roles)
         {
-            claims.Add(new Claim(ClaimTypes.Role, role));
+            claims.Add(new Claim(CustomClaimTypes.Role, role));
         }
 
         return claims;
