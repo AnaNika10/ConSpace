@@ -1,5 +1,6 @@
 #region
 
+using Common.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using User.Controllers.Authorization;
@@ -12,6 +13,7 @@ namespace User.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Policy = RolePolicy.SpeakerOrUser)]
 public class ScheduleController : ControllerBase
 {
     private readonly ILogger<ScheduleController> _logger;
@@ -28,7 +30,6 @@ public class ScheduleController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
     public async Task<ActionResult<bool>> AddSeminarToSchedule(SeminarDto seminar)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
@@ -40,7 +41,6 @@ public class ScheduleController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
     public async Task<ActionResult<bool>> DeleteSeminarFromSchedule(Guid seminarId)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
