@@ -24,7 +24,12 @@ services:
     image: ${DOCKER_REGISTRY-}conference
     build:
       context: .
-      dockerfile: Services/Conference/Conference.Api/Dockerfile 
+      dockerfile: Services/Conference/Conference.Api/Dockerfile
+  apigateway:
+    image: ${DOCKER_REGISTRY-}apigateway
+    build:
+      context: .
+      dockerfile: SPAGateway/Dockerfile
 volumes:
   mssql_data:
   postgres_data_conference:

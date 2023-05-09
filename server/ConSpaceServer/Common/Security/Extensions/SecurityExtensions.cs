@@ -53,6 +53,14 @@ public static class SecurityExtensions
             {
                 policy.RequireClaim(CustomClaimTypes.Role, Roles.SPEAKER);
             });
+            
+            options.AddPolicy(RolePolicy.SpeakerOrUser, policy =>
+            {
+                policy.RequireAssertion(context => context.User.HasClaim(c => 
+                    c.Type == CustomClaimTypes.Role && (c.Value == Roles.USER || c.Value == Roles.SPEAKER)
+                    )
+                );
+            });
         });
 
         return services;

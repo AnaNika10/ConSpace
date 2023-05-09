@@ -42,7 +42,7 @@ public static class EnumConversionExtension
             case DTO.AttendeeType.SPEAKER:
                 return AttendeeType.SPEAKER;
             case DTO.AttendeeType.ATTENDEE:
-                return AttendeeType.SPEAKER;
+                return AttendeeType.ATTENDEE;
             default:
                 throw new ArgumentException("Illegal argument when mapping AttendeeType");
         }

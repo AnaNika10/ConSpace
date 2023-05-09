@@ -1,5 +1,6 @@
 #region
 
+using Common.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using User.Controllers.Authorization;
@@ -11,7 +12,7 @@ using User.Repositories;
 namespace User.Controllers;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = RolePolicy.SpeakerOrUser)]
 [Route("api/[controller]")]
 public class NoteController : ControllerBase
 {
@@ -29,7 +30,6 @@ public class NoteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
     public async Task<ActionResult<bool>> CreateNote(NoteDto note)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
@@ -41,7 +41,6 @@ public class NoteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
     public async Task<ActionResult<bool>> DeleteNote(Guid id)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
@@ -53,7 +52,6 @@ public class NoteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
     public async Task<ActionResult<bool>> EditNote(NoteDto updatedNote)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
@@ -65,7 +63,6 @@ public class NoteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
     public async Task<ActionResult<IEnumerable<NoteDto>>> GetNotes()
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
@@ -80,7 +77,6 @@ public class NoteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
     public async Task<ActionResult<NoteDto>> GetNote(Guid id)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);

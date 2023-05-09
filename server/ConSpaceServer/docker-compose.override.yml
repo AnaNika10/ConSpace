@@ -71,3 +71,9 @@ services:
           - conferencedb
         ports:
           - "8002:80"
+    apigateway:
+        container_name: apigateway
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        ports:
+            - "8001:80"
