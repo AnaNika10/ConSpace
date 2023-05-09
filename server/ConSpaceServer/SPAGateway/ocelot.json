@@ -460,8 +460,120 @@
       },
       "UpstreamPathTemplate": "/DeleteSeminarFromSchedule",
       "UpstreamHttpMethod": [ "Delete" ]
-    }
+    },
+
+
+    {
+      "DownstreamPathTemplate": "/api/v1/Conference",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Conferences",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Conference/{conferenceId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Conference/{conferenceId}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Conference/Filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/FilterConferences",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
     
+    {
+      "DownstreamPathTemplate": "/api/v1/Exhibitor",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Exhibitor",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Exhibitor/{exhibitorId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Exhibitor/{exhibitorId}",
+      "UpstreamHttpMethod": [ "Delete", "Get" ]
+    },
+    
+    {
+      "DownstreamPathTemplate": "/api/v1/FAQ",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/FAQ",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/FAQ/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/FAQ/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ]
+    },
+    
+    {
+      "DownstreamPathTemplate": "/api/v1/Speaker",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Speaker",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Speaker/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Speaker/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ]
+    }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:8001"
