@@ -1,80 +1,80 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Conference.Api.Repositories;
-using Conference.Api.DTOs.Conference;
+using Conference.Api.DTOs.Seminar;
 
 namespace Conference.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class ConferenceController : ControllerBase
+    public class SeminarController : ControllerBase
     {
-        private readonly IConferenceRepository _repository;
-        public ConferenceController(IConferenceRepository repository)
+        private readonly ISeminarRepository _repository;
+        public SeminarController(ISeminarRepository repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<ConferenceDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<SeminarDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<ConferenceDTO>>> GetAllConferences()
+        public async Task<ActionResult<IEnumerable<SeminarDTO>>> GetAllSeminars()
         {
-            var conferences = await _repository.GetAllConferences();
-            if (conferences == null)
+            var seminars = await _repository.GetAllSeminars();
+            if (seminars == null)
             {
                 return NotFound();
             }
-            return Ok(conferences);
+            return Ok(seminars);
         }
-        [HttpGet("{ConferenceId}", Name = nameof(GetConferenceById))]
-        [ProducesResponseType(typeof(ConferenceDTO), StatusCodes.Status200OK)]
+        [HttpGet("{SeminarId}", Name = nameof(GetSeminarsById))]
+        [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ConferenceDTO>> GetConferenceById(int ConferenceId)
+        public async Task<ActionResult<SeminarDTO>> GetSeminarsById(int SeminarId)
         {
-            var conference = await _repository.GetConference(ConferenceId);
-            if (conference == null)
+            var seminar = await _repository.GetSeminar(SeminarId);
+            if (seminar == null)
             {
                 return NotFound(null);
             }
-            return Ok(conference);
+            return Ok(seminar);
         }
 
         [HttpGet("Filter")]
-        [ProducesResponseType(typeof(ConferenceDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ConferenceDTO>> GetConferencesWithFilters([FromQuery] FilterConferenceDTO Conference)
+        public async Task<ActionResult<SeminarDTO>> GetSeminarsWithFilters([FromQuery] FilterSeminarDTO seminar)
         {
-            var conferences = await _repository.GetConferencesWithFilter(Conference);
-            if (conferences == null)
+            var seminars = await _repository.GetSeminarsWithFilter(seminar);
+            if (seminars == null)
             {
                 return NotFound(null);
             }
-            return Ok(conferences);
+            return Ok(seminars);
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(ConferenceDTO), StatusCodes.Status201Created)]
-        public async Task<ActionResult<ConferenceDTO>> CreatePost([FromBody] CreateConferenceDTO request)
+        [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status201Created)]
+        public async Task<ActionResult<SeminarDTO>> CreateSeminar([FromBody] CreateSeminarDTO request)
         {
-            int Id = await _repository.CreateConference(request);
-            var conference = await _repository.GetConference(Id);
-            return CreatedAtRoute("GetById", new { conference.ConferenceId }, conference);
+            int Id = await _repository.CreateSeminar(request);
+            var seminar = await _repository.GetSeminar(Id);
+            return CreatedAtRoute("GetById", new { seminar.SeminarId }, seminar);
 
         }
         [HttpPut]
-        [ProducesResponseType(typeof(ConferenceDTO), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ConferenceDTO>> UpdatePost([FromBody] UpdateConferenceDTO request)
+        [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
+        public async Task<ActionResult<SeminarDTO>> UpdateSeminar([FromBody] UpdateSeminarDTO request)
         {
-            await _repository.UpdateConference(request);
+            await _repository.UpdateSeminar(request);
 
-            var conference = await _repository.GetConference(request.ConferenceId);
-            return CreatedAtRoute("GetById", new { conference.ConferenceId }, conference);
+            var seminar = await _repository.GetSeminar(request.SeminarId);
+            return CreatedAtRoute("GetById", new { seminar.SeminarId }, seminar);
         }
-        [HttpDelete("{conferenceId}")]
+        [HttpDelete("{seminarId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> DeletePost(int conferenceId)
+        public async Task<ActionResult<bool>> DeleteSeminar(int seminarId)
         {
-            var success = await _repository.DeleteConference(conferenceId);
+            var success = await _repository.DeleteSeminar(seminarId);
             if (success)
             {
                 return Ok();

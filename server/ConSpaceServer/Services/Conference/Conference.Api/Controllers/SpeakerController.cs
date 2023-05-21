@@ -18,12 +18,12 @@ namespace Conference.Api.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<SpeakerDTO>>> GetAllSpeakers()
         {
-            var conferences = await _repository.GetAllSpeakers();
-            if (conferences == null)
+            var speakers = await _repository.GetAllSpeakers();
+            if (speakers == null)
             {
                 return NotFound();
             }
-            return Ok(conferences);
+            return Ok(speakers);
         }
         [HttpGet("{speakerId}", Name = nameof(GetSpeakerById))]
         [ProducesResponseType(typeof(SpeakerDTO), StatusCodes.Status200OK)]

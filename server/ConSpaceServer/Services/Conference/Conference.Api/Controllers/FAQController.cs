@@ -18,12 +18,12 @@ namespace Conference.Api.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<FAQDTO>>> GetAllFAQ()
         {
-            var conferences = await _repository.GetAllFAQs();
-            if (conferences == null)
+            var seminars = await _repository.GetAllFAQs();
+            if (seminars == null)
             {
                 return NotFound();
             }
-            return Ok(conferences);
+            return Ok(seminars);
         }
         [HttpGet("{faqId}", Name = nameof(GetFAQById))]
         [ProducesResponseType(typeof(FAQDTO), StatusCodes.Status200OK)]
