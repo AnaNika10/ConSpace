@@ -1,11 +1,13 @@
-import { Button, Container, Grid, Stack, Typography } from "@mui/material";
+import { AppBar, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import MenuDrawer from "./Menu";
 
 export default function NavBar() {
 
     return (
         <Grid>
             <Container maxWidth={false}>
+                <AppBar position="fixed"  sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Stack direction={"row"} justifyContent="space-around" alignItems="center">
                     <Typography  variant="h2" color={"#9c27b0"} fontFamily={"sans-serif"}>
                         ConSpace
@@ -21,15 +23,16 @@ export default function NavBar() {
                             Exhibitors
                         </Button>
                         </Link>
-                        <Link to={"/floorplan"}>
+                        <Link to={"/floorplan"}/>
                         <Button sx={{color: "white"}}>
                             Floorplan
                         </Button>
-                        </Link>
                         <Button variant="contained">Sign up</Button>
                     </Grid>
                 </Stack>
+                </AppBar>
             </Container>
+            <MenuDrawer/>
         </Grid>
     )
 }

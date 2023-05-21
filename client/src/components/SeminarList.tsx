@@ -92,7 +92,7 @@ function SeminarTabs() {
 
 export default function SeminarList() {
     return (
-        <Grid container justifyContent="space-around" paddingTop={5} paddingBottom={5}>
+        <Grid container justifyContent="space-around" paddingTop={15} paddingBottom={15}>
             <Paper elevation={3} >
                 <SeminarTabs/>
                 <List>
