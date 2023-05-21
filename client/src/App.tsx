@@ -6,15 +6,13 @@ import { Card, CssBaseline, Paper } from "@mui/material";
 
 function App() {
   return  (
-    <ThemeProvider theme={themeOptions}>
+    <>
+      <ThemeProvider theme={themeOptions}>
       <CssBaseline/>
-      <Card>
-      <Paper>
-        <NavBar/>
-        <SeminarList/>
-      </Paper>
-      </Card>
-    </ThemeProvider>
+          <NavBar/>
+          <SeminarList/>
+      </ThemeProvider>
+    </>
     
   )
 }
