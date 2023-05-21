@@ -30,4 +30,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\EventBus\EventBus.Messages\EventBus.Messages.csproj" />
+  </ItemGroup>
+
 </Project>
