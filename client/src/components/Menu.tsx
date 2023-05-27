@@ -11,6 +11,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
 import NavBar from "./NavigationBar";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 280;
 
@@ -130,18 +131,20 @@ export default function NavBarAndMenu() {
   );
 }
 
-  const MenuList = () => <List>
-  {[{section:'Notification', icon: <NotificationsIcon/>}, 
-    {section:'My Seminar Schedule', icon: <TodayIcon/>}, 
-    {section:'Notes', icon:<StickyNote2Icon/>}, 
-    {section:'Speakers', icon: <MicIcon/>}].map(({section, icon}) => (
-    <ListItem key={section}>
-        <ListItemIcon>
-            {icon}
-        </ListItemIcon>
-      <ListItemButton>
-        <ListItemText primary={section} />
-      </ListItemButton>
-    </ListItem>
-  ))}
-</List>;
+  const MenuList = () => <>
+  <List>
+    {[{section:'Notifications', icon: <NotificationsIcon/>, link: '/notifications'}, 
+      {section:'My Seminar Schedule', icon: <TodayIcon/>, link: '/calendar-schedule'}, 
+      {section:'Notes', icon:<StickyNote2Icon/>, link: '/notes'}, 
+      {section:'Speakers', link: '', icon: <MicIcon/>, link: 'speakers'}].map(({section, icon, link}) => (
+      <ListItem key={section}>
+          <ListItemIcon>
+              {icon}
+          </ListItemIcon>
+          <ListItemButton component = {Link} to={link}>
+            <ListItemText primary={section} />
+          </ListItemButton>
+      </ListItem>
+    ))}
+  </List> 
+</>;
