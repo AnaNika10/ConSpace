@@ -1,4 +1,4 @@
-import { Box, Grid, Paper } from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import { Scheduler, DayView, Appointments, AppointmentTooltip } from '@devexpress/dx-react-scheduler-material-ui';
 
 // todo pass data to component
