@@ -136,7 +136,7 @@ export default function NavBarAndMenu() {
     {[{section:'Notifications', icon: <NotificationsIcon/>, link: '/notifications'}, 
       {section:'My Seminar Schedule', icon: <TodayIcon/>, link: '/calendar-schedule'}, 
       {section:'Notes', icon:<StickyNote2Icon/>, link: '/notes'}, 
-      {section:'Speakers', link: '', icon: <MicIcon/>, link: 'speakers'}].map(({section, icon, link}) => (
+      {section:'Speakers', icon: <MicIcon/>, link: 'speakers'}].map(({section, icon, link}) => (
       <ListItem key={section}>
           <ListItemIcon>
               {icon}
