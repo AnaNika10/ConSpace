@@ -1,9 +1,9 @@
 import { ThemeProvider } from "@emotion/react";
 import SeminarList from "./components/SeminarList";
 import { themeOptions } from "./components/DarkTheme";
-import NavBar from "./components/NavigationBar";
 import { CssBaseline } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import NavBarAndMenu from "./components/Menu";
 
 function App() {
   return  (
@@ -11,7 +11,7 @@ function App() {
       <ThemeProvider theme={themeOptions}>
       <CssBaseline/>
       <BrowserRouter>
-      <NavBar/>
+      <NavBarAndMenu/>
       <Routes>
         <Route path="/seminar-schedule" element={<SeminarList/>} />
       </Routes>
