@@ -2,7 +2,9 @@ import { AppBar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { SeminarDataProvider } from "../dataProviders/SeminarDataProvider";
+import { Seminar } from "../models/Seminar";
 
 const CloseButton = ({handleClose}: {handleClose: ()=> void}) => {
     return <>
@@ -69,35 +71,63 @@ function SeminarListItem({name, date, destination}: {name : string, date : strin
     );
 }
 
-function formatDate(date: Date) {
-    return date.getHours().toString() + ":" + date.getMinutes().toString().padStart(2, '0');
+function formatDate(date: string) {
+    return date.substring(11, 16);
 }
 
-function SeminarTabs() {
+function SeminarTabs({size}: {size:number}) {
     const [value, setValue] = useState('1');
   
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
       setValue(newValue);
     };
-  
+    
     return (
         <Grid container justifyContent={"center"} >
-            <Tabs value={value} onChange={handleChange}>
-                <Tab label="Day 1" value="1" />
-                <Tab label="Day 2" value="2" />
+            <Tabs value={value} onChange={handleChange} >
+                {size > 0 && Array.from({length: size}, (_, i) => i + 1).map((day) => {
+                    return <Tab key={day} label={"Day " + day} value={day}/>
+                })}
             </Tabs>
         </Grid>
     );
 }
 
 export default function SeminarList() {
+    const [data , setData] = useState([]);
+    const [isLoading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    useEffect(() => {
+        const fetchData = async () => { 
+        try{
+            const response =  await SeminarDataProvider.fetchSeminarSchedule();
+            if(!response.ok) {
+                throw new Error("Failed fetching data");
+            }
+            const actual = await response.json();
+            setLoading(false);
+            setError(null);
+            setData(actual)
+        }catch(err: any) {
+            setError(err.message);
+            setData([]);
+        } finally {
+            setLoading(false);
+        }
+    }  
+        fetchData();
+    }, []);
+
+    const durationOfConference = new Set(data.map((seminar: Seminar) => new Date(seminar.dateTime.substring(0, 10)))).size;
+    
     return (
         <Grid container justifyContent="space-around" paddingTop={15} paddingBottom={15}>
             <Paper elevation={3} >
-                <SeminarTabs/>
+                <SeminarTabs size={durationOfConference}/>
                 <List>
-                    <SeminarListItem name="seminarcic" destination="boulevard of broken dreams" date={formatDate(new Date())}/>
-                    <SeminarListItem name="seminarcic" destination="boulevard of broken dreams" date={formatDate(new Date())}/>
+                    {data.length > 0  && data.map((seminar: Seminar) => {
+                        return <SeminarListItem name={seminar.name} destination={"Floor: " + seminar.floor} date={formatDate(seminar.dateTime)}/>
+                })}
                 </List>
             </Paper>
         </Grid>
