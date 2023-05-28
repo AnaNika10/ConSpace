@@ -1,8 +1,6 @@
 import { Grid, Paper } from "@mui/material";
 import { Scheduler, DayView, Appointments, AppointmentTooltip } from '@devexpress/dx-react-scheduler-material-ui';
 import { ViewState } from '@devexpress/dx-react-scheduler';
-import { Room } from "@mui/icons-material";
-import { useState } from "react";
 
 const appointments = [
   {
