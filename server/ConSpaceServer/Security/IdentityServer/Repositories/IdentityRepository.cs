@@ -15,45 +15,45 @@ namespace IdentityServer.Repositories;
 public class IdentityRepository : IIdentityRepository
 {
     private readonly IdentityContext _dbContext;
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<UserEntity> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
-    public IdentityRepository(IdentityContext dbContext, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+    public IdentityRepository(IdentityContext dbContext, UserManager<UserEntity> userManager, RoleManager<IdentityRole> roleManager)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
     }
 
-    public async Task<IdentityResult> CreateUser(User user, string password)
+    public async Task<IdentityResult> CreateUser(UserEntity user, string password)
     {
         return await _userManager.CreateAsync(user, password);
     }
-    public async Task<IdentityResult> UpdateUser(User user)
+    public async Task<IdentityResult> UpdateUser(UserEntity user)
     {
         return await _userManager.UpdateAsync(user);
     }
-    public async Task DeleteUser(User user)
+    public async Task DeleteUser(UserEntity user)
     {
         await _userManager.DeleteAsync(user);
     }
-    public async Task UpdateUserName(User user, string firstName, string lastName)
+    public async Task UpdateUserName(UserEntity user, string firstName, string lastName)
     {
         user.FirstName = firstName;
         user.LastName = lastName;
         await _userManager.UpdateAsync(user);
     }
 
-    public async Task<bool> UpdateUserPassword(User user, string currentPassword, string newPassword)
+    public async Task<bool> UpdateUserPassword(UserEntity user, string currentPassword, string newPassword)
     {
         var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
         return result.Succeeded;
     }
-    public async Task<bool> CheckUserPassword(User user, string password)
+    public async Task<bool> CheckUserPassword(UserEntity user, string password)
     {
         return await _userManager.CheckPasswordAsync(user, password);
     }
-    public async Task<bool> AddRoleToUser(User user, string role)
+    public async Task<bool> AddRoleToUser(UserEntity user, string role)
     {
         var roleExists = await _roleManager.RoleExistsAsync(role);
 
@@ -63,19 +63,19 @@ public class IdentityRepository : IIdentityRepository
         await _userManager.AddToRoleAsync(user, role);
         return true;
     }
-    public async Task<IEnumerable<string>> GetUserRoles(User user)
+    public async Task<IEnumerable<string>> GetUserRoles(UserEntity user)
     {
         return await _userManager.GetRolesAsync(user);
     }
-    public async Task<User?> GetUserByEmail(string email)
+    public async Task<UserEntity?> GetUserByEmail(string email)
     {
         return await _userManager.FindByEmailAsync(email);
     }
-    public async Task<IEnumerable<User>> GetAllUsers()
+    public async Task<IEnumerable<UserEntity>> GetAllUsers()
     {
         return await _userManager.Users.ToListAsync();
     }
-    public async Task<(int, IEnumerable<User>)> GetUsers(string searchString, int page, int pageSize)
+    public async Task<(int, IEnumerable<UserEntity>)> GetUsers(string searchString, int page, int pageSize)
     {
         var customerRole = await _roleManager.FindByNameAsync(Roles.USER);
 
@@ -97,7 +97,7 @@ public class IdentityRepository : IIdentityRepository
         return (count, users);
     }
 
-    public async Task<(int, IEnumerable<User>)> GetSpeakers(string searchString, int page, int pageSize)
+    public async Task<(int, IEnumerable<UserEntity>)> GetSpeakers(string searchString, int page, int pageSize)
     {
         var customerRole = await _roleManager.FindByNameAsync(Roles.SPEAKER);
 
@@ -119,7 +119,7 @@ public class IdentityRepository : IIdentityRepository
         return (count, users);
     }
 
-    public async Task<(int, IEnumerable<User>)> GetAdministrators(string searchString, int page, int pageSize)
+    public async Task<(int, IEnumerable<UserEntity>)> GetAdministrators(string searchString, int page, int pageSize)
     {
         var administratorRole = await _roleManager.FindByNameAsync(Roles.ADMINISTRATOR);
 

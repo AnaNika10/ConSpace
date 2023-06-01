@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Data.EntityTypeConfigurations;
 
-public class UserConfiguration : IEntityTypeConfiguration<User>
+public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
         builder.Navigation(u => u.RefreshTokens).AutoInclude();
     }

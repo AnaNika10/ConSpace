@@ -6,7 +6,7 @@ using IdentityServer.Data.EntityTypeConfigurations;
 
 namespace IdentityServer.Data;
 
-public class IdentityContext : IdentityDbContext<User>
+public class IdentityContext : IdentityDbContext<UserEntity>
 {
     public DbSet<RefreshToken> RefreshTokens { get; set; }
 

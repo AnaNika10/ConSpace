@@ -8,7 +8,7 @@ public class IdentityProfile : Profile
 {
     public IdentityProfile()
     {
-        CreateMap<User, NewUserDto>().ReverseMap();
-        CreateMap<User, UserDetails>().ReverseMap();
+        CreateMap<UserEntity, NewUserDto>().ReverseMap();
+        CreateMap<UserEntity, UserDetails>().ReverseMap();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using IdentityServer.DTOs;
 using IdentityServer.Entities;
+using IdentityServer.GrpcServices;
 using IdentityServer.Repositories;
 using IdentityServer.Services;
 using Microsoft.AspNetCore.Http;
@@ -19,18 +20,24 @@ public class RegistrationControllerBase : ControllerBase
     protected readonly IMapper _mapper;
     protected readonly IIdentityRepository _repository;
     protected readonly IAuthenticationService _authService;
+    protected readonly UserGrpcService _userGrpcService;
+    private ILogger<AuthenticationController> logger;
+    private IMapper mapper;
+    private IIdentityRepository repository;
+    private IAuthenticationService authService;
 
-    public RegistrationControllerBase(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService)
+    public RegistrationControllerBase(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService, UserGrpcService userGrpcService)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+        _userGrpcService = userGrpcService ?? throw new ArgumentNullException(nameof(userGrpcService));
     }
 
     protected async Task<IActionResult> RegisterNewUserWithRoles(NewUserDto newUser, IEnumerable<string> roles)
     {
-        var user = _mapper.Map<User>(newUser);
+        var user = _mapper.Map<UserEntity>(newUser);
 
         var result = await _repository.CreateUser(user, newUser.Password);
         if (!result.Succeeded)

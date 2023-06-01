@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using User.GRPC.Protos;
+using IdentityServer.GrpcServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,10 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 
 builder.Services.ConfigureMiscellaneousServices();
+
+builder.Services.AddGrpcClient<UserProtoService.UserProtoServiceClient>(
+    options => options.Address = new Uri(builder.Configuration["GrpcSettings:UserUrl"]));
+builder.Services.AddScoped<UserGrpcService>();
 
 builder.Services.AddControllers();
 

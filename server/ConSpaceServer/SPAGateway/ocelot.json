@@ -37,18 +37,6 @@
       "UpstreamHttpMethod": [ "Get" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Internal/CreateUser",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "userservice",
-          "Port": 80
-        }
-      ],
-      "UpstreamPathTemplate": "/CreateUser",
-      "UpstreamHttpMethod": [ "Post" ]
-    },
-    {
       "DownstreamPathTemplate": "/api/v1/Authentication/RegisterUser",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

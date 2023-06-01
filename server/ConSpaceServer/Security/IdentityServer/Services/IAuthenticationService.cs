@@ -6,8 +6,8 @@ namespace IdentityServer.Services;
 
 public interface IAuthenticationService
 {
-    Task<User> ValidateUser(UserCredentialsDto userCredentials);
-    Task<AuthenticationModel> CreateAuthenticationModel(User user);
-    Task RemoveRefreshToken(User user, string refreshToken);
+    Task<UserEntity> ValidateUser(UserCredentialsDto userCredentials);
+    Task<AuthenticationModel> CreateAuthenticationModel(UserEntity user);
+    Task RemoveRefreshToken(UserEntity user, string refreshToken);
     Task RevokeAllRefreshTokens();
 }
