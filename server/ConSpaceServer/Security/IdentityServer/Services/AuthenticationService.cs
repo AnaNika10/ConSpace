@@ -32,7 +32,7 @@ public class AuthenticationService : IAuthenticationService
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
-    public async Task<User> ValidateUser(UserCredentialsDto userCredentials)
+    public async Task<UserEntity> ValidateUser(UserCredentialsDto userCredentials)
     {
         var user = await _repository.GetUserByEmail(userCredentials.Email);
         if (user == null || !await _repository.CheckUserPassword(user, userCredentials.Password))
@@ -42,7 +42,7 @@ public class AuthenticationService : IAuthenticationService
         return user;
     }
 
-    public async Task<AuthenticationModel> CreateAuthenticationModel(User user)
+    public async Task<AuthenticationModel> CreateAuthenticationModel(UserEntity user)
     {
         var accessToken = await CreateAccessToken(user);
         var refreshToken = await CreateRefreshToken();
@@ -53,7 +53,7 @@ public class AuthenticationService : IAuthenticationService
         return new AuthenticationModel { AccessToken = accessToken, RefreshToken = refreshToken.Token };
     }
 
-    private async Task<string> CreateAccessToken(User user)
+    private async Task<string> CreateAccessToken(UserEntity user)
     {
         var signingCredentials = GetSigningCredentials();
         var claims = await GetClaims(user);
@@ -70,7 +70,7 @@ public class AuthenticationService : IAuthenticationService
         return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
     }
 
-    private async Task<IEnumerable<Claim>> GetClaims(User user)
+    private async Task<IEnumerable<Claim>> GetClaims(UserEntity user)
     {
         var claims = new List<Claim>
         {
@@ -122,7 +122,7 @@ public class AuthenticationService : IAuthenticationService
         return token;
     }
 
-    public async Task RemoveRefreshToken(User user, string refreshToken)
+    public async Task RemoveRefreshToken(UserEntity user, string refreshToken)
     {
         user.RefreshTokens.RemoveAll(r => r.Token == refreshToken);
         await _repository.UpdateUser(user);

@@ -17,7 +17,7 @@ namespace IdentityServer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.15")
+                .HasAnnotation("ProductVersion", "6.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -34,17 +34,17 @@ namespace IdentityServer.Migrations
                     b.Property<string>("Token")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("UserEntityId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserEntityId");
 
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("IdentityServer.Entities.User", b =>
+            modelBuilder.Entity("IdentityServer.Entities.UserEntity", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -144,22 +144,22 @@ namespace IdentityServer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "402f13d0-a4a1-4f1f-a150-7d85edfb28d9",
-                            ConcurrencyStamp = "c081219a-2a28-4975-b85b-87a89947152f",
+                            Id = "b07d3729-4754-4c0f-98ee-3771ceaf178e",
+                            ConcurrencyStamp = "96c16786-51cc-4484-a9ec-bbaec49102e9",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "3a38c6d2-018b-4d21-aee3-1526c503e158",
-                            ConcurrencyStamp = "20c8f845-03a5-468e-938a-4191dc08a614",
+                            Id = "7409ae48-8fc0-4119-886d-36096712d253",
+                            ConcurrencyStamp = "bee19756-11ad-4201-9d39-2b16603a54d7",
                             Name = "Speaker",
                             NormalizedName = "SPEAKER"
                         },
                         new
                         {
-                            Id = "9bfd7a21-f2be-4619-92f8-640d89a00437",
-                            ConcurrencyStamp = "f02bc9b4-6bcd-48d0-8128-fc92ebffa8cb",
+                            Id = "730ccfb6-768f-4bd2-86fd-9d62e4d8f8f0",
+                            ConcurrencyStamp = "7afc10ef-4a58-4867-baf3-e973e042865d",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -273,9 +273,9 @@ namespace IdentityServer.Migrations
 
             modelBuilder.Entity("IdentityServer.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("IdentityServer.Entities.User", null)
+                    b.HasOne("IdentityServer.Entities.UserEntity", null)
                         .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserEntityId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -289,7 +289,7 @@ namespace IdentityServer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("IdentityServer.Entities.User", null)
+                    b.HasOne("IdentityServer.Entities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -298,7 +298,7 @@ namespace IdentityServer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("IdentityServer.Entities.User", null)
+                    b.HasOne("IdentityServer.Entities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -313,7 +313,7 @@ namespace IdentityServer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("IdentityServer.Entities.User", null)
+                    b.HasOne("IdentityServer.Entities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -322,14 +322,14 @@ namespace IdentityServer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("IdentityServer.Entities.User", null)
+                    b.HasOne("IdentityServer.Entities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("IdentityServer.Entities.User", b =>
+            modelBuilder.Entity("IdentityServer.Entities.UserEntity", b =>
                 {
                     b.Navigation("RefreshTokens");
                 });
