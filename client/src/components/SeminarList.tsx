@@ -34,10 +34,10 @@ function EventInformation({name, date, destination, isOpened, setOpen, isAdded, 
         </DialogTitle>
         <DialogContent dividers>
             <Typography>
-                Location: {destination}
+                {destination}
             </Typography>
             <Typography>
-                {date}
+                Time: {date}
             </Typography>
         </DialogContent>
         <DialogActions>
@@ -60,7 +60,7 @@ function SeminarListItem({seminar}: {seminar: Seminar}) {
         <ListItem alignItems="flex-start" key={seminar.conferenceId}>
             <Stack spacing={2} direction={"row"}>
                 <ListItemButton onClick={() => displayEventInfo(true)}>
-                    <ListItemText primary={formatDate(seminar.dateTime) + " " + seminar.name} secondary={"Floor: " + seminar.floor}/>
+                    <ListItemText sx={{width: 500}} primary={formatDate(seminar.dateTime) + " " + seminar.name} secondary={"Floor: " + seminar.floor}/>
                     <ListItemIcon sx={{display: 'flex', justifyContent:'flex-end'}}>
                         {isAddedToSchedule ? <TaskAltIcon/> : <AddIcon/>}
                     </ListItemIcon>
@@ -143,7 +143,7 @@ export default function SeminarList() {
                 <List>
                     {!isLoading && getSeminarsForSelectedDay()
                     .map((seminar: Seminar) =>{
-                        return <SeminarListItem seminar={seminar}/>
+                        return <SeminarListItem seminar={seminar} key={seminar.conferenceId}/>
                 })}
                 </List>
             </Paper>
