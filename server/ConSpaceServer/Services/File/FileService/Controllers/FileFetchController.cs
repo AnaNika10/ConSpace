@@ -1,89 +1,88 @@
 using File.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace File.Controllers
+namespace File.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class FileFetchController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class FileFetchController : ControllerBase
+    private readonly IFileRepository _repo;
+    private readonly ILogger<FileFetchController> _logger;
+
+    public FileFetchController(ILogger<FileFetchController> logger, IFileRepository repo)
     {
-        private readonly IFileRepository _repo;
-        private readonly ILogger<FileFetchController> _logger;
+        _logger = logger;
+        _repo = repo;
+    }
 
-        public FileFetchController(ILogger<FileFetchController> logger, IFileRepository repo)
+    [Route("[action]/{id}")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetImage(string id)
+    {
+        var fileInfo = await _repo.GetFile(id);
+
+        if (fileInfo == null)
         {
-            _logger = logger;
-            _repo = repo;
+            return NotFound();
         }
 
-        [Route("[action]/{id}")]
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> GetImage(string id)
+        var content = System.IO.File.ReadAllBytes(fileInfo.uniqueFilePath);
+
+        return File(content, "image/" + fileInfo.originalFileExt.Substring(1), fileInfo.originalFileName);
+    }
+
+    [Route("[action]/{id}")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetVideo(string id)
+    {
+        var fileInfo = await _repo.GetFile(id);
+
+        if (fileInfo == null)
+        {
+            return NotFound();
+        }
+
+        var content = System.IO.File.ReadAllBytes(fileInfo.uniqueFilePath);
+        var mimeType = "";
+        if (fileInfo.originalFileExt.Substring(1) == "mp4")
+        {
+            mimeType = "mp4";
+        }
+        else if (fileInfo.originalFileExt.Substring(1) == "mkv")
+        {
+            mimeType = "x-matroska";
+        }
+
+        return File(content, "video/" + mimeType + fileInfo.originalFileExt.Substring(1),
+            fileInfo.originalFileName);
+    }
+
+
+    [Route("[action]")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetMultipleImages([FromQuery(Name = "ids[]")] string[] ids)
+    {
+        var files = new List<FileContentResult>();
+        foreach (var id in ids)
         {
             var fileInfo = await _repo.GetFile(id);
 
             if (fileInfo == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Image id: " + id });
             }
 
             var content = System.IO.File.ReadAllBytes(fileInfo.uniqueFilePath);
-
-            return File(content, "image/" + fileInfo.originalFileExt.Substring(1), fileInfo.originalFileName);
+            files.Add(File(content, "image/" + fileInfo.originalFileExt.Substring(1), fileInfo.originalFileName));
         }
 
-        [Route("[action]/{id}")]
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> GetVideo(string id)
-        {
-            var fileInfo = await _repo.GetFile(id);
-
-            if (fileInfo == null)
-            {
-                return NotFound();
-            }
-
-            var content = System.IO.File.ReadAllBytes(fileInfo.uniqueFilePath);
-            var mimeType = "";
-            if (fileInfo.originalFileExt.Substring(1) == "mp4")
-            {
-                mimeType = "mp4";
-            }
-            else if (fileInfo.originalFileExt.Substring(1) == "mkv")
-            {
-                mimeType = "x-matroska";
-            }
-
-            return File(content, "video/" + mimeType + fileInfo.originalFileExt.Substring(1),
-                fileInfo.originalFileName);
-        }
-
-
-        [Route("[action]")]
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> GetMultipleImages([FromQuery(Name = "ids[]")] string[] ids)
-        {
-            var files = new List<FileContentResult>();
-            foreach (var id in ids)
-            {
-                var fileInfo = await _repo.GetFile(id);
-
-                if (fileInfo == null)
-                {
-                    return NotFound(new { message = "Image id: " + id });
-                }
-
-                var content = System.IO.File.ReadAllBytes(fileInfo.uniqueFilePath);
-                files.Add(File(content, "image/" + fileInfo.originalFileExt.Substring(1), fileInfo.originalFileName));
-            }
-
-            return Ok(new { fetchedFiles = files.ToArray() });
-        }
+        return Ok(new { fetchedFiles = files.ToArray() });
     }
 }
