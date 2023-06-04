@@ -40,7 +40,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
   filedb:
-    image: mongo
+    image: mongo:4.2
     extra_hosts:
       - "host.docker.internal:host-gateway"
   file:

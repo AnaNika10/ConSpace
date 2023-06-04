@@ -1,8 +1,17 @@
+#region
+
+using System.Text.Json.Serialization;
 using File.Extensions;
 using Microsoft.OpenApi.Models;
 
+#endregion
+
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
+
+builder.Services.RegisterServices();
+builder.Services.AddControllers()
+    .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
     {
@@ -32,11 +41,12 @@ builder.Services.AddSwaggerGen(option =>
         });
     }
 );
-builder.Services.RegisterServices();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
