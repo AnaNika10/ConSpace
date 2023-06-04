@@ -35,9 +35,30 @@ services:
     build:
       context: .
       dockerfile: Services/User/User.GRPC/Dockerfile
-
+  clamav:
+    image: clamav/clamav
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  filedb:
+    image: mongo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  file:
+    image: file
+    depends_on: 
+      - filedb
+      - clamav
+    build:
+      context: .
+      dockerfile: File/Dockerfile
+    ports:
+      - 5000:5000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 volumes:
   mssql_data:
   postgres_data_conference:
   postgres_data_user:
   pgadmin_data:
+  clam_data:
+  mongo_data:
