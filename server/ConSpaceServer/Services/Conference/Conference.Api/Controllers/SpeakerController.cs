@@ -30,12 +30,12 @@ namespace Conference.Api.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<SpeakerDTO>> GetSpeakerById(int speakerId)
         {
-            var conference = await _repository.GetSpeaker(speakerId);
-            if (conference == null)
+            var speaker = await _repository.GetSpeaker(speakerId);
+            if (speaker == null)
             {
                 return NotFound(null);
             }
-            return Ok(conference);
+            return Ok(speaker);
         }
 
         [HttpPost]

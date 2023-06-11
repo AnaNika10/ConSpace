@@ -30,12 +30,12 @@ namespace Conference.Api.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<FAQDTO>> GetFAQById(int faqId)
         {
-            var conference = await _repository.GetFAQ(faqId);
-            if (conference == null)
+            var faq = await _repository.GetFAQ(faqId);
+            if (faq == null)
             {
                 return NotFound(null);
             }
-            return Ok(conference);
+            return Ok(faq);
         }
 
 

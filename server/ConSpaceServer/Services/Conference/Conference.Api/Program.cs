@@ -3,15 +3,8 @@ using Conference.Api.Repositories;
 using Conference.Api.Data;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//static IHostBuilder CreateHostBuilder(string[] args) =>
-//    Host.CreateDefaultBuilder(args)
-//        .ConfigureServices((_, services) =>
-//             services.AddScoped<IConferenceRepository, ConferenceRepository>()
-//                     .AddScoped<IConferenceContext, ConferanceContext>()
-                     
-//             );
-builder.Services.AddScoped<IConferenceRepository, ConferenceRepository>()
+
+builder.Services.AddScoped<ISeminarRepository, SeminarRepository>()
                 .AddScoped<IConferenceContext, ConferanceContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();

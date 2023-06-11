@@ -26,12 +26,12 @@ namespace Conference.Api.Controllers
             }
             return Ok(seminars);
         }
-        [HttpGet("{SeminarId}", Name = nameof(GetSeminarsById))]
+        [HttpGet("{seminarId}", Name = nameof(GetSeminarsById))]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<SeminarDTO>> GetSeminarsById(int SeminarId)
+        public async Task<ActionResult<SeminarDTO>> GetSeminarsById(int seminarId)
         {
-            var seminar = await _repository.GetSeminar(SeminarId);
+            var seminar = await _repository.GetSeminar(seminarId);
             if (seminar == null)
             {
                 return NotFound(null);
@@ -85,39 +85,5 @@ namespace Conference.Api.Controllers
             }
 
         }
-        [HttpPost]
-        [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status201Created)]
-        public async Task<ActionResult<SeminarDTO>> AddSeminarSpeakers([FromBody] SeminarSpeakersDTO request)
-        {
-            int Id = await _repository.CreateSeminar(request);
-            var seminar = await _repository.GetSeminar(Id);
-            return CreatedAtRoute("GetById", new { seminar.SeminarId }, seminar);
-
-        }
-        [HttpPut]
-        [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
-        public async Task<ActionResult<SeminarDTO>> UpdateSeminarSpeakers([FromBody] UpdateSeminarDTO request)
-        {
-            await _repository.UpdateSeminar(request);
-
-            var seminar = await _repository.GetSeminar(request.SeminarId);
-            return CreatedAtRoute("GetById", new { seminar.SeminarId }, seminar);
-        }
-        [HttpDelete]
-        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> DeleteSeminarSpeakers(int seminarId)
-        {
-            var success = await _repository.DeleteSeminar(seminarId);
-            if (success)
-            {
-                return Ok();
-            }
-            else
-            {
-                return NotFound();
-            }
-
-        }
-
     }
 }
