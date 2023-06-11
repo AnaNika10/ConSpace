@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Conference.Api.Repositories;
 using Conference.Api.DTOs.Conference;
+using AutoMapper;
+using MassTransit;
+using EventBus.Messages.Events;
 
 namespace Conference.Api.Controllers
 {
@@ -9,9 +12,14 @@ namespace Conference.Api.Controllers
     public class ConferenceController : ControllerBase
     {
         private readonly IConferenceRepository _repository;
-        public ConferenceController(IConferenceRepository repository)
+        private readonly IMapper _mapper;
+        private readonly IPublishEndpoint _publishEndpoint;
+
+        public ConferenceController(IConferenceRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
         }
 
         [HttpGet]
@@ -68,6 +76,9 @@ namespace Conference.Api.Controllers
             await _repository.UpdateConference(request);
 
             var conference = await _repository.GetConference(request.ConferenceId);
+            var eventMessage = _mapper.Map<SeminarChangeEvent>(conference);
+            await _publishEndpoint.Publish(eventMessage);
+
             return CreatedAtRoute("GetById", new { conference.ConferenceId }, conference);
         }
         [HttpDelete("{conferenceId}")]

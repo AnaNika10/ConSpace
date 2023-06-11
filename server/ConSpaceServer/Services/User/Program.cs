@@ -2,8 +2,11 @@
 
 using System.Text.Json.Serialization;
 using Common.Security.Extensions;
+using EventBus.Messages.Contsants;
+using MassTransit;
 using Microsoft.OpenApi.Models;
 using User.Controllers.Exceptions;
+using User.EventBusConsumers;
 using User.Extensions;
 
 #endregion
@@ -45,6 +48,20 @@ builder.Services.AddSwaggerGen(option =>
         });
     }
 );
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<SeminarChangeConsumer>();
+    x.UsingRabbitMq((context, cfg) =>
+    {
+
+        cfg.Host(builder.Configuration["EventBusSettings:HostAdress"]);
+        cfg.ReceiveEndpoint(EventBusConstants.ConferenceUpdateQueue, c =>
+        {
+            c.ConfigureConsumer<SeminarChangeConsumer>(context);
+        });
+    });
+});
+
 builder.Services.RegisterServices();
 builder.Services.ConfigureJWT(builder.Configuration);
 

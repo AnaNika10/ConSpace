@@ -3,6 +3,7 @@ using Conference.Api.DTOs.Conference;
 using Conference.Api.DTOs.Exhibitors;
 using Conference.Api.DTOs.FAQ;
 using Conference.Api.DTOs.Speakers;
+using EventBus.Messages.Events;
 
 namespace Conference.Api.Profiles
 {
@@ -14,6 +15,7 @@ namespace Conference.Api.Profiles
             CreateMap<Entities.Speaker, SpeakerDTO>().ReverseMap();
             CreateMap<Entities.Exhibitor, ExhibitorDTO>().ReverseMap();
             CreateMap<Entities.FAQ, FAQDTO>().ReverseMap();
+            CreateMap<ConferenceDTO, SeminarChangeEvent>().ReverseMap();
         }
 
         
