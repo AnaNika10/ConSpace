@@ -1,10 +1,10 @@
-﻿namespace Conference.Api.DTOs.Conference
+﻿namespace Conference.Api.DTOs.Seminar
 {
-    public class BaseConferenceDTO
+    public class BaseSeminarDTO
     {
        
         public string Name { get; set; }
-        public int Floor { get; set; }
+        public string Hall { get; set; }
         public int[] Speakers { get; set; }
 
         public int Exhibitors { get; set; }

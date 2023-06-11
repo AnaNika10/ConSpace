@@ -1,9 +1,9 @@
-﻿namespace Conference.Api.DTOs.Conference
+﻿namespace Conference.Api.DTOs.Seminar
 {
-    public class FilterConferenceDTO
+    public class FilterSeminarDTO
     {
         public string? Name { get; set; }
-        public int? Floor { get; set; }
+        public string Hall { get; set; }
         public int[]? Speakers { get; set; }
         public string? Description { get; set; }
         public string[]? FilesUrls { get; set; }

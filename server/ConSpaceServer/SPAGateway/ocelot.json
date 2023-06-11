@@ -452,7 +452,7 @@
 
 
     {
-      "DownstreamPathTemplate": "/api/v1/Conference",
+      "DownstreamPathTemplate": "/api/v1/Seminar",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -464,7 +464,7 @@
       "UpstreamHttpMethod": [ "Get", "Post", "Put" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/Conference/{conferenceId}",
+      "DownstreamPathTemplate": "/api/v1/Seminar/{seminarId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -472,11 +472,11 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/Conference/{conferenceId}",
+      "UpstreamPathTemplate": "/Seminar/{seminarId}",
       "UpstreamHttpMethod": [ "Get", "Delete" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/Conference/Filter",
+      "DownstreamPathTemplate": "/api/v1/Seminar/Filter",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
