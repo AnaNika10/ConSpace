@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Conference.Api.Repositories;
 using Conference.Api.DTOs.Seminar;
+using Conference.Api.DTOs.Seminars;
 
 namespace Conference.Api.Controllers
 {
@@ -64,9 +65,18 @@ namespace Conference.Api.Controllers
         [HttpPut]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
         public async Task<ActionResult<SeminarDTO>> UpdateSeminar([FromBody] UpdateSeminarDTO request)
-        {
-            await _repository.UpdateSeminar(request);
+        {            
 
+            var speakers = await _repository.GetSeminarSpeakers(request.SeminarId);
+            var toBeInserted = request.Speakers.ExceptBy(speakers, x => x).ToList();
+            var toBeDeleted = speakers.ExceptBy(request.Speakers, x => x).ToList();
+            if (toBeInserted.Any() || toBeDeleted.Any())
+            {
+                var changeSpeakersRequest = new ChangeSeminarSpeakersDTO { SeminarId = request.SeminarId, Speakers = toBeInserted, RemovedSpeakers = toBeDeleted };
+                await _repository.ChangeSeminarSpeakers(changeSpeakersRequest);
+            }
+            
+            await _repository.UpdateSeminar(request);
             var seminar = await _repository.GetSeminar(request.SeminarId);
             return CreatedAtRoute("GetById", new { seminar.SeminarId }, seminar);
         }
@@ -85,5 +95,14 @@ namespace Conference.Api.Controllers
             }
 
         }
+        //[HttpPost("Speakers")]
+        //[ProducesResponseType(typeof(SeminarSpeakersDTO), StatusCodes.Status201Created)]
+        //public async Task<ActionResult<SeminarSpeakersDTO>> ChangeSeminarSpeakers([FromBody] SeminarSpeakersDTO request)
+        //{
+        //    await _repository.ChangeSeminarSpeakers(request);
+        //    var speakers = await _repository.GetSeminarSpeakers(Id);
+        //    //return CreatedAtRoute("GetById", new { seminar.SeminarId }, seminar);
+
+        //}
     }
 }

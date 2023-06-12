@@ -6,6 +6,7 @@ using DapperQueryBuilder;
 using Conference.Api.Repositories;
 using System.Reflection;
 using System.Text;
+using Conference.Api.DTOs.Seminars;
 
 namespace Conference.Api.Repositories
 {
@@ -109,6 +110,31 @@ namespace Conference.Api.Repositories
                    Description = seminar.Description,
                    FilesUrls = seminar.FilesUrls
                  });
+          
+
+            if (affected == 0)
+                return false;
+
+            return true;
+        }
+
+        public async Task<List<int>> GetSeminarSpeakers(int id)
+        {
+            using var connection = _context.GetConnection();
+
+            var seminars = await connection.QueryAsync<int>(
+               "SELECT SpeakerId FROM \"Seminar_Speakers\" WHERE \"SeminarId\" = @Id", new { Id = id });
+
+            return seminars.ToList();
+        }
+
+        public async Task<bool> ChangeSeminarSpeakers(ChangeSeminarSpeakersDTO request)
+        {
+            using var connection = _context.GetConnection();
+
+            var affected = await connection.ExecuteAsync(
+                "DELETE FROM \"Seminar_Speakers\" WHERE \"SeminarId\" = @Id AND \"SpeakerId\" IN @speakers",
+                new { request.SeminarId, request.RemovedSpeakers });
 
             if (affected == 0)
                 return false;

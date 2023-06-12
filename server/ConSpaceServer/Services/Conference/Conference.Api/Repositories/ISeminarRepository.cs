@@ -1,4 +1,5 @@
 ﻿using Conference.Api.DTOs.Seminar;
+using Conference.Api.DTOs.Seminars;
 
 namespace Conference.Api.Repositories
 {
@@ -13,5 +14,7 @@ namespace Conference.Api.Repositories
         Task<bool> UpdateSeminar(UpdateSeminarDTO id);
 
         Task<bool> DeleteSeminar(int id);
+        Task<List<int>> GetSeminarSpeakers(int id);
+        Task<bool> ChangeSeminarSpeakers(ChangeSeminarSpeakersDTO request);
     }
 }

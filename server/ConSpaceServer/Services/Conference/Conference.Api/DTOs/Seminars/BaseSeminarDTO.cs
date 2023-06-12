@@ -5,7 +5,7 @@
        
         public string Name { get; set; }
         public string Hall { get; set; }
-        public int[] Speakers { get; set; }
+        public List<int> Speakers { get; set; } = new List<int>();
 
         public int Exhibitors { get; set; }
         public string? Description { get; set; }
