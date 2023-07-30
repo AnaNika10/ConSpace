@@ -11,6 +11,9 @@ using Common.Security;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Grpc.Core;
+using IdentityServer.GrpcServices;
+using IdentityServer.Entities;
 
 namespace IdentityServer.Controllers;
 
@@ -19,8 +22,8 @@ namespace IdentityServer.Controllers;
 [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
 public class AdministratorController : RegistrationControllerBase
 {
-    public AdministratorController(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService) 
-        : base(logger, mapper, repository, authService)
+    public AdministratorController(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService, UserGrpcService userGrpcService) 
+        : base(logger, mapper, repository, authService, userGrpcService)
     {
     }
 
@@ -37,7 +40,21 @@ public class AdministratorController : RegistrationControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterSpeaker([FromBody] NewUserDto newUser)
     {
-        return await RegisterNewUserWithRoles(newUser, new string[] { Roles.SPEAKER });
+        var newRegisteredSpeaker = await RegisterNewUserWithRoles(newUser, new string[] { Roles.SPEAKER });
+
+        try
+        {
+            var user = await _repository.GetUserByEmail(newUser.Email);
+            UserDetails userWithDetails = _mapper.Map<UserDetails>(user);
+            var isSuccessful = await _userGrpcService.CreateUser(userWithDetails.Id, userWithDetails.FirstName, Roles.SPEAKER);
+            _logger.LogInformation("Is successful {isSuccessful}", isSuccessful);
+        }
+        catch (RpcException e)
+        {
+            _logger.LogInformation("Error while creating user {UserName}: {message}", newUser.FirstName, e.Message);
+        }
+
+        return newRegisteredSpeaker;
     }
 
     [HttpGet("[action]")]

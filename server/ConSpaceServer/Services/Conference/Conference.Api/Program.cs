@@ -5,7 +5,7 @@ using Conference.Api.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddScoped<IConferenceRepository, ConferenceRepository>()
+builder.Services.AddScoped<ISeminarRepository, SeminarRepository>()
                 .AddScoped<IConferenceContext, ConferanceContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddMassTransit(x => 

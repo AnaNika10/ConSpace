@@ -46,10 +46,8 @@ public static class IdentityExtensions
                     });
             retry.Execute(() =>
             {
-                using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                {
-                    scope.ServiceProvider.GetService<IdentityContext>().Database.Migrate();
-                }
+                using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                scope.ServiceProvider.GetService<IdentityContext>().Database.Migrate();
             });
 
             logger.LogInformation("Migrating database associated with context IdentityContext was successful");
@@ -62,7 +60,7 @@ public static class IdentityExtensions
 
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
-        services.AddIdentity<User, IdentityRole>(options =>
+        services.AddIdentity<UserEntity, IdentityRole>(options =>
         {
             options.Password.RequireDigit = true;
             options.Password.RequireLowercase = false;
