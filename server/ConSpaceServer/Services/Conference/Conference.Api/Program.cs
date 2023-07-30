@@ -11,7 +11,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddMassTransit(x => 
   x.UsingRabbitMq((context, cfg) =>
 {
-    cfg.Host(builder.Configuration["EventBusSettings:HostAdress"]);
+    cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
     }));
 
 builder.Services.AddControllers();

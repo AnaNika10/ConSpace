@@ -54,7 +54,7 @@ builder.Services.AddMassTransit(x =>
     x.UsingRabbitMq((context, cfg) =>
     {
 
-        cfg.Host(builder.Configuration["EventBusSettings:HostAdress"]);
+        cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
         cfg.ReceiveEndpoint(EventBusConstants.ConferenceUpdateQueue, c =>
         {
             c.ConfigureConsumer<SeminarChangeConsumer>(context);
