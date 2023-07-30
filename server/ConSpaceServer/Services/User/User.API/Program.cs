@@ -5,9 +5,9 @@ using Common.Security.Extensions;
 using EventBus.Messages.Contsants;
 using MassTransit;
 using Microsoft.OpenApi.Models;
-using User.Controllers.Exceptions;
-using User.EventBusConsumers;
-using User.Extensions;
+using User.API.Controllers.Exceptions;
+using User.API.EventBusConsumers;
+using User.Common.Extensions;
 
 #endregion
 

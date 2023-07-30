@@ -29,10 +29,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Common\EventBus\EventBus.Messages\EventBus.Messages.csproj" />
-      <ProjectReference Include="..\..\Common\Security\Security.csproj" />
       <ProjectReference Include="..\..\..\Common\Security\Security.csproj" />
       <ProjectReference Include="..\User.Common\User.Common.csproj" />
+      <ProjectReference Include="..\..\..\Common\EventBus\EventBus.Messages\EventBus.Messages.csproj" />
     </ItemGroup>
 
 </Project>
