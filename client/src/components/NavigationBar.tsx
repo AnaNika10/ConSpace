@@ -1,7 +1,10 @@
 import { Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 export default function NavBar() {
+  const { auth } = useAuth();
+
   return (
     <Container maxWidth={false}>
       <Stack
@@ -22,8 +25,8 @@ export default function NavBar() {
           <Link to={"/floorplan"}>
             <Button sx={{ color: "white" }}>Floorplan</Button>
           </Link>
-          <Link to={"/sign-up"}>
-            <Button variant="contained">Sign up</Button>
+          <Link to={auth ? "/sign-out" : "/sign-up"}>
+            <Button variant="contained">{auth ? "Sign Out" : "Sign Up"}</Button>
           </Link>
         </Grid>
       </Stack>

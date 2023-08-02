@@ -1,11 +1,10 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -13,6 +12,11 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+import axios from "../api/axios";
+import useAuth from "../hooks/useAuth";
+
+const LOGIN_URL = "/api/v1/Authentication/Login";
 
 function Copyright(props: any) {
   return (
@@ -36,13 +40,42 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const { setAuth } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get("email"),
       password: data.get("password"),
     });
+
+    try {
+      const response = await axios.post(
+        LOGIN_URL,
+        JSON.stringify({
+          email: data.get("email"),
+          password: data.get("password"),
+        }),
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log(JSON.stringify(response?.data));
+
+      setAuth({
+        accessToken: response?.data.accessToken,
+        refreshToken: response?.data.refreshToken,
+      });
+
+      navigate(from, { replace: true });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
