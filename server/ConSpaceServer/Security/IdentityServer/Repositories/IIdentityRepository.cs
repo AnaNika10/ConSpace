@@ -9,19 +9,19 @@ namespace IdentityServer.Repositories;
 
 public interface IIdentityRepository
 {
-    Task<IdentityResult> CreateUser(User user, string password);
-    Task<IdentityResult> UpdateUser(User user);
-    Task DeleteUser(User user);
-    Task UpdateUserName(User user, string firstName, string lastName);
-    Task<bool> UpdateUserPassword(User user, string currentPassword, string newPassword);
-    Task<bool> CheckUserPassword(User user, string password);
-    Task<bool> AddRoleToUser(User user, string role);
-    Task<IEnumerable<string>> GetUserRoles(User user);
-    Task<User?> GetUserByEmail(string email);
-    Task<IEnumerable<User>> GetAllUsers();
-    Task<(int, IEnumerable<User>)> GetUsers(string searchString, int page, int pageSize);
-    Task<(int, IEnumerable<User>)> GetSpeakers(string searchString, int page, int pageSize);
-    Task<(int, IEnumerable<User>)> GetAdministrators(string searchString, int page, int pageSize);
+    Task<IdentityResult> CreateUser(UserEntity user, string password);
+    Task<IdentityResult> UpdateUser(UserEntity user);
+    Task DeleteUser(UserEntity user);
+    Task UpdateUserName(UserEntity user, string firstName, string lastName);
+    Task<bool> UpdateUserPassword(UserEntity user, string currentPassword, string newPassword);
+    Task<bool> CheckUserPassword(UserEntity user, string password);
+    Task<bool> AddRoleToUser(UserEntity user, string role);
+    Task<IEnumerable<string>> GetUserRoles(UserEntity user);
+    Task<UserEntity?> GetUserByEmail(string email);
+    Task<IEnumerable<UserEntity>> GetAllUsers();
+    Task<(int, IEnumerable<UserEntity>)> GetUsers(string searchString, int page, int pageSize);
+    Task<(int, IEnumerable<UserEntity>)> GetSpeakers(string searchString, int page, int pageSize);
+    Task<(int, IEnumerable<UserEntity>)> GetAdministrators(string searchString, int page, int pageSize);
     Task CreateRefreshToken(RefreshToken refreshToken);
     Task<RefreshToken?> FindRefreshToken(string refreshToken);
     Task DeleteRefreshToken(RefreshToken refreshToken);

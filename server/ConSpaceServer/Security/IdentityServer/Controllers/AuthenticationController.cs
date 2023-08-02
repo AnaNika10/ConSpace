@@ -13,6 +13,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Common.Security;
+using IdentityServer.GrpcServices;
+using Grpc.Core;
+using System.Collections.Generic;
 
 namespace IdentityServer.Controllers;
 
@@ -20,8 +23,8 @@ namespace IdentityServer.Controllers;
 [ApiController]
 public class AuthenticationController : RegistrationControllerBase
 {
-    public AuthenticationController(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService) 
-        : base(logger, mapper, repository, authService)
+    public AuthenticationController(ILogger<AuthenticationController> logger, IMapper mapper, IIdentityRepository repository, IAuthenticationService authService, UserGrpcService userGrpcService) 
+        : base(logger, mapper, repository, authService, userGrpcService)
     {
     }
 
@@ -30,7 +33,21 @@ public class AuthenticationController : RegistrationControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterUser([FromBody] NewUserDto newUser)
     {
-        return await RegisterNewUserWithRoles(newUser, new string[] { Roles.USER });
+        var newRegisteredUser = await RegisterNewUserWithRoles(newUser, new string[] { Roles.USER });
+
+        try
+        {
+            var user = await _repository.GetUserByEmail(newUser.Email);
+            UserDetails userWithDetails = _mapper.Map<UserDetails>(user);
+            var isSuccessful = await _userGrpcService.CreateUser(userWithDetails.Id, userWithDetails.FirstName, Roles.USER);
+            _logger.LogInformation("Is successful {isSuccessful}", isSuccessful);
+        }
+        catch (RpcException e)
+        {
+            _logger.LogInformation("Error while creating user {UserName}: {message}", newUser.FirstName, e.Message);
+        }
+
+        return newRegisteredUser;
     }
 
     [HttpPost("[action]")]

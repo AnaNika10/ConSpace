@@ -17,7 +17,7 @@ services:
     image: ${DOCKER_REGISTRY-}userservice
     build:
       context: .
-      dockerfile: Services/User/Dockerfile
+      dockerfile: Services/User/User.API/Dockerfile
   conferencedb:
     image: postgres:15.3-bullseye
   conference:
@@ -30,8 +30,33 @@ services:
     build:
       context: .
       dockerfile: SPAGateway/Dockerfile
+  user.grpc:
+    image: ${DOCKER_REGISTRY-}usergrpc
+    build:
+      context: .
+      dockerfile: Services/User/User.GRPC/Dockerfile
+  clamav:
+    image: clamav/clamav
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  filedb:
+    image: mongo:4.2
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  file:
+    image: ${DOCKER_REGISTRY-}file
+    depends_on: 
+      - filedb
+      - clamav
+    build:
+      context: .
+      dockerfile: Services/File/FileService/Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 volumes:
   mssql_data:
   postgres_data_conference:
   postgres_data_user:
   pgadmin_data:
+  clam_data:
+  mongo_data:

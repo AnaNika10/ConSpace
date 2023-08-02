@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "User.GRPC.Protos";
+
+service UserProtoService {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+}
+
+message CreateUserRequest {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+}
+
+message CreateUserResponse {
+  bool isSuccessful = 1;
+}

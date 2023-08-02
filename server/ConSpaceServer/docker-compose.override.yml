@@ -11,14 +11,15 @@ services:
             - "1433:1433"
         volumes:
             - mssql_data:/var/opt/mssql/data
-
     identityserver:
         container_name: identityserver
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - "ConnectionStrings:IdentityConnectionString=Server=mssql;Database=IdentityDb;User Id=sa;Password=MATF12345678rs2;"
+            - "GrpcSettings:UserUrl=http://user.grpc"
         depends_on:
             - mssql
+            - user.grpc
         ports:
             - "4000:80"
     userdb:
@@ -77,3 +78,37 @@ services:
             - ASPNETCORE_ENVIRONMENT=Development
         ports:
             - "8001:80"
+    user.grpc:
+        container_name: user.grpc
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - "DatabaseSettings:ConnectionString=Server=userdb;Port=5432;Database=UserDb;User Id=postgres;Password=postgres;"
+        depends_on:
+            - userdb
+        ports:
+             - "8003:80"
+    clamav:
+        container_name: clamav
+        # restart: always
+        volumes:
+            - clam_data:/var/lib/clamav
+        ports:
+            - "3310:3310"
+            - "7357:7357"
+    filedb:
+        container_name: filedb
+        restart: always
+        ports:
+            - "27017:27017"
+        volumes:
+            - mongo_data:/data/db
+    file:
+        container_name: fileservice
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        depends_on:
+            - filedb
+            - clamav
+        ports:
+           - "5000:80"
+      
