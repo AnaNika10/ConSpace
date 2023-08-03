@@ -25,8 +25,10 @@ export default function NavBar() {
           <Link to={"/floorplan"}>
             <Button sx={{ color: "white" }}>Floorplan</Button>
           </Link>
-          <Link to={auth ? "/sign-out" : "/sign-up"}>
-            <Button variant="contained">{auth ? "Sign Out" : "Sign Up"}</Button>
+          <Link to={auth.accessToken ? "/sign-out" : "/sign-up"}>
+            <Button variant="contained">
+              {auth.accessToken ? "Sign Out" : "Sign Up"}
+            </Button>
           </Link>
         </Grid>
       </Stack>
