@@ -46,4 +46,17 @@ public class ScheduleController : ControllerBase
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
         return await _scheduleRepository.delete(userId, seminarId);
     }
+
+    [Route("[action]")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IEnumerable<SeminarDto>> GetSchedule()
+    {
+        var userId = ClaimExtractor.ExtractUserId(User.Claims);
+        var result = await _scheduleRepository.getSchedule(userId);
+        return result.Select(it =>
+            new SeminarDto(it.Id, it.Speakers, it.ConferenceRoomId, it.DateTimeOfSeminar.DateTime));
+    }
 }

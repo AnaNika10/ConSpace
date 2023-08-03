@@ -35,4 +35,11 @@ public class ScheduleRepository : IScheduleRepository
         _logger.LogInformation($"Deleting seminar for user with userId:{userId}");
         return await _context.SaveChangesAsync() > 0;
     }
+
+    public async Task<IEnumerable<Seminar>> getSchedule(Guid userId)
+    {
+        _logger.LogInformation($"Fetching user's schedule for user with id: {userId}");
+        List<Seminar> result = await _context.Seminars.Where(seminar => seminar.UserId == userId).ToListAsync();
+        return result;
+    }
 }

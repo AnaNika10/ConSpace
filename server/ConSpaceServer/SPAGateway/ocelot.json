@@ -449,7 +449,22 @@
       "UpstreamPathTemplate": "/DeleteSeminarFromSchedule",
       "UpstreamHttpMethod": [ "Delete" ]
     },
-
+    {
+      "DownstreamPathTemplate": "/api/Schedule/GetSchedule",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "UpstreamPathTemplate": "/GetSchedule",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
 
     {
       "DownstreamPathTemplate": "/api/v1/Seminar",
