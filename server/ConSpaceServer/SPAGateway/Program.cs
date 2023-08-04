@@ -5,26 +5,14 @@ using SPAGateway.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureServices();
+var corsPolicy = builder.Services.ConfigureCors();
 builder.Services.ConfigureJWT(builder.Configuration);
-var corsPolicy = "corsPolicy"; 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: corsPolicy,
-        policy  =>
-        {
-            policy.AllowAnyOrigin()
-                .AllowCredentials()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
-});
 
 var app = builder.Build();
 
+app.UseCors(corsPolicy);
 await app.UseOcelot();
 
-app.UseCors(corsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
-    
 app.Run();

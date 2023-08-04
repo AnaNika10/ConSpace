@@ -47,7 +47,7 @@ builder.Services.AddSwaggerGen(option =>
 );
 builder.Services.RegisterServices();
 builder.Services.ConfigureJWT(builder.Configuration);
-
+var cors = builder.Services.ConfigureCors();
 var app = builder.Build();
 
 app.MigrateDatabase();
@@ -60,6 +60,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<GlobalExceptionHandler>();
+app.UseCors(cors);
 app.UseAuthentication();
 app.UseAuthorization();
 
