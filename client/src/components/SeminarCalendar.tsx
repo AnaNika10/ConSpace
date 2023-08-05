@@ -1,6 +1,16 @@
-import { Divider, Grid, Link, Paper, Stack, Typography } from "@mui/material";
-import { Scheduler, DayView, Appointments, AppointmentTooltip, WeekView, ViewSwitcher, Toolbar, TodayButton, DateNavigator } from '@devexpress/dx-react-scheduler-material-ui';
-import { ViewState } from '@devexpress/dx-react-scheduler';
+import { Divider, Grid, Link, Paper, Stack } from "@mui/material";
+import { 
+  Scheduler, 
+  DayView, 
+  Appointments, 
+  AppointmentTooltip, 
+  WeekView, 
+  ViewSwitcher, 
+  Toolbar, 
+  TodayButton, 
+  DateNavigator,
+  ConfirmationDialog } from '@devexpress/dx-react-scheduler-material-ui';
+import { ViewState, EditingState, IntegratedEditing } from '@devexpress/dx-react-scheduler';
 import { useEffect, useState } from "react";
 import { UserDataProvider } from "../dataProviders/UserDataProvider";
 import useAuth from "../hooks/useAuth";
@@ -8,8 +18,6 @@ import { MicOutlined, Room } from "@mui/icons-material";
 import { Appointment } from "../models/Appointment";
 
 const AppointmentContent = ({appointmentData, ...restProps} : {appointmentData: Appointment, restProps: any[]}) => {
-  console.log(appointmentData);
-  console.log(typeof appointmentData.startDate);
   return <>
       <AppointmentTooltip.Content {...restProps} appointmentData={appointmentData}>
       <Grid container direction="column" alignItems="left" paddingLeft={2.5} spacing={5}>
@@ -34,7 +42,7 @@ const AppointmentContent = ({appointmentData, ...restProps} : {appointmentData: 
 }
 
 export default function SeminarCalendar(){ 
-  const [data , setData] = useState([]);
+  const [data , setData] = useState<Appointment[]>([]);
   const [, setLoading] = useState(true);
   const [, setError] = useState(null);
   const { auth } = useAuth();
@@ -64,8 +72,21 @@ export default function SeminarCalendar(){
       fetchData();
   }, [auth, data]);
 
+  const commitChanges = ({ deleted } : {deleted : string}) => {
+    setData((state : Appointment[]) => {
+      if (deleted !== undefined) {
+        UserDataProvider.deleteSeminarFromSchedule(deleted, auth.accessToken)
+        // next line maybe isnt needed?
+        state = state.filter((appointment: Appointment) => appointment.id !== deleted);
+
+      }
+      return state;
+    });
+
+  }
   const currentDate = new Date().toISOString().substring(0, 10);
-    return (
+  
+  return (
      <Paper>
         <Grid justifyContent="space-around" alignItems="center" padding={10} paddingLeft={15}>
           <Scheduler data={data}>
@@ -74,6 +95,8 @@ export default function SeminarCalendar(){
               currentViewName = {currentViewName}
               onCurrentViewNameChange={setCalendarView}
             />
+            <EditingState onCommitChanges={commitChanges}/>
+            <IntegratedEditing />
             <DayView
               startDayHour={10}
               endDayHour={20}
@@ -86,10 +109,12 @@ export default function SeminarCalendar(){
             <ViewSwitcher />
             <DateNavigator />
             <TodayButton />
+            <ConfirmationDialog />
             <Appointments />
             <AppointmentTooltip 
               contentComponent = {AppointmentContent}
-              showCloseButton />
+              showCloseButton
+              showDeleteButton />
           </Scheduler>
         </Grid>
       </Paper>
