@@ -10,13 +10,24 @@ namespace User.Common.Entities;
 [Table("seminar")]
 public class Seminar
 {
-    public Seminar(Guid id, Guid userId, List<string> speakers, Guid conferenceRoomId, DateTimeOffset dateTimeOfSeminar)
+    public Seminar(
+        Guid id, 
+        Guid userId, 
+        List<string> speakers, 
+        Guid conferenceRoomId,
+        string title,
+        DateTimeOffset startDateTime,
+        DateTimeOffset endDateTime,
+        string location)
     {
         Id = id;
         UserId = userId;
         Speakers = speakers;
         ConferenceRoomId = conferenceRoomId;
-        DateTimeOfSeminar = dateTimeOfSeminar;
+        Title = title;
+        StartDateTime = startDateTime;
+        EndDateTime = endDateTime;
+        Location = location;
     }
 
     [Column("id")] [Key] public Guid Id { get; set; }
@@ -28,7 +39,12 @@ public class Seminar
 
     [Column("conference_room_id")] public Guid ConferenceRoomId { get; set; }
 
-    [Column("date_time_of_seminar")] public DateTimeOffset DateTimeOfSeminar { get; set; }
+    [Column("title")] public string Title { get; set; }
+    [Column("start_date_time")] public DateTimeOffset StartDateTime { get; set; }
+    
+    [Column("end_date_time")] public DateTimeOffset EndDateTime { get; set; }
+
+    [Column("location")] public string Location { get; set; }
 
     public Attendee User { get; set; }
 }

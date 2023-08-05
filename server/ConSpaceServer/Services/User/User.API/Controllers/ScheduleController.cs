@@ -57,6 +57,14 @@ public class ScheduleController : ControllerBase
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
         var result = await _scheduleRepository.getSchedule(userId);
         return result.Select(it =>
-            new SeminarDto(it.Id, it.Speakers, it.ConferenceRoomId, it.DateTimeOfSeminar.DateTime));
+            new SeminarDto(
+                    it.Id, 
+                    it.Speakers, 
+                    it.ConferenceRoomId, 
+                    it.Title,
+                    it.StartDateTime.DateTime,
+                    it.EndDateTime.DateTime,
+                    it.Location
+                ));
     }
 }

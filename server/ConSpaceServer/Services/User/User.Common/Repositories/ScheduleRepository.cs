@@ -24,7 +24,7 @@ public class ScheduleRepository : IScheduleRepository
     public async Task<bool> create(Guid userId, SeminarDto seminar)
     {
         await _context.Seminars.AddAsync(new Seminar(seminar.id, userId, seminar.speakers, seminar.conferenceRoomId,
-            seminar.dateTime));
+            seminar.title, seminar.startDate, seminar.endDate, seminar.location));
         _logger.LogInformation($"Creating seminar for user with userId:{userId}");
         return await _context.SaveChangesAsync() > 0;
     }
