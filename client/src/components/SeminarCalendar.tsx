@@ -4,7 +4,7 @@ import { ViewState } from '@devexpress/dx-react-scheduler';
 import { useEffect, useState } from "react";
 import { UserDataProvider } from "../dataProviders/UserDataProvider";
 import useAuth from "../hooks/useAuth";
-import { Room } from "@mui/icons-material";
+import { MicOutlined, Room } from "@mui/icons-material";
 import { Appointment } from "../models/Appointment";
 
 const AppointmentContent = ({appointmentData, ...restProps} : {appointmentData: Appointment, restProps: any[]}) => {
@@ -14,7 +14,11 @@ const AppointmentContent = ({appointmentData, ...restProps} : {appointmentData: 
       <AppointmentTooltip.Content {...restProps} appointmentData={appointmentData}>
       <Grid container direction="column" alignItems="left" paddingLeft={2.5} spacing={5}>
       <Grid item xs={20}>
-        <Stack direction={"row"} spacing={2.5}>
+        <Stack direction={"row"} spacing={2.5} paddingY={1}>
+          <MicOutlined/>
+            <span>{appointmentData.speakers}</span>
+        </Stack>
+        <Stack direction={"row"} spacing={2.5} paddingY={1}>
           <Room/>
             <span>{appointmentData.location}</span>
         </Stack>
