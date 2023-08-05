@@ -4,13 +4,8 @@ import { ViewState } from '@devexpress/dx-react-scheduler';
 import { useEffect, useState } from "react";
 import { UserDataProvider } from "../dataProviders/UserDataProvider";
 import useAuth from "../hooks/useAuth";
-import { PlayCircleOutlineOutlined, Room, Stop, StopCircleOutlined } from "@mui/icons-material";
+import { Room } from "@mui/icons-material";
 import { Appointment } from "../models/Appointment";
-
-// todo incorporate timezone offset
-function formatDate(dateString: string) {
-  return dateString.substring(11, 16);
-}
 
 const AppointmentContent = ({appointmentData, ...restProps} : {appointmentData: Appointment, restProps: any[]}) => {
   console.log(appointmentData);

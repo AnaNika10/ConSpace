@@ -5,6 +5,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import { SeminarDataProvider } from "../dataProviders/SeminarDataProvider";
 import { Seminar } from "../models/Seminar";
+import * as dayjs from 'dayjs'
+
+//todo: switch to dayjs for formatting dates
 
 const CloseButton = ({handleClose}: {handleClose: ()=> void}) => {
     return <>
