@@ -36,7 +36,7 @@ public class ScheduleController : ControllerBase
         return await _scheduleRepository.create(userId, seminar);
     }
 
-    [Route("[action]")]
+    [Route("[action]/{seminarId}")]
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
