@@ -1,23 +1,9 @@
 import { Grid, Paper } from "@mui/material";
-import { Scheduler, DayView, Appointments, AppointmentTooltip } from '@devexpress/dx-react-scheduler-material-ui';
+import { Scheduler, DayView, Appointments, AppointmentTooltip, WeekView, ViewSwitcher, Toolbar } from '@devexpress/dx-react-scheduler-material-ui';
 import { ViewState } from '@devexpress/dx-react-scheduler';
-
-const appointments = [
-  {
-    title: 'Book Flights to San Fran for Sales Trip',
-    startDate: formatDate(new Date(2023, 4, 28, 13, 11)),
-    endDate: formatDate(new Date(2023, 4, 28, 14, 0)),
-    id: 1,
-    location: 'Room 1',
-  },
-  {
-    title: 'Book Flights to San Fran for Sales Trip',
-    startDate: formatDate(new Date(2023, 4, 28, 17, 11)),
-    endDate: formatDate(new Date(2023, 4, 28, 18, 0)),
-    id: 2,
-    location: 'Room 1',
-  }
-];
+import { useEffect, useState } from "react";
+import { UserDataProvider } from "../dataProviders/UserDataProvider";
+import useAuth from "../hooks/useAuth";
 
 // todo incorporate timezone offset
 function formatDate(date: Date) {
@@ -28,18 +14,56 @@ function formatDate(date: Date) {
 
 // todo pass data to component
 export default function SeminarCalendar(){ 
+  const [data , setData] = useState([]);
+  const [, setLoading] = useState(true);
+  const [, setError] = useState(null);
+  const { auth } = useAuth();
+  const [currentViewName, currentViewNameChange] = useState("Week");
+  const setCalendarView = (name : string) => {
+    currentViewNameChange(name);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => { 
+    try{    
+        const response =  await UserDataProvider.fetchUserSchedule(auth.accessToken);
+        if(!response.ok) {
+            throw new Error("Failed fetching data");
+        }
+        const actual = await response.json();
+        setLoading(false);
+        setError(null);
+        setData(actual)
+    }catch(err: any) {
+        setError(err.message);
+        setData([]);
+    } finally {
+        setLoading(false);
+    }
+  }  
+      fetchData();
+  }, []);
+  console.log(data);
   const currentDate = new Date().toISOString().substring(0, 10);
     return (
      <Paper>
         <Grid justifyContent="space-around" alignItems="center" padding={10} paddingLeft={15}>
-          <Scheduler data={appointments}>
+          <Scheduler data={data}>
             <ViewState
-              currentDate={currentDate}
+              defaultCurrentDate = {currentDate}
+              currentViewName = {currentViewName}
+              onCurrentViewNameChange={setCalendarView}
             />
             <DayView
               startDayHour={10}
               endDayHour={20}
             />
+            <WeekView 
+              startDayHour={10}
+              endDayHour={20}
+            />
+            <Toolbar />
+            <ViewSwitcher />
             <Appointments />
             <AppointmentTooltip showCloseButton/>
           </Scheduler>
