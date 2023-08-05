@@ -1,5 +1,5 @@
 import { Grid, Paper } from "@mui/material";
-import { Scheduler, DayView, Appointments, AppointmentTooltip, WeekView, ViewSwitcher, Toolbar } from '@devexpress/dx-react-scheduler-material-ui';
+import { Scheduler, DayView, Appointments, AppointmentTooltip, WeekView, ViewSwitcher, Toolbar, TodayButton, DateNavigator } from '@devexpress/dx-react-scheduler-material-ui';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import { useEffect, useState } from "react";
 import { UserDataProvider } from "../dataProviders/UserDataProvider";
@@ -12,7 +12,6 @@ function formatDate(date: Date) {
   return rounded.toISOString().substring(0, 16);
 }
 
-// todo pass data to component
 export default function SeminarCalendar(){ 
   const [data , setData] = useState([]);
   const [, setLoading] = useState(true);
@@ -64,6 +63,8 @@ export default function SeminarCalendar(){
             />
             <Toolbar />
             <ViewSwitcher />
+            <DateNavigator />
+            <TodayButton />
             <Appointments />
             <AppointmentTooltip showCloseButton/>
           </Scheduler>
