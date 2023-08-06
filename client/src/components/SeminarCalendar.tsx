@@ -9,7 +9,9 @@ import {
   Toolbar, 
   TodayButton, 
   DateNavigator,
-  ConfirmationDialog } from '@devexpress/dx-react-scheduler-material-ui';
+  ConfirmationDialog,
+  CurrentTimeIndicator
+} from '@devexpress/dx-react-scheduler-material-ui';
 import { ViewState, EditingState, IntegratedEditing } from '@devexpress/dx-react-scheduler';
 import { useEffect, useState } from "react";
 import { UserDataProvider } from "../dataProviders/UserDataProvider";
@@ -115,6 +117,10 @@ export default function SeminarCalendar(){
               contentComponent = {AppointmentContent}
               showCloseButton
               showDeleteButton />
+              <CurrentTimeIndicator
+                shadePreviousCells={true}
+                shadePreviousAppointments={true}
+              />
           </Scheduler>
         </Grid>
       </Paper>
