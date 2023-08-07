@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\EventBus\EventBus.Messages\EventBus.Messages.csproj" />
+    <ProjectReference Include="..\..\User\User.Common\User.Common.csproj" />
   </ItemGroup>
 
 </Project>

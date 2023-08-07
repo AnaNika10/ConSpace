@@ -8,7 +8,7 @@ namespace EventBus.Messages.Contsants
 {
     public static class EventBusConstants
     {
-        public const string ConferenceUpdateQueue = "conferencecheckout-queue";
+        public const string ConferenceUpdateQueue = "seminarupdate-queue";
 
     }
 }

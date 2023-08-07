@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Conference.Api.Repositories;
 using Conference.Api.DTOs.Seminar;
+using MassTransit;
+using AutoMapper;
+using EventBus.Messages.Events;
 
 namespace Conference.Api.Controllers
 {
@@ -9,9 +12,13 @@ namespace Conference.Api.Controllers
     public class SeminarController : ControllerBase
     {
         private readonly ISeminarRepository _repository;
-        public SeminarController(ISeminarRepository repository)
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IMapper _mapper;
+        public SeminarController(ISeminarRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
         }
 
         [HttpGet]
@@ -58,7 +65,7 @@ namespace Conference.Api.Controllers
         {
             int Id = await _repository.CreateSeminar(request);
             var seminar = await _repository.GetSeminar(Id);
-            return CreatedAtRoute("GetById", new { seminar.SeminarId }, seminar);
+            return CreatedAtRoute("GetSeminarsById", new { seminar.SeminarId }, seminar);
 
         }
         [HttpPut]
@@ -68,7 +75,16 @@ namespace Conference.Api.Controllers
             await _repository.UpdateSeminar(request);
 
             var seminar = await _repository.GetSeminar(request.SeminarId);
-            return CreatedAtRoute("GetById", new { seminar.SeminarId }, seminar);
+
+            
+            if (seminar == null)
+            {
+                return BadRequest();
+            }
+            var eventMessage = _mapper.Map<SeminarChangeEvent>(seminar);
+            await _publishEndpoint.Publish(eventMessage);
+
+            return Ok(seminar);
         }
         [HttpDelete("{seminarId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]

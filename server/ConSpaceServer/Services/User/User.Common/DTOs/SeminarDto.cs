@@ -2,6 +2,10 @@ namespace User.Common.DTOs;
 
 public class SeminarDto
 {
+    public SeminarDto()
+    {
+        speakers = new List<string>();
+    }
     public SeminarDto(
         Guid id,
         List<string> speakers,

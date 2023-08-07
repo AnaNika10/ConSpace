@@ -2,7 +2,8 @@
 using EventBus.Messages.Events;
 using MassTransit;
 using MediatR;
-using User.DTO;
+using User.API.Commands;
+using User.Common.DTOs;
 
 namespace User.API.EventBusConsumers
 {
@@ -21,9 +22,10 @@ namespace User.API.EventBusConsumers
 
         public async Task Consume(ConsumeContext<SeminarChangeEvent> context)
         {
-           var command = _mapper.Map<SeminarDto>(context.Message);
+           var command = _mapper.Map<ChangeSeminarCommand>(context.Message);
            var id = await _mediator.Send(command);
 
+           _logger.LogInformation($"{typeof(SeminarChangeEvent).Name} consumed successfully. Created order id: {command.dateTime}");
 
         }
     }

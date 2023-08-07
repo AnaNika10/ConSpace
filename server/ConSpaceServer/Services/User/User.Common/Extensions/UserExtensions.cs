@@ -1,6 +1,7 @@
 #region
 
 using System.Text;
+using EventBus.Messages.Events;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Data.SqlClient;
@@ -26,7 +27,10 @@ public static class UserExtensions
         services.AddScoped<IRemindersRepository, ReminderRepository>();
         services.AddScoped<IAttendeeRepository, AttendeeRepository>();
         services.AddScoped<IScheduleRepository, ScheduleRepository>();
-        services.AddAutoMapper(configuration => { configuration.CreateMap<NoteDto, Note>().ReverseMap(); }
+
+        services.AddAutoMapper(configuration => { 
+            configuration.CreateMap<NoteDto, Note>().ReverseMap();
+        }
         );
         services.AddEntityFrameworkNpgsql().AddDbContext<UserContext>();
     }

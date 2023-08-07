@@ -8,13 +8,22 @@ using Microsoft.OpenApi.Models;
 using User.API.Controllers.Exceptions;
 using User.API.EventBusConsumers;
 using User.Common.Extensions;
-
+using MediatR;
+using System.Reflection;
+using User.API.Commands;
+using EventBus.Messages.Events;
+using User.Common.DTOs;
 #endregion
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddAutoMapper(configuration =>
+{
+    configuration.CreateMap<ChangeSeminarCommand, SeminarChangeEvent>().ForMember(dest => dest.DateTime, act => act.MapFrom(src => src.dateTime)).ReverseMap();
+    configuration.CreateMap<SeminarDto, ChangeSeminarCommand>().ForMember(dest => dest.dateTime, act => act.MapFrom(src => src.dateTime)).ReverseMap();
 
+});
 builder.Services.AddControllers()
     .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 ;
@@ -61,7 +70,7 @@ builder.Services.AddMassTransit(x =>
         });
     });
 });
-
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ChangeSeminarCommand>());
 builder.Services.RegisterServices();
 builder.Services.ConfigureJWT(builder.Configuration);
 
