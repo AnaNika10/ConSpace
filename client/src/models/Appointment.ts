@@ -1,7 +1,7 @@
 
 export interface Appointment {
     id : string,
-    conferenceRoomId : string, 
+    conferenceRoomId : number, 
     location : string,
     title : string
     speakers : [string]
