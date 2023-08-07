@@ -11,10 +11,10 @@ namespace User.Common.Entities;
 public class Seminar
 {
     public Seminar(
-        Guid id, 
-        Guid userId, 
-        List<string> speakers, 
-        Guid conferenceRoomId,
+        Guid id,
+        Guid userId,
+        List<string> speakers,
+        int conferenceRoomId,
         string title,
         DateTimeOffset startDateTime,
         DateTimeOffset endDateTime,
@@ -37,11 +37,11 @@ public class Seminar
     [Column("speakers", TypeName = "text[]")]
     public List<string> Speakers { get; set; }
 
-    [Column("conference_room_id")] public Guid ConferenceRoomId { get; set; }
+    [Column("conference_room_id")] public int ConferenceRoomId { get; set; }
 
     [Column("title")] public string Title { get; set; }
     [Column("start_date_time")] public DateTimeOffset StartDateTime { get; set; }
-    
+
     [Column("end_date_time")] public DateTimeOffset EndDateTime { get; set; }
 
     [Column("location")] public string Location { get; set; }
