@@ -60,6 +60,7 @@ public class ScheduleController : ControllerBase
             new SeminarDto(
                     it.Id, 
                     it.Speakers, 
+                    it.SpeakerIds,
                     it.ConferenceRoomId, 
                     it.Title,
                     it.StartDateTime.DateTime,
