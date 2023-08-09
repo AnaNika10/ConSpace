@@ -14,6 +14,7 @@ public class Seminar
         Guid id,
         Guid userId,
         List<string> speakers,
+        List<Guid> speakerIds,
         int conferenceRoomId,
         string title,
         DateTimeOffset startDateTime,
@@ -23,6 +24,7 @@ public class Seminar
         Id = id;
         UserId = userId;
         Speakers = speakers;
+        SpeakerIds = speakerIds;
         ConferenceRoomId = conferenceRoomId;
         Title = title;
         StartDateTime = startDateTime;
@@ -36,6 +38,9 @@ public class Seminar
 
     [Column("speakers", TypeName = "text[]")]
     public List<string> Speakers { get; set; }
+    
+    [Column("speaker_ids", TypeName = "uuid[]")]
+    public List<Guid> SpeakerIds { get; set; }
 
     [Column("conference_room_id")] public int ConferenceRoomId { get; set; }
 

@@ -5,6 +5,7 @@ public class SeminarDto
     public SeminarDto(
         Guid id,
         List<string> speakers,
+        List<Guid> speakerIds,
         int conferenceRoomId,
         String title,
         DateTime startDate,
@@ -14,6 +15,7 @@ public class SeminarDto
     {
         this.id = id;
         this.speakers = speakers;
+        this.speakerIds = speakerIds;
         this.conferenceRoomId = conferenceRoomId;
         this.title = title;
         this.startDate = startDate;
@@ -23,6 +25,7 @@ public class SeminarDto
 
     public Guid id { get; set; }
     public List<string> speakers { get; set; }
+    public List<Guid> speakerIds { get; set; }
     public int conferenceRoomId { get; set; }
     public String title { get; set; }
     public DateTime startDate { get; set; }
