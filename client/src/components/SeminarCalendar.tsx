@@ -1,4 +1,13 @@
-import { Divider, Grid, Link, Paper, Stack } from "@mui/material";
+import {
+  Divider,
+  Grid,
+  Link,
+  MenuItem,
+  Paper,
+  Select,
+  SelectChangeEvent,
+  Stack,
+} from "@mui/material";
 import {
   Scheduler,
   DayView,
@@ -63,26 +72,104 @@ const AppointmentContent = ({
           </Grid>
         </Grid>
       </AppointmentTooltip.Content>
+      ;;
     </>
   );
 };
 
+type ReduceReturnType = {
+  speakers: string[];
+  speakerIds: string[];
+};
+
+function getSpeakers(data: Appointment[]) {
+  const dict: { [id: string]: string } = {};
+  const speakersWithIds = data
+    .map((it: Appointment) => {
+      return { speakers: it.speakers, speakerIds: it.speakerIds };
+    })
+    .reduce<ReduceReturnType>(
+      (acc, curr) => {
+        return {
+          speakers: acc.speakers.concat(curr.speakers),
+          speakerIds: acc.speakerIds.concat(curr.speakerIds),
+        };
+      },
+      { speakers: [], speakerIds: [] }
+    );
+
+  speakersWithIds.speakerIds.forEach((id, index) => {
+    if (dict[id] === undefined) {
+      dict[id] = speakersWithIds.speakers[index];
+    }
+  });
+  const result = [];
+  for (const key in dict) {
+    result.push({ text: dict[key], id: key });
+  }
+  return [...new Set(result)];
+}
+
+function mapResources(data: Appointment[]) {
+  return [
+    {
+      id: 0,
+      fieldName: "conferenceRoomId",
+      instances: [
+        ...new Set(
+          data.map((it: Appointment) => {
+            return { text: it.location, id: it.conferenceRoomId };
+          })
+        ),
+      ],
+      title: "Location",
+    },
+    {
+      id: 1,
+      fieldName: "speakerIds",
+      instances: getSpeakers(data),
+      title: "Speakers",
+    },
+  ];
+}
+
+function SelectGrouping({
+  groupName,
+  setGroupName,
+  setGrouping,
+}: {
+  groupName: string;
+  setGroupName: (a: string) => void;
+  setGrouping: (a: { resourceName: string }) => void;
+}) {
+  const groupings = [
+    { value: "Speakers", resourceName: "speakerIds" },
+    { value: "Location", resourceName: "conferenceRoomId" },
+  ];
+  const handleChange = (event: SelectChangeEvent) => {
+    const selected = groupings.find((it) => it.value === event.target.value);
+    setGroupName(selected === undefined ? "Location" : selected.value);
+    setGrouping({
+      resourceName:
+        selected === undefined ? "conferenceRoomId" : selected.resourceName,
+    });
+  };
+  return (
+    <>
+      <Select value={groupName} onChange={handleChange} displayEmpty>
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        <MenuItem value={"Location"}>Location</MenuItem>
+        <MenuItem value={"Speakers"}>Speakers</MenuItem>
+      </Select>
+    </>
+  );
+}
 export default function SeminarCalendar() {
   const [data, setData] = useState<Appointment[]>([]);
-  const resources = useMemo(
-    () => [
-      // {id:1, fieldName: "speakers", instances: data.map((it:Appointment) => {return {text: it.speakers}), title: "Speakers", allowMultiple: true},
-      {
-        id: 0,
-        fieldName: "conferenceRoomId",
-        instances: data.map((it: Appointment) => {
-          return { text: it.location, id: it.conferenceRoomId };
-        }),
-        title: "Location",
-      },
-    ],
-    [data]
-  );
+
+  const resources = useMemo(() => mapResources(data), [data]);
   const [isLoading, setLoading] = useState(true);
   const [, setError] = useState(null);
   const { auth } = useAuth();
@@ -90,11 +177,14 @@ export default function SeminarCalendar() {
   const setCalendarView = (name: string) => {
     currentViewNameChange(name);
   };
-
+  const [grouping, setGrouping] = useState([
+    { resourceName: "conferenceRoomId" },
+  ]);
+  const [groupName, setGroupName] = useState("Location");
   const currentDate = new Date().toISOString().substring(0, 10);
-  const mainResourceName = "conferenceRoomId";
-  const grouping = [{ resourceName: "conferenceRoomId" }];
-  //, {resourceName: "speakers"}
+  const selectGroupName = (name: string) => setGroupName(name);
+  const selectGrouping = (group: { resourceName: string }) =>
+    setGrouping([group]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,7 +221,6 @@ export default function SeminarCalendar() {
     });
   };
 
-  // console.log({resources});
   return (
     <Paper>
       <Grid
@@ -140,6 +229,11 @@ export default function SeminarCalendar() {
         padding={10}
         paddingLeft={15}
       >
+        <SelectGrouping
+          groupName={groupName}
+          setGroupName={selectGroupName}
+          setGrouping={selectGrouping}
+        />
         <Scheduler data={data}>
           <ViewState
             defaultCurrentDate={currentDate}
@@ -155,7 +249,10 @@ export default function SeminarCalendar() {
           <DateNavigator />
           <TodayButton />
           <Appointments />
-          <Resources data={resources} mainResourceName={mainResourceName} />
+          <Resources
+            data={resources}
+            mainResourceName={grouping[0].resourceName}
+          />
           <IntegratedEditing />
           {isLoading ? null : <IntegratedGrouping />}
           <AppointmentTooltip
