@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using User.Common.Data;
@@ -12,9 +13,11 @@ using User.Common.Data;
 namespace User.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20230805132120_AddTitleLocationStartAndEndDateOfSeminar")]
+    partial class AddTitleLocationStartAndEndDateOfSeminar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,8 +165,8 @@ namespace User.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<int>("ConferenceRoomId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("ConferenceRoomId")
+                        .HasColumnType("uuid")
                         .HasColumnName("conference_room_id");
 
                     b.Property<DateTimeOffset>("EndDateTime")
@@ -174,11 +177,6 @@ namespace User.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("location");
-
-                    b.Property<List<Guid>>("SpeakerIds")
-                        .IsRequired()
-                        .HasColumnType("uuid[]")
-                        .HasColumnName("speaker_ids");
 
                     b.Property<List<string>>("Speakers")
                         .IsRequired()

@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
-import SeminarList from "./components/SeminarList";
-import SeminarCalendar from "./components/SeminarCalendar";
+import SeminarList from "./components/SeminarSchedulePage/SeminarList";
+import SeminarCalendar from "./components/MySeminarSchedulePage/SeminarCalendar";
 import { themeOptions } from "./components/DarkTheme";
 import { CssBaseline } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -22,8 +22,7 @@ function App() {
             <NavBarAndMenu />
             <Routes>
               {/* public routes */}
-              {/* <Route path="/seminar-schedule" element={<SeminarList />} /> */}
-              <Route path="/calendar-schedule" element={<SeminarCalendar />} />
+              <Route path="/seminar-schedule" element={<SeminarList />} />
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/sign-out" element={<SignOut />} />
@@ -31,7 +30,14 @@ function App() {
 
               {/* protected routes */}
               {/* TODO: add your protected routes here, examples are commented out */}
-
+              <Route
+                element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
+              >
+                <Route
+                  path="/calendar-schedule"
+                  element={<SeminarCalendar />}
+                />
+              </Route>
               {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>
                 <Route path="/seminar-schedule" element={<SeminarList />} />
               </Route> */}
