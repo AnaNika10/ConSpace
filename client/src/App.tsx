@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
-import SeminarList from "./components/SeminarList";
+import SeminarList from "./components/SeminarSchedulePage/SeminarList";
 import SeminarCalendar from "./components/MySeminarSchedulePage/SeminarCalendar";
 import { themeOptions } from "./components/DarkTheme";
 import { CssBaseline } from "@mui/material";
