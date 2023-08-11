@@ -1,6 +1,7 @@
 import {
   Divider,
   Grid,
+  InputLabel,
   Link,
   MenuItem,
   Paper,
@@ -128,40 +129,71 @@ function mapResources(data: Appointment[]) {
       id: 1,
       fieldName: "speakerIds",
       instances: getSpeakers(data),
+      allowMultiple: true,
       title: "Speakers",
     },
   ];
 }
+const mainGroupingBy = {
+  byLocation: [
+    { resourceName: "conferenceRoomId" },
+    { resourceName: "speakerIds" },
+  ],
+  bySpeakers: [
+    { resourceName: "speakerIds" },
+    { resourceName: "conferenceRoomId" },
+  ],
+};
 
 function SelectGrouping({
   groupName,
   setGroupName,
   setGrouping,
+  setMain,
 }: {
   groupName: string;
   setGroupName: (a: string) => void;
-  setGrouping: (a: { resourceName: string }) => void;
+  setGrouping: (a: { resourceName: string }[]) => void;
+  setMain: (a: boolean) => void;
 }) {
   const groupings = [
     { value: "Speakers", resourceName: "speakerIds" },
     { value: "Location", resourceName: "conferenceRoomId" },
+    { value: "Location and Speakers", resourceName: "conferenceRoomId" },
   ];
   const handleChange = (event: SelectChangeEvent) => {
     const selected = groupings.find((it) => it.value === event.target.value);
-    setGroupName(selected === undefined ? "Location" : selected.value);
-    setGrouping({
-      resourceName:
-        selected === undefined ? "conferenceRoomId" : selected.resourceName,
-    });
+    setGroupName(selected === undefined ? "" : selected.value);
+    let grouping: { resourceName: string }[];
+    switch (selected?.value) {
+      case "Speakers":
+        grouping = [{ resourceName: "speakerIds" }];
+        break;
+      case "Location":
+        grouping = [{ resourceName: "conferenceRoomId" }];
+        break;
+      case "Location and Speakers":
+        setMain(true);
+        grouping = mainGroupingBy.byLocation;
+        break;
+      default:
+        grouping = [];
+        break;
+    }
+    setGrouping(grouping);
   };
   return (
     <>
+      <InputLabel>Group by</InputLabel>
       <Select value={groupName} onChange={handleChange} displayEmpty>
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
         <MenuItem value={"Location"}>Location</MenuItem>
         <MenuItem value={"Speakers"}>Speakers</MenuItem>
+        <MenuItem value={"Location and Speakers"}>
+          Location and Speakers
+        </MenuItem>
       </Select>
     </>
   );
@@ -177,14 +209,15 @@ export default function SeminarCalendar() {
   const setCalendarView = (name: string) => {
     currentViewNameChange(name);
   };
-  const [grouping, setGrouping] = useState([
-    { resourceName: "conferenceRoomId" },
-  ]);
-  const [groupName, setGroupName] = useState("Location");
+  const [grouping, setGrouping] = useState<{ resourceName: string }[]>([]);
+  const [groupName, setGroupName] = useState("");
+  const [mainGroup, setMain] = useState("Location");
+  const [isBoth, setBoth] = useState(false);
   const currentDate = new Date().toISOString().substring(0, 10);
   const selectGroupName = (name: string) => setGroupName(name);
-  const selectGrouping = (group: { resourceName: string }) =>
-    setGrouping([group]);
+  const selectGrouping = (group: { resourceName: string }[]) =>
+    setGrouping(group);
+  const selectedBoth = (both: boolean) => setBoth(both);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -221,6 +254,15 @@ export default function SeminarCalendar() {
     });
   };
 
+  const handleGrouping = (event: SelectChangeEvent) => {
+    if (event.target.value === "Location" || event.target.value === undefined) {
+      setGrouping(mainGroupingBy.byLocation);
+    } else {
+      setGrouping(mainGroupingBy.bySpeakers);
+    }
+    setMain(event.target.value === undefined ? "Location" : event.target.value);
+  };
+
   return (
     <Paper>
       <Grid
@@ -229,11 +271,24 @@ export default function SeminarCalendar() {
         padding={10}
         paddingLeft={15}
       >
-        <SelectGrouping
-          groupName={groupName}
-          setGroupName={selectGroupName}
-          setGrouping={selectGrouping}
-        />
+        <>
+          <SelectGrouping
+            groupName={groupName}
+            setGroupName={selectGroupName}
+            setGrouping={selectGrouping}
+            setMain={selectedBoth}
+          />
+          {!isBoth || grouping.length !== 2 ? null : (
+            <>
+              <InputLabel>Switch</InputLabel>
+              <Select value={mainGroup} onChange={handleGrouping}>
+                <MenuItem value={"Location"}>Location</MenuItem>
+                <MenuItem value={"Speakers"}>Speakers</MenuItem>
+              </Select>
+            </>
+          )}
+        </>
+
         <Scheduler data={data}>
           <ViewState
             defaultCurrentDate={currentDate}
@@ -249,12 +304,14 @@ export default function SeminarCalendar() {
           <DateNavigator />
           <TodayButton />
           <Appointments />
-          <Resources
-            data={resources}
-            mainResourceName={grouping[0].resourceName}
-          />
+          {grouping.length === 0 ? null : (
+            <Resources
+              data={resources}
+              mainResourceName={grouping[0].resourceName}
+            />
+          )}
           <IntegratedEditing />
-          {isLoading ? null : <IntegratedGrouping />}
+          {isLoading || grouping.length === 0 ? null : <IntegratedGrouping />}
           <AppointmentTooltip
             contentComponent={AppointmentContent}
             showCloseButton
@@ -265,7 +322,7 @@ export default function SeminarCalendar() {
             shadePreviousAppointments={true}
           />
           <ConfirmationDialog />
-          {isLoading ? null : <GroupingPanel />}
+          {isLoading || grouping.length === 0 ? null : <GroupingPanel />}
         </Scheduler>
       </Grid>
     </Paper>
