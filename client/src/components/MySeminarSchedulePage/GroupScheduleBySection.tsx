@@ -1,10 +1,12 @@
 import {
   FormControlLabel,
   FormGroup,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
+  Stack,
   Switch,
 } from "@mui/material";
 import { useState } from "react";
@@ -102,34 +104,43 @@ export default function GroupByScheduleSection({
   };
   return (
     <>
-      <SelectGrouping
-        groupName={groupName}
-        setGroupName={selectGroupName}
-        setGrouping={selectGrouping}
-        setMain={selectedBoth}
-      />
-      {!isBoth || numberOfGroups !== 2 ? null : (
-        <>
-          <InputLabel>Switch</InputLabel>
-          <Select value={mainGroup} onChange={handleGrouping}>
-            <MenuItem value={"Location"}>Location</MenuItem>
-            <MenuItem value={"Speakers"}>Speakers</MenuItem>
-          </Select>
-        </>
-      )}
-      {numberOfGroups === 0 ? null : (
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={isGroupedByDate}
-                onChange={(e) => setGroupByDate(e.target.checked)}
-              />
-            }
-            label="Group by date"
+      <Grid
+        justifyContent="space-around"
+        alignItems="center"
+        container
+        direction="column"
+      >
+        <Stack>
+          <SelectGrouping
+            groupName={groupName}
+            setGroupName={selectGroupName}
+            setGrouping={selectGrouping}
+            setMain={selectedBoth}
           />
-        </FormGroup>
-      )}
+          {!isBoth || numberOfGroups !== 2 ? null : (
+            <>
+              <InputLabel>Switch</InputLabel>
+              <Select value={mainGroup} onChange={handleGrouping}>
+                <MenuItem value={"Location"}>Location</MenuItem>
+                <MenuItem value={"Speakers"}>Speakers</MenuItem>
+              </Select>
+            </>
+          )}
+          {numberOfGroups === 0 ? null : (
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isGroupedByDate}
+                    onChange={(e) => setGroupByDate(e.target.checked)}
+                  />
+                }
+                label="Group by date"
+              />
+            </FormGroup>
+          )}
+        </Stack>
+      </Grid>
     </>
   );
 }
