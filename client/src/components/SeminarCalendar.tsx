@@ -1,5 +1,7 @@
 import {
   Divider,
+  FormControlLabel,
+  FormGroup,
   Grid,
   InputLabel,
   Link,
@@ -8,6 +10,7 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
+  Switch,
 } from "@mui/material";
 import {
   Scheduler,
@@ -213,6 +216,7 @@ export default function SeminarCalendar() {
   const [groupName, setGroupName] = useState("");
   const [mainGroup, setMain] = useState("Location");
   const [isBoth, setBoth] = useState(false);
+  const [isGroupedByDate, setGroupByDate] = useState(false);
   const currentDate = new Date().toISOString().substring(0, 10);
   const selectGroupName = (name: string) => setGroupName(name);
   const selectGrouping = (group: { resourceName: string }[]) =>
@@ -287,6 +291,19 @@ export default function SeminarCalendar() {
               </Select>
             </>
           )}
+          {grouping.length === 0 ? null : (
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isGroupedByDate}
+                    onChange={(e) => setGroupByDate(e.target.checked)}
+                  />
+                }
+                label="Group by date"
+              />
+            </FormGroup>
+          )}
         </>
 
         <Scheduler data={data}>
@@ -296,7 +313,12 @@ export default function SeminarCalendar() {
             onCurrentViewNameChange={setCalendarView}
           />
           <EditingState onCommitChanges={commitChanges} />
-          {isLoading ? null : <GroupingState grouping={grouping} />}
+          {isLoading ? null : (
+            <GroupingState
+              grouping={grouping}
+              groupByDate={() => isGroupedByDate}
+            />
+          )}
           <DayView startDayHour={10} endDayHour={20} />
           <WeekView startDayHour={10} endDayHour={20} />
           <Toolbar />
