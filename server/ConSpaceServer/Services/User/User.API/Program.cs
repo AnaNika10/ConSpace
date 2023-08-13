@@ -19,8 +19,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddAutoMapper(configuration =>
 {
-    configuration.CreateMap<SeminarDto, SeminarChangeEvent>().ForMember(dest => dest.DateTime, act => act.MapFrom(src => src.dateTime)).ReverseMap();
-    
+    configuration.CreateMap<SeminarDto, SeminarChangeEvent>().ForMember(dest => dest.StartDateTime, act => act.MapFrom(src => src.startDate))
+                                                       .ForMember(dest => dest.EndDateTime, act => act.MapFrom(src => src.endDate))
+                                                       .ForMember(dest => dest.Name, act => act.MapFrom(src => src.title))
+                                                       .ForMember(dest => dest.SpeakerNames, act => act.MapFrom(src => src.speakers))
+                                                       .ForMember(dest => dest.Speakers, act => act.MapFrom(src => src.speakerIds))
+                                                       .ForMember(dest => dest.SeminarId, act => act.MapFrom(src => src.id)).ReverseMap();
+
 });
 builder.Services.AddControllers()
     .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });

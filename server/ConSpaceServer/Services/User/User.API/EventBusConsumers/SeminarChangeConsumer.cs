@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using EventBus.Messages.Events;
 using MassTransit;
-using MediatR;
 using User.API.Commands;
 using User.Common.DTOs;
 using User.Common.Repositories;
@@ -26,7 +25,7 @@ namespace User.API.EventBusConsumers
         {
            var command = _mapper.Map<SeminarDto>(context.Message);
 
-           _logger.LogInformation($"{typeof(SeminarChangeEvent).Name} consumed successfully. Created order id: {command.dateTime}");
+           _logger.LogInformation($"{typeof(SeminarChangeEvent).Name} consumed successfully. Created order id: {command.startDate}");
             _scheduleRepository.update(command);
 
 

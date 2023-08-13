@@ -28,7 +28,6 @@ public class ScheduleRepository : IScheduleRepository
             userId, 
             seminar.speakers,
             seminar.speakerIds,
-            seminar.conferenceRoomId,
             seminar.title, 
             seminar.startDate, 
             seminar.endDate, 
@@ -54,8 +53,8 @@ public class ScheduleRepository : IScheduleRepository
     public async Task<bool> update(SeminarDto seminar)
     {
         await _context.Seminars.Where(seminar => seminar.Id == seminar.Id).ExecuteUpdateAsync(setters => setters
-                                                                                              .SetProperty(b=> b.Hall, seminar.hall)
-                                                                                              .SetProperty(b=>b.DateTimeOfSeminar,seminar.dateTime));
+                                                                                              .SetProperty(b=> b.Location, seminar.location)
+                                                                                              .SetProperty(b=>b.StartDateTime,seminar.startDate));
         return await _context.SaveChangesAsync() > 0;
     }
 }
