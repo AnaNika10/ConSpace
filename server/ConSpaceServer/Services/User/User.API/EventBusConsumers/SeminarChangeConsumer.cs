@@ -4,28 +4,34 @@ using MassTransit;
 using MediatR;
 using User.API.Commands;
 using User.Common.DTOs;
+using User.Common.Repositories;
 
 namespace User.API.EventBusConsumers
 {
     public class SeminarChangeConsumer: IConsumer<SeminarChangeEvent>
     {
-        private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         private readonly ILogger<SeminarChangeConsumer> _logger;
+        private readonly IScheduleRepository _scheduleRepository;
 
-        public SeminarChangeConsumer(IMediator mediator, IMapper mapper, ILogger<SeminarChangeConsumer> logger)
+        public SeminarChangeConsumer( IMapper mapper, ILogger<SeminarChangeConsumer> logger, IScheduleRepository scheduleRepository)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _scheduleRepository = scheduleRepository ?? throw new ArgumentNullException(nameof(scheduleRepository));
+
         }
 
-        public async Task Consume(ConsumeContext<SeminarChangeEvent> context)
+        public  Task Consume(ConsumeContext<SeminarChangeEvent> context)
         {
-           var command = _mapper.Map<ChangeSeminarCommand>(context.Message);
-           var id = await _mediator.Send(command);
+           var command = _mapper.Map<SeminarDto>(context.Message);
 
            _logger.LogInformation($"{typeof(SeminarChangeEvent).Name} consumed successfully. Created order id: {command.dateTime}");
+            _scheduleRepository.update(command);
+
+
+
+            return Task.CompletedTask;
 
         }
     }

@@ -10,12 +10,12 @@ namespace User.Common.Entities;
 [Table("seminar")]
 public class Seminar
 {
-    public Seminar(Guid id, Guid userId, List<string> speakers, Guid conferenceRoomId, DateTimeOffset dateTimeOfSeminar)
+    public Seminar(Guid id, Guid userId, List<string> speakers, string hall, DateTimeOffset dateTimeOfSeminar)
     {
         Id = id;
         UserId = userId;
         Speakers = speakers;
-        ConferenceRoomId = conferenceRoomId;
+        Hall = hall;
         DateTimeOfSeminar = dateTimeOfSeminar;
     }
 
@@ -26,7 +26,7 @@ public class Seminar
     [Column("speakers", TypeName = "text[]")]
     public List<string> Speakers { get; set; }
 
-    [Column("conference_room_id")] public Guid ConferenceRoomId { get; set; }
+    [Column("Hall")] public string Hall { get; set; }
 
     [Column("date_time_of_seminar")] public DateTimeOffset DateTimeOfSeminar { get; set; }
 

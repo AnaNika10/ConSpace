@@ -20,11 +20,11 @@ namespace Conference.Api.Repositories
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<int> CreateSeminar(CreateSeminarDTO seminar)
+        public async Task<Guid> CreateSeminar(CreateSeminarDTO seminar)
         {
             using var connection = _context.GetConnection();
             
-            int id = await connection.QueryFirstAsync<int>(
+            var id = await connection.QueryFirstAsync<Guid>(
                   "insert into \"Seminar\" (\"Name\",\"Floor\",\"DateTime\",\"Exhibitors\",\"Description\", \"FilesUrls\")" +
                   " values (@Name, @Floor, @DateTime,@Exhibitors, @Description, @FilesUrls) RETURNING \"SeminarId\"",
                   new { 
@@ -38,7 +38,7 @@ namespace Conference.Api.Repositories
 
             return id;
         }
-        public async Task<SeminarDTO> GetSeminar(int id)
+        public async Task<SeminarDTO> GetSeminar(Guid id)
         {
             using var connection = _context.GetConnection();
 

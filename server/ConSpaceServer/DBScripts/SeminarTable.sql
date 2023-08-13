@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS public."Seminar"
     "Name" text COLLATE pg_catalog."default" NOT NULL,
     "Hall" text NOT NULL,
     "DateTime" timestamp without time zone NOT NULL,
-	"Exhibitors" int  NOT NULL,
+    "Exhibitors" int  NOT NULL,
     "Description" text COLLATE pg_catalog."default",
     "FilesUrls" text[] COLLATE pg_catalog."default",
     CONSTRAINT "Seminar_pkey" PRIMARY KEY ("SeminarId")

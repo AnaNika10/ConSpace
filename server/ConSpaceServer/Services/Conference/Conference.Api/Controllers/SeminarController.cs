@@ -36,7 +36,7 @@ namespace Conference.Api.Controllers
         [HttpGet("{seminarId}", Name = nameof(GetSeminarsById))]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<SeminarDTO>> GetSeminarsById(int seminarId)
+        public async Task<ActionResult<SeminarDTO>> GetSeminarsById(Guid seminarId)
         {
             var seminar = await _repository.GetSeminar(seminarId);
             if (seminar == null)
@@ -63,7 +63,7 @@ namespace Conference.Api.Controllers
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status201Created)]
         public async Task<ActionResult<SeminarDTO>> CreateSeminar([FromBody] CreateSeminarDTO request)
         {
-            int Id = await _repository.CreateSeminar(request);
+            var Id = await _repository.CreateSeminar(request);
             var seminar = await _repository.GetSeminar(Id);
             return CreatedAtRoute("GetSeminarsById", new { seminar.SeminarId }, seminar);
 

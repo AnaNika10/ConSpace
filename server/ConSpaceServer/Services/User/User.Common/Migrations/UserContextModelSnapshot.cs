@@ -42,7 +42,7 @@ namespace User.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("attendee");
+                    b.ToTable("attendee", (string)null);
                 });
 
             modelBuilder.Entity("User.Entities.Invite", b =>
@@ -73,7 +73,7 @@ namespace User.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("invites");
+                    b.ToTable("invites", (string)null);
                 });
 
             modelBuilder.Entity("User.Entities.Note", b =>
@@ -116,7 +116,7 @@ namespace User.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("notes");
+                    b.ToTable("notes", (string)null);
                 });
 
             modelBuilder.Entity("User.Entities.Reminder", b =>
@@ -152,7 +152,7 @@ namespace User.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("reminders");
+                    b.ToTable("reminders", (string)null);
                 });
 
             modelBuilder.Entity("User.Entities.Seminar", b =>
@@ -183,7 +183,7 @@ namespace User.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("seminar");
+                    b.ToTable("seminar", (string)null);
                 });
 
             modelBuilder.Entity("User.Entities.Note", b =>
