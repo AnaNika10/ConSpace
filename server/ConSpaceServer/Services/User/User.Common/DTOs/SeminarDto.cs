@@ -9,18 +9,30 @@ public class SeminarDto
     public SeminarDto(
         Guid id,
         List<string> speakers,
-        string hall,
-        DateTime dateTime
+        List<Guid> speakerIds,
+        int conferenceRoomId,
+        String title,
+        DateTime startDate,
+        DateTime endDate,
+        String location
     )
     {
         this.id = id;
         this.speakers = speakers;
-        this.hall = hall;
-        this.dateTime = dateTime;
+        this.speakerIds = speakerIds;
+        this.conferenceRoomId = conferenceRoomId;
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.location = location;
     }
 
     public Guid id { get; set; }
     public List<string> speakers { get; set; }
-    public string hall { get; set; }
-    public DateTime dateTime { get; set; }
+    public List<Guid> speakerIds { get; set; }
+    public int conferenceRoomId { get; set; }
+    public String title { get; set; }
+    public DateTime startDate { get; set; }
+    public DateTime endDate { get; set; }
+    public String location { get; set; }
 }

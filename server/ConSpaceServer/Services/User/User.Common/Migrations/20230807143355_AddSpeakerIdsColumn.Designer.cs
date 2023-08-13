@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using User.Common.Data;
@@ -12,9 +13,11 @@ using User.Common.Data;
 namespace User.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20230807143355_AddSpeakerIdsColumn")]
+    partial class AddSpeakerIdsColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace User.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("attendee", (string)null);
+                    b.ToTable("attendee");
                 });
 
             modelBuilder.Entity("User.Common.Entities.Invite", b =>
@@ -73,7 +76,7 @@ namespace User.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("invites", (string)null);
+                    b.ToTable("invites");
                 });
 
             modelBuilder.Entity("User.Common.Entities.Note", b =>
@@ -116,7 +119,7 @@ namespace User.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("notes", (string)null);
+                    b.ToTable("notes");
                 });
 
             modelBuilder.Entity("User.Common.Entities.Reminder", b =>
@@ -152,7 +155,7 @@ namespace User.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("reminders", (string)null);
+                    b.ToTable("reminders");
                 });
 
             modelBuilder.Entity("User.Common.Entities.Seminar", b =>
@@ -202,7 +205,7 @@ namespace User.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("seminar", (string)null);
+                    b.ToTable("seminar");
                 });
 
             modelBuilder.Entity("User.Common.Entities.Note", b =>

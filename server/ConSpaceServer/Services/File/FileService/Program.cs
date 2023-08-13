@@ -1,6 +1,7 @@
 #region
 
 using System.Text.Json.Serialization;
+using Common.Security.Extensions;
 using File.Extensions;
 using Microsoft.OpenApi.Models;
 
@@ -41,7 +42,7 @@ builder.Services.AddSwaggerGen(option =>
         });
     }
 );
-
+var cors = builder.Services.ConfigureCors();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -51,6 +52,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(cors);
 app.MapControllers();
 
 app.Run();

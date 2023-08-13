@@ -1,6 +1,7 @@
 #region
 
 using User.Common.DTOs;
+using User.Common.Entities;
 
 #endregion
 
@@ -12,4 +13,6 @@ public interface IScheduleRepository
     Task<bool> delete(Guid userId, Guid seminarId);
 
     Task<bool> update(SeminarDto seminar);
+
+    Task<IEnumerable<Seminar>> getSchedule(Guid userId);
 }

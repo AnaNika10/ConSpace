@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: Security/IdentityServer/Dockerfile
   userdb:
-    image: postgres  
+    image: postgres:15.3-bullseye  
   pgadmin:
     image: dpage/pgadmin4
   rabbitmq:
@@ -25,7 +25,7 @@ services:
       context: .
       dockerfile: Services/User/User.API/Dockerfile
   conferencedb:
-    image: postgres
+    image: postgres:15.3-bullseye
   conference:
     image: ${DOCKER_REGISTRY-}conference
     build:
