@@ -11,7 +11,16 @@ namespace Conference.Api.Profiles
     {
         public ConferenceProfile()
         {
-            CreateMap<Entities.Seminar, SeminarDTO>().ReverseMap();
+            CreateMap<Entities.Seminar, SeminarDTO>().ForMember(dest => dest.Name, act => act.MapFrom(src => src.Name))
+                                                       .ForMember(dest => dest.Hall, act => act.MapFrom(src => src.Hall))
+                                                       .ForMember(dest => dest.Exhibitors, act => act.MapFrom(src => src.Exhibitors))
+                                                       .ForMember(dest => dest.Description, act => act.MapFrom(src => src.Description))
+                                                       .ForMember(dest => dest.FilesUrls, act => act.MapFrom(src => src.FilesUrls))
+                                                       .ForMember(dest => dest.StartDateTime, act => act.MapFrom(src => src.StartDateTime))
+                                                       .ForMember(dest => dest.EndDateTime, act => act.MapFrom(src => src.EndDateTime))
+                                                       .ForMember(dest => dest.SpeakerNames, act => act.MapFrom(src => src.Speakers.Select(x=>x.Name)))
+                                                       .ForMember(dest => dest.Speakers, act => act.MapFrom(src => src.Speakers.Select(x => x.SpeakerId)))
+                                                       .ReverseMap();
             CreateMap<Entities.Speaker, SpeakerDTO>().ReverseMap();
             CreateMap<Entities.Exhibitor, ExhibitorDTO>().ReverseMap();
             CreateMap<Entities.FAQ, FAQDTO>().ReverseMap();

@@ -13,7 +13,7 @@ namespace Conference.Api.Repositories
 
         Task<bool> UpdateSeminar(UpdateSeminarDTO id);
 
-        Task<List<int>> GetSeminarSpeakers(int id);
+        Task<List<int>> GetSeminarSpeakers(Guid id);
         Task<bool> ChangeSeminarSpeakers(ChangeSeminarSpeakersDTO request);
         Task<bool> DeleteSeminar(Guid id);
     }
