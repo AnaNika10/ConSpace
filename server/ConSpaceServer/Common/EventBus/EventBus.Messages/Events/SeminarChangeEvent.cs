@@ -1,8 +1,14 @@
-﻿namespace Conference.Api.DTOs.Seminar
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EventBus.Messages.Events
 {
-    public class BaseSeminarDTO
+    public class SeminarChangeEvent : IntegrationBaseEvent
     {
-       
+        public Guid SeminarId { get; set; }
         public string Name { get; set; }
         public string Hall { get; set; }
         public int[] Speakers { get; set; }
@@ -14,6 +20,8 @@
         public string[]? FilesUrls { get; set; }
 
         public DateTime StartDateTime { get; set; }
+
         public DateTime EndDateTime { get; set; }
+
     }
 }

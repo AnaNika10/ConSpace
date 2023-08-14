@@ -1,6 +1,7 @@
 using Common.Security.Extensions;
 using Conference.Api;
 using Conference.Api.Repositories;
+using MassTransit;
 using Conference.Api.Data;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,11 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ISeminarRepository, SeminarRepository>()
                 .AddScoped<IConferenceContext, ConferanceContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddMassTransit(x => 
+  x.UsingRabbitMq((context, cfg) =>
+{
+    cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
+    }));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var cors = builder.Services.ConfigureCors();
+
 
 var app = builder.Build();
 

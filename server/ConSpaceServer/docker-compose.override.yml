@@ -43,13 +43,18 @@ services:
         - "5050:80"
         volumes:
         - pgadmin_data:/root/.pgadmin
+
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
     userservice:
         container_name: userservice
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - "DatabaseSettings:ConnectionString=Server=userdb;Port=5432;Database=UserDb;User Id=postgres;Password=postgres;"
+            - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
         depends_on:
             - userdb
+            - rabbitmq
         ports:
             - "8080:80"
     conferencedb:
@@ -68,8 +73,10 @@ services:
         environment:
           - ASPNETCORE_ENVIRONMENT=Development
           - "DatabaseSettings:ConnectionString=Server=conferencedb;Port=5432;Database=ConferenceDb;User Id=admin;Password=admin1234;"
+          - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
         depends_on:
           - conferencedb
+          - rabbitmq
         ports:
           - "8002:80"
     apigateway:

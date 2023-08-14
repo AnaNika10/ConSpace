@@ -7,6 +7,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Services/Conference/Conference.Api/Conference.Api.csproj", "Services/Conference/Conference.Api/"]
+COPY ["Common/EventBus/EventBus.Messages/EventBus.Messages.csproj", "Common/EventBus/EventBus.Messages/"]
 RUN dotnet restore "Services/Conference/Conference.Api/Conference.Api.csproj"
 COPY . .
 WORKDIR "/src/Services/Conference/Conference.Api"

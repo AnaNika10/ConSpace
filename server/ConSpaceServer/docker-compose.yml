@@ -12,7 +12,13 @@ services:
   userdb:
     image: postgres:15.3-bullseye  
   pgadmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:6.21
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+        - 5672:5672
+        - 15672:15672
   userservice:
     image: ${DOCKER_REGISTRY-}userservice
     build:
