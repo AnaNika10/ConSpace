@@ -23,8 +23,10 @@ builder.Services.AddAutoMapper(configuration =>
                                                        .ForMember(dest => dest.EndDateTime, act => act.MapFrom(src => src.endDate))
                                                        .ForMember(dest => dest.Name, act => act.MapFrom(src => src.title))
                                                        .ForMember(dest => dest.SpeakerNames, act => act.MapFrom(src => src.speakers))
+                                                       .ForMember(dest => dest.Hall, act => act.MapFrom(src => src.location))
                                                        .ForMember(dest => dest.Speakers, act => act.MapFrom(src => src.speakerIds))
-                                                       .ForMember(dest => dest.SeminarId, act => act.MapFrom(src => src.id)).ReverseMap();
+                                                       .ForMember(dest => dest.SeminarId, act => act.MapFrom(src => src.id))
+                                                       .ReverseMap();
 
 });
 builder.Services.AddControllers()

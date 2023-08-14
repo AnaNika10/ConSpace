@@ -10,10 +10,10 @@ public class SeminarDto
         Guid id,
         List<string> speakers,
         List<int> speakerIds,
-        String title,
+        string title,
         DateTime startDate,
         DateTime endDate,
-        String location
+        string location
     )
     {
         this.id = id;

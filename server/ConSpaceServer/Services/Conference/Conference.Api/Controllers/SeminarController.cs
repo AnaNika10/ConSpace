@@ -88,7 +88,7 @@ namespace Conference.Api.Controllers
         }
         [HttpDelete("{seminarId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> DeleteSeminar(int seminarId)
+        public async Task<ActionResult<bool>> DeleteSeminar(Guid seminarId)
         {
             var success = await _repository.DeleteSeminar(seminarId);
             if (success)

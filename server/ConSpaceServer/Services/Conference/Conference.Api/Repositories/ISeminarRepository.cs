@@ -12,6 +12,6 @@ namespace Conference.Api.Repositories
 
         Task<bool> UpdateSeminar(UpdateSeminarDTO id);
 
-        Task<bool> DeleteSeminar(int id);
+        Task<bool> DeleteSeminar(Guid id);
     }
 }
