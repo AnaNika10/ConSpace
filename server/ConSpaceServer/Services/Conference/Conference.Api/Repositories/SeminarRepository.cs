@@ -21,17 +21,18 @@ namespace Conference.Api.Repositories
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<int> CreateSeminar(CreateSeminarDTO seminar)
+        public async Task<Guid> CreateSeminar(CreateSeminarDTO seminar)
         {
             using var connection = _context.GetConnection();
             
-            int id = await connection.QueryFirstAsync<int>(
-                  "insert into \"Seminar\" (\"Name\",\"Floor\",\"DateTime\",\"Exhibitors\",\"Description\", \"FilesUrls\")" +
-                  " values (@Name, @Floor, @DateTime,@Exhibitors, @Description, @FilesUrls) RETURNING \"SeminarId\"",
+            var id = await connection.QueryFirstAsync<Guid>(
+                  "insert into \"Seminar\" (\"Name\",\"Hall\",\"StartDateTime\",\"EndDateTime\",\"Exhibitors\",\"Description\", \"FilesUrls\")" +
+                  " values (@Name, @Floor, @StartDateTime, @EndDateTime, @Exhibitors, @Description, @FilesUrls) RETURNING \"SeminarId\"",
                   new { 
                       Name = seminar.Name,
-                      Floor = seminar.Hall,
-                      DateTime = seminar.DateTime,
+                      Hall = seminar.Hall,
+                      StartDateTime = seminar.StartDateTime,
+                      EndDateTime = seminar.EndDateTime,
                       Exhibitors = seminar.Exhibitors,
                       Description = seminar.Description,
                       FilesUrls = seminar.FilesUrls
@@ -39,7 +40,7 @@ namespace Conference.Api.Repositories
 
             return id;
         }
-        public async Task<SeminarDTO> GetSeminar(int id)
+        public async Task<SeminarDTO> GetSeminar(Guid id)
         {
             using var connection = _context.GetConnection();
 
@@ -49,7 +50,7 @@ namespace Conference.Api.Repositories
             return _mapper.Map<SeminarDTO>(post);
         }
 
-        public async Task<bool> DeleteSeminar(int seminarId)
+        public async Task<bool> DeleteSeminar(Guid seminarId)
         {
             using var connection = _context.GetConnection();
 
@@ -97,7 +98,7 @@ namespace Conference.Api.Repositories
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "UPDATE \"Seminar\" SET \"Name\"=@Name, \"Hall\" = @Hall, \"DateTime\" = @DateTime " +
+                "UPDATE \"Seminar\" SET \"Name\"=@Name, \"Hall\" = @Hall, \"StartDateTime\" = @StartDateTime, \"EndDateTime\" = @EndDateTime " +
                 ",\"Exhibitors\"=@Exhibitors, \"Description\" = @Description, \"FilesUrls\" = @FilesUrls" +
                 " WHERE \"SeminarId\" = @SeminarId",
                new
@@ -105,7 +106,8 @@ namespace Conference.Api.Repositories
                    SeminarId = seminar.SeminarId,
                    Name = seminar.Name,
                    Hall = seminar.Hall,
-                   DateTime = seminar.DateTime,
+                   StartDateTime = seminar.StartDateTime,
+                   EndDateTime = seminar.EndDateTime,
                    Exhibitors = seminar.Exhibitors,
                    Description = seminar.Description,
                    FilesUrls = seminar.FilesUrls

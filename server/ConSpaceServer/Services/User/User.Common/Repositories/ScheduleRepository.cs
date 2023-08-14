@@ -23,8 +23,15 @@ public class ScheduleRepository : IScheduleRepository
 
     public async Task<bool> create(Guid userId, SeminarDto seminar)
     {
-        await _context.Seminars.AddAsync(new Seminar(seminar.id, userId, seminar.speakers, seminar.conferenceRoomId,
-            seminar.dateTime));
+        await _context.Seminars.AddAsync(new Seminar(
+            seminar.id, 
+            userId, 
+            seminar.speakers,
+            seminar.speakerIds,
+            seminar.title, 
+            seminar.startDate, 
+            seminar.endDate, 
+            seminar.location));
         _logger.LogInformation($"Creating seminar for user with userId:{userId}");
         return await _context.SaveChangesAsync() > 0;
     }
@@ -33,6 +40,21 @@ public class ScheduleRepository : IScheduleRepository
     {
         await _context.Seminars.Where(seminar => seminar.Id == seminarId).ExecuteDeleteAsync();
         _logger.LogInformation($"Deleting seminar for user with userId:{userId}");
+        return await _context.SaveChangesAsync() > 0;
+    }
+
+    public async Task<IEnumerable<Seminar>> getSchedule(Guid userId)
+    {
+        _logger.LogInformation($"Fetching user's schedule for user with id: {userId}");
+        List<Seminar> result = await _context.Seminars.Where(seminar => seminar.UserId == userId).ToListAsync();
+        return result;
+    }
+
+    public async Task<bool> update(SeminarDto seminar)
+    {
+        await _context.Seminars.Where(seminar => seminar.Id == seminar.Id).ExecuteUpdateAsync(setters => setters
+                                                                                              .SetProperty(b=> b.Location, seminar.location)
+                                                                                              .SetProperty(b=>b.StartDateTime,seminar.startDate));
         return await _context.SaveChangesAsync() > 0;
     }
 }

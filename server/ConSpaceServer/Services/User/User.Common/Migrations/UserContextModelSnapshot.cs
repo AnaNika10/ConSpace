@@ -23,7 +23,7 @@ namespace User.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("User.Entities.Attendee", b =>
+            modelBuilder.Entity("User.Common.Entities.Attendee", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,7 +45,7 @@ namespace User.Migrations
                     b.ToTable("attendee");
                 });
 
-            modelBuilder.Entity("User.Entities.Invite", b =>
+            modelBuilder.Entity("User.Common.Entities.Invite", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,7 +76,7 @@ namespace User.Migrations
                     b.ToTable("invites");
                 });
 
-            modelBuilder.Entity("User.Entities.Note", b =>
+            modelBuilder.Entity("User.Common.Entities.Note", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -119,7 +119,7 @@ namespace User.Migrations
                     b.ToTable("notes");
                 });
 
-            modelBuilder.Entity("User.Entities.Reminder", b =>
+            modelBuilder.Entity("User.Common.Entities.Reminder", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -155,25 +155,40 @@ namespace User.Migrations
                     b.ToTable("reminders");
                 });
 
-            modelBuilder.Entity("User.Entities.Seminar", b =>
+            modelBuilder.Entity("User.Common.Entities.Seminar", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("ConferenceRoomId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("conference_room_id");
-
-                    b.Property<DateTimeOffset>("DateTimeOfSeminar")
+                    b.Property<DateTimeOffset>("EndDateTime")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date_time_of_seminar");
+                        .HasColumnName("end_date_time");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("location");
+
+                    b.Property<List<int>>("SpeakerIds")
+                        .IsRequired()
+                        .HasColumnType("int[]")
+                        .HasColumnName("speaker_ids");
 
                     b.Property<List<string>>("Speakers")
                         .IsRequired()
                         .HasColumnType("text[]")
                         .HasColumnName("speakers");
+
+                    b.Property<DateTimeOffset>("StartDateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_date_time");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
@@ -186,9 +201,9 @@ namespace User.Migrations
                     b.ToTable("seminar");
                 });
 
-            modelBuilder.Entity("User.Entities.Note", b =>
+            modelBuilder.Entity("User.Common.Entities.Note", b =>
                 {
-                    b.HasOne("User.Entities.Attendee", "user")
+                    b.HasOne("User.Common.Entities.Attendee", "user")
                         .WithMany("Notes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -197,9 +212,9 @@ namespace User.Migrations
                     b.Navigation("user");
                 });
 
-            modelBuilder.Entity("User.Entities.Seminar", b =>
+            modelBuilder.Entity("User.Common.Entities.Seminar", b =>
                 {
-                    b.HasOne("User.Entities.Attendee", "User")
+                    b.HasOne("User.Common.Entities.Attendee", "User")
                         .WithMany("Seminars")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -208,7 +223,7 @@ namespace User.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("User.Entities.Attendee", b =>
+            modelBuilder.Entity("User.Common.Entities.Attendee", b =>
                 {
                     b.Navigation("Notes");
 
