@@ -28,7 +28,6 @@ public class ScheduleRepository : IScheduleRepository
             userId, 
             seminar.speakers,
             seminar.speakerIds,
-            seminar.conferenceRoomId,
             seminar.title, 
             seminar.startDate, 
             seminar.endDate, 
@@ -49,5 +48,13 @@ public class ScheduleRepository : IScheduleRepository
         _logger.LogInformation($"Fetching user's schedule for user with id: {userId}");
         List<Seminar> result = await _context.Seminars.Where(seminar => seminar.UserId == userId).ToListAsync();
         return result;
+    }
+
+    public async Task<bool> update(SeminarDto seminar)
+    {
+        await _context.Seminars.Where(seminar => seminar.Id == seminar.Id).ExecuteUpdateAsync(setters => setters
+                                                                                              .SetProperty(b=> b.Location, seminar.location)
+                                                                                              .SetProperty(b=>b.StartDateTime,seminar.startDate));
+        return await _context.SaveChangesAsync() > 0;
     }
 }

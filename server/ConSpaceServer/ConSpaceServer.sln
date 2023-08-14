@@ -27,15 +27,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "User", "User", "{A19B2FEA-4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{B9FB6A17-433E-441C-817A-7FF045AA5F30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Common", "Services\User\User.Common\User.Common.csproj", "{FE2F6318-B0D6-47D9-AFCF-B6AC60EAF6EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.Common", "Services\User\User.Common\User.Common.csproj", "{FE2F6318-B0D6-47D9-AFCF-B6AC60EAF6EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.GRPC", "Services\User\User.GRPC\User.GRPC.csproj", "{A59F736A-1284-41B5-946F-212CC7F52F2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.GRPC", "Services\User\User.GRPC\User.GRPC.csproj", "{A59F736A-1284-41B5-946F-212CC7F52F2B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "File", "File", "{CBBC84DE-8D27-42F6-A4DA-AABDDE160002}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileService", "Services\File\FileService\FileService.csproj", "{F67A2A9B-589D-40E5-89EA-31B3C2BCA7A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileService", "Services\File\FileService\FileService.csproj", "{F67A2A9B-589D-40E5-89EA-31B3C2BCA7A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "File.Test", "Services\File\File.Test\File.Test.csproj", "{F5A6A129-69FF-40AE-BFDF-F743BDA47791}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "File.Test", "Services\File\File.Test\File.Test.csproj", "{F5A6A129-69FF-40AE-BFDF-F743BDA47791}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.Messages", "Common\EventBus\EventBus.Messages\EventBus.Messages.csproj", "{14A143DF-96B4-45F6-98E6-616036BD4310}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{F5A6A129-69FF-40AE-BFDF-F743BDA47791}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5A6A129-69FF-40AE-BFDF-F743BDA47791}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5A6A129-69FF-40AE-BFDF-F743BDA47791}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14A143DF-96B4-45F6-98E6-616036BD4310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A143DF-96B4-45F6-98E6-616036BD4310}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14A143DF-96B4-45F6-98E6-616036BD4310}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14A143DF-96B4-45F6-98E6-616036BD4310}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,6 +106,7 @@ Global
 		{CBBC84DE-8D27-42F6-A4DA-AABDDE160002} = {9F6EAE7F-4579-418D-B833-3409620E82F6}
 		{F67A2A9B-589D-40E5-89EA-31B3C2BCA7A0} = {CBBC84DE-8D27-42F6-A4DA-AABDDE160002}
 		{F5A6A129-69FF-40AE-BFDF-F743BDA47791} = {CBBC84DE-8D27-42F6-A4DA-AABDDE160002}
+		{14A143DF-96B4-45F6-98E6-616036BD4310} = {E0FC836E-8F80-4DEE-A2C9-0A5B759120CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D64DDF4F-E8E9-4145-822F-0776D7319221}

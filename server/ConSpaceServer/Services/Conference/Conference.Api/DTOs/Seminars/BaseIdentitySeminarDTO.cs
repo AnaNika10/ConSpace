@@ -2,6 +2,6 @@
 {
     public class BaseIdentitySeminarDTO : BaseSeminarDTO
     {
-        public int SeminarId { get; set; }
+        public Guid SeminarId { get; set; }
     }
 }

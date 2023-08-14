@@ -61,7 +61,6 @@ public class ScheduleController : ControllerBase
                     it.Id, 
                     it.Speakers, 
                     it.SpeakerIds,
-                    it.ConferenceRoomId, 
                     it.Title,
                     it.StartDateTime.DateTime,
                     it.EndDateTime.DateTime,
