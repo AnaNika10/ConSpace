@@ -10,7 +10,7 @@ import SignIn from "./components/SignIn";
 import AuthProvider from "./context/AuthProvider";
 import RequireAuth from "./components/RequireAuth";
 import Unauthorized from "./components/Unauthorized";
-import SignOut from "./components/SignOut";
+import HomePage from "./components/HomePage";
 
 function App() {
   return (
@@ -22,10 +22,10 @@ function App() {
             <NavBarAndMenu />
             <Routes>
               {/* public routes */}
+              <Route path="/" element={<HomePage />} />
               <Route path="/seminar-schedule" element={<SeminarList />} />
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
-              <Route path="/sign-out" element={<SignOut />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
 
               {/* protected routes */}
