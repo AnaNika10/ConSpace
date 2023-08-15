@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 
-export default function Unauthorized() {
+export default function Missing() {
   return (
     <Container maxWidth="sm" style={{ textAlign: "center", marginTop: "2rem" }}>
       <Typography variant="h4" gutterBottom>
