@@ -10,7 +10,8 @@ import SignIn from "./components/SignIn";
 import AuthProvider from "./context/AuthProvider";
 import RequireAuth from "./components/RequireAuth";
 import Unauthorized from "./components/Unauthorized";
-import SignOut from "./components/SignOut";
+import HomePage from "./components/HomePage";
+import Missing from "./components/Missing";
 import Notes from "./components/NotesPage/Notes";
 
 function App() {
@@ -23,10 +24,10 @@ function App() {
             <NavBarAndMenu />
             <Routes>
               {/* public routes */}
+              <Route path="/" element={<HomePage />} />
               <Route path="/seminar-schedule" element={<SeminarList />} />
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
-              <Route path="/sign-out" element={<SignOut />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
 
               {/* protected routes */}
@@ -53,7 +54,7 @@ function App() {
                 <Route path="/seminar-schedule" element={<SeminarList />} />
               </Route> */}
 
-              {/* TODO: catch all - essentially a 404 page*/}
+              <Route path="*" element={<Missing />} />
             </Routes>
           </AuthProvider>
         </BrowserRouter>

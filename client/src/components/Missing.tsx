@@ -7,10 +7,10 @@ export default function Unauthorized() {
   return (
     <Container maxWidth="sm" style={{ textAlign: "center", marginTop: "2rem" }}>
       <Typography variant="h4" gutterBottom>
-        Unauthorized Access
+        Missing page
       </Typography>
       <Typography variant="body1" gutterBottom>
-        You do not have permission to access this page.
+        Nothing to see here.
       </Typography>
       <Button
         component={Link}
