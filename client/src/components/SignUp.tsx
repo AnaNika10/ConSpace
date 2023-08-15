@@ -25,8 +25,10 @@ import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import axios from "../api/axios";
+import useAuth from "../hooks/useAuth";
 
 const REGISTER_USER_URL = "/api/v1/Authentication/RegisterUser";
+const LOGIN_URL = "/api/v1/Authentication/Login";
 
 const registerSchema = object({
   firstName: string()
@@ -66,6 +68,8 @@ function Copyright(props: any) {
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
 
+  const { setAuth } = useAuth();
+
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
@@ -94,24 +98,35 @@ export default function SignUp() {
     setLoading(true);
 
     try {
-      await axios.post(
-        REGISTER_USER_URL,
-        JSON.stringify({
-          email: values.email,
-          password: values.password,
-          firstname: values.firstName,
-          lastname: values.lastName,
-          username: values.email.replace(/[^a-zA-Z0-9]/g, ""),
-        }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const registrationData = {
+        email: values.email,
+        password: values.password,
+        firstname: values.firstName,
+        lastname: values.lastName,
+        username: values.email.replace(/[^a-zA-Z0-9]/g, ""),
+      };
+
+      await axios.post(REGISTER_USER_URL, JSON.stringify(registrationData), {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const loginData = {
+        email: values.email,
+        password: values.password,
+      };
+
+      const response = await axios.post(LOGIN_URL, JSON.stringify(loginData), {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      setAuth({
+        accessToken: response?.data.accessToken,
+        refreshToken: response?.data.refreshToken,
+      });
 
       navigate(from, { replace: true });
-    } catch (err) {
-      console.log(err);
-      // console.log(errors);
+    } catch (error) {
+      console.error(error);
     } finally {
       setLoading(false);
     }
