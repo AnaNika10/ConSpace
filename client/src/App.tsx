@@ -12,6 +12,7 @@ import RequireAuth from "./components/RequireAuth";
 import Unauthorized from "./components/Unauthorized";
 import HomePage from "./components/HomePage";
 import Missing from "./components/Missing";
+import Notes from "./components/NotesPage/Notes";
 
 function App() {
   return (
@@ -38,6 +39,11 @@ function App() {
                   path="/calendar-schedule"
                   element={<SeminarCalendar />}
                 />
+              </Route>
+              <Route
+                element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
+              >
+                <Route path="/notes" element={<Notes />} />
               </Route>
               {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>
                 <Route path="/seminar-schedule" element={<SeminarList />} />

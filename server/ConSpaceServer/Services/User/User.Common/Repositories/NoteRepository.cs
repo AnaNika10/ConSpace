@@ -52,7 +52,7 @@ public class NoteRepository : INoteRepository
 
     public async Task<IEnumerable<Note>> FindAll(Guid userId)
     {
-        return await _context.Notes.Where(note => note.UserId == userId).ToListAsync();
+        return await _context.Notes.Where(note => note.UserId == userId && !note.deleted).ToListAsync();
     }
 
     public async Task<Note> FindOne(Guid id, Guid userId)
