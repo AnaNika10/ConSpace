@@ -1,7 +1,7 @@
 import { Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
-import SignOut from "./SignOut";
+import useAuth from "../../hooks/useAuth";
+import SignOut from "../LoginPage/SignOut";
 
 export default function NavBar() {
   const { auth, setAuth } = useAuth();
