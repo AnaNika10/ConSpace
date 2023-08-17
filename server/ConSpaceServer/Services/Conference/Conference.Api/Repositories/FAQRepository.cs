@@ -29,10 +29,10 @@ namespace Conference.Api.Repositories
         {
             using var connection = _context.GetConnection();
 
-            var post = await connection.QueryFirstOrDefaultAsync<Entities.FAQ>(
+            var faq = await connection.QueryFirstOrDefaultAsync<Entities.FAQ>(
                 "SELECT * FROM \"FAQ\" WHERE \"QuestionId\" = @Id", new { Id = id });
 
-            return _mapper.Map<FAQDTO>(post);
+            return _mapper.Map<FAQDTO>(faq);
         }
 
         public async Task<int> CreateFAQ(CreateFAQDTO faq)
@@ -60,7 +60,7 @@ namespace Conference.Api.Repositories
                 " WHERE \"QuestionId\" = @QuestionId",
                new
                {
-                   SpeakerId = faq.QuestionId,
+                   QuestionId = faq.QuestionId,
                    Question = faq.Question,
                    Answer = faq.Answer
                });

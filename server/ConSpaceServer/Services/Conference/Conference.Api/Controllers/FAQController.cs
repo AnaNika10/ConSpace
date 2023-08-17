@@ -25,12 +25,12 @@ namespace Conference.Api.Controllers
             }
             return Ok(seminars);
         }
-        [HttpGet("{faqId}", Name = nameof(GetFAQById))]
+        [HttpGet("{questionId}", Name = nameof(GetFAQById))]
         [ProducesResponseType(typeof(FAQDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<FAQDTO>> GetFAQById(int faqId)
+        public async Task<ActionResult<FAQDTO>> GetFAQById(int questionId)
         {
-            var faq = await _repository.GetFAQ(faqId);
+            var faq = await _repository.GetFAQ(questionId);
             if (faq == null)
             {
                 return NotFound(null);
@@ -45,7 +45,7 @@ namespace Conference.Api.Controllers
         {
             int Id = await _repository.CreateFAQ(request);
             var question = await _repository.GetFAQ(Id);
-            return CreatedAtRoute("GetById", new { question.QuestionId }, question);
+            return CreatedAtRoute("GetFAQById", new { question.QuestionId }, question);
 
         }
         [HttpPut]
@@ -55,7 +55,7 @@ namespace Conference.Api.Controllers
             await _repository.UpdateFAQ(request);
 
             var question = await _repository.GetFAQ(request.QuestionId);
-            return CreatedAtRoute("GetById", new { question.QuestionId }, question);
+            return CreatedAtRoute("GetFAQById", new { question.QuestionId }, question);
         }
         [HttpDelete("{questionId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]

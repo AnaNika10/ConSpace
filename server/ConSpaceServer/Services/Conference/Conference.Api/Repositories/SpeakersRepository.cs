@@ -29,10 +29,10 @@ namespace Conference.Api.Repositories
         {
             using var connection = _context.GetConnection();
 
-            var post = await connection.QueryFirstOrDefaultAsync<Entities.Speaker>(
+            var speaker = await connection.QueryFirstOrDefaultAsync<Entities.Speaker>(
                 "SELECT * FROM \"Speakers\" WHERE \"SpeakerId\" = @Id", new { Id = id });
 
-            return _mapper.Map<SpeakerDTO>(post);
+            return _mapper.Map<SpeakerDTO>(speaker);
         }
 
         public async Task<int> CreateSpeaker(CreateSpeakerDTO faq)

@@ -70,4 +70,33 @@ INSERT INTO public."FAQ"(
 	VALUES ('Qustion2?', 'Answer2');
 INSERT INTO public."FAQ"(
 	"Question", "Answer")
-	VALUES ('Qustion3?', 'Answer3');  
+	VALUES ('Qustion3?', 'Answer3'); 
+	CREATE TABLE IF NOT EXISTS public."Seminar_Speakers"
+(
+    "SeminarId" UUID NOT NULL,
+    "SpeakerId" INT NOT NULL,
+    constraint pk_seminar_speaker primary key ("SeminarId", "SpeakerId"),
+      CONSTRAINT fk_seminar
+      FOREIGN KEY("SeminarId") 
+	  REFERENCES public."Seminar"("SeminarId")
+	  ON DELETE CASCADE,
+      CONSTRAINT fk_speakers
+      FOREIGN KEY("SpeakerId") 
+	  REFERENCES public."Speakers"("SpeakerId")
+	  ON DELETE CASCADE
+
+);
+
+
+
+INSERT INTO "Seminar_Speakers"
+SELECT
+     "SeminarId",
+     CASE
+           WHEN "Exhibitors" = 1
+                THEN 1
+            WHEN "Exhibitors" = 2
+                THEN 3
+			ELSE 
+			   2
+       END "SpeakerId" FROM  "Seminar";

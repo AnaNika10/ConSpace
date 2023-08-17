@@ -41,25 +41,25 @@ namespace Conference.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(ExhibitorDTO), StatusCodes.Status201Created)]
-        public async Task<ActionResult<ExhibitorDTO>> CreatePost([FromBody] CreateExhibitorDTO request)
+        public async Task<ActionResult<ExhibitorDTO>> CreateExhibitor([FromBody] CreateExhibitorDTO request)
         {
             int Id = await _repository.CreateExhibitor(request);
             var exhibitor = await _repository.GetExhibitor(Id);
-            return CreatedAtRoute("GetById", new { exhibitor.ExhibitorId }, exhibitor);
+            return CreatedAtRoute("GetExhibitorById", new { exhibitor.ExhibitorId }, exhibitor);
 
         }
         [HttpPut]
         [ProducesResponseType(typeof(ExhibitorDTO), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ExhibitorDTO>> UpdatePost([FromBody] UpdateExhibitorDTO request)
+        public async Task<ActionResult<ExhibitorDTO>> UpdateExhibitor([FromBody] UpdateExhibitorDTO request)
         {
             await _repository.UpdateExhibitor(request);
 
             var exhibitor = await _repository.GetExhibitor(request.ExhibitorId);
-            return CreatedAtRoute("GetById", new { exhibitor.ExhibitorId }, exhibitor);
+            return CreatedAtRoute("GetExhibitorById", new { exhibitor.ExhibitorId }, exhibitor);
         }
         [HttpDelete("{exhibitorId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> DeletePost(int exhibitorId)
+        public async Task<ActionResult<bool>> DeleteExhibitor(int exhibitorId)
         {
             var success = await _repository.DeleteExhibitor(exhibitorId);
             if (success)

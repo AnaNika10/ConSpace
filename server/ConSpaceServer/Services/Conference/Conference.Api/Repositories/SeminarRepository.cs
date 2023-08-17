@@ -86,8 +86,8 @@ namespace Conference.Api.Repositories
             var ss = await connection.QueryAsync<Entities.Seminar, Entities.Speaker, Entities.Seminar>(
         "SELECT \"Seminar\".* ,\"Speakers\".\"SpeakerId\", \"Speakers\".\"Name\" " +
         "    FROM \"Seminar\"  " +
-       "     JOIN \"Seminar_Speakers\" on \"Seminar_Speakers\".\"SeminarId\" = \"Seminar\".\"SeminarId\" " +
-       "     JOIN \"Speakers\"  on  \"Seminar_Speakers\".\"SpeakerId\" = \"Speakers\".\"SpeakerId\" ",
+       "    LEFT JOIN \"Seminar_Speakers\" on \"Seminar_Speakers\".\"SeminarId\" = \"Seminar\".\"SeminarId\" " +
+       "   LEFT  JOIN \"Speakers\"  on  \"Seminar_Speakers\".\"SpeakerId\" = \"Speakers\".\"SpeakerId\" ",
         (seminar, speaker) =>
         {
             seminar.Speakers.Add(speaker);
@@ -118,10 +118,16 @@ namespace Conference.Api.Repositories
             foreach (PropertyInfo prop in filter.GetType().GetProperties())
             {
                 var value = prop.GetValue(filter);
-                if (value is not null)
+                if (value is not null && !value.GetType().IsArray)
                 {
-                    query.Append($" AND \"{prop.Name}\" = {value}");
+                     query.Append($" AND \"{prop.Name}\" = {value}");
                 }
+            }
+
+            if (filter.Speakers is not null && filter.Speakers.Any())
+            {
+                var speakers = string.Join(',',filter.Speakers);
+                query.Append($" AND \"Seminar_Speakers\".\"SpeakerId\" IN ({speakers})");
             }
             var ss = await connection.QueryAsync<Entities.Seminar, Entities.Speaker, Entities.Seminar>(query.ToString(),
         (seminar, speaker) =>

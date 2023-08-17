@@ -44,7 +44,7 @@ namespace Conference.Api.Controllers
         {
             int Id = await _repository.CreateSpeaker(request);
             var speaker = await _repository.GetSpeaker(Id);
-            return CreatedAtRoute("GetById", new { speaker.SpeakerId }, speaker);
+            return CreatedAtRoute("GetSpeakerById", new { speaker.SpeakerId }, speaker);
 
         }
         [HttpPut]
@@ -54,7 +54,7 @@ namespace Conference.Api.Controllers
             await _repository.UpdateSpeaker(request);
 
             var speaker = await _repository.GetSpeaker(request.SpeakerId);
-            return CreatedAtRoute("GetById", new { speaker.SpeakerId }, speaker);
+            return CreatedAtRoute("GetSpeakerById", new { speaker.SpeakerId }, speaker);
         }
         [HttpDelete("{speakerId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]

@@ -29,10 +29,10 @@ namespace Conference.Api.Repositories
         {
             using var connection = _context.GetConnection();
 
-            var post = await connection.QueryFirstOrDefaultAsync<Entities.Exhibitor>(
+            var exhibitor = await connection.QueryFirstOrDefaultAsync<Entities.Exhibitor>(
                 "SELECT * FROM \"Exhibitors\" WHERE \"ExhibitorId\" = @Id", new { Id = id });
 
-            return _mapper.Map<ExhibitorDTO>(post);
+            return _mapper.Map<ExhibitorDTO>(exhibitor);
         }
         public async Task<int> CreateExhibitor(CreateExhibitorDTO exhibitor)
         {
@@ -57,7 +57,7 @@ namespace Conference.Api.Repositories
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "UPDATE \"Exhibitor\" SET \"Name\"=@Name, \"Stand\" = @Stand,\"Description\" = @Description" +
+                "UPDATE \"Exhibitors\" SET \"Name\"=@Name, \"Stand\" = @Stand,\"Description\" = @Description" +
                 " WHERE \"ExhibitorId\" = @ExhibitorId",
                new
                {
@@ -77,7 +77,7 @@ namespace Conference.Api.Repositories
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "DELETE FROM \"Exhibitor\" WHERE \"ExhibitorId\" = @exhibitorId",
+                "DELETE FROM \"Exhibitors\" WHERE \"ExhibitorId\" = @exhibitorId",
                 new { exhibitorId });
 
             if (affected == 0)

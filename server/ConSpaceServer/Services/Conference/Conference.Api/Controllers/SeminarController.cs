@@ -114,14 +114,5 @@ namespace Conference.Api.Controllers
             }
 
         }
-        //[HttpPost("Speakers")]
-        //[ProducesResponseType(typeof(SeminarSpeakersDTO), StatusCodes.Status201Created)]
-        //public async Task<ActionResult<SeminarSpeakersDTO>> ChangeSeminarSpeakers([FromBody] SeminarSpeakersDTO request)
-        //{
-        //    await _repository.ChangeSeminarSpeakers(request);
-        //    var speakers = await _repository.GetSeminarSpeakers(Id);
-        //    //return CreatedAtRoute("GetById", new { seminar.SeminarId }, seminar);
-
-        //}
     }
 }
