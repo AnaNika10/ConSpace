@@ -1,4 +1,5 @@
 export interface Seminar {
+    seminarId: string,
     name : string,
     hall: number,
     speakers: [number],
@@ -6,6 +7,5 @@ export interface Seminar {
     description: string,
     filesUrls: [string],
     startDateTime: string,
-    endDateTime: string,
-    conferenceId: number
+    endDateTime: string
 }
