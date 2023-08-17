@@ -10,7 +10,8 @@
             public int Exhibitors { get; set; }
             public string? Description { get; set; }
             public string[]? FilesUrls { get; set; }
-            
-            public DateTime DateTime { get; set; }
-        }
+
+            public DateTime StartDateTime { get; set; }
+            public DateTime EndDateTime { get; set; }
     }
+}

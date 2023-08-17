@@ -67,6 +67,7 @@ services:
         ports:
           - "5430:5432"
         volumes:
+          - ./init.sql:/docker-entrypoint-initdb.d/init.sql
           - postgres_data_conference:/var/lib/postgresql/data/
     conference:
         container_name: conference

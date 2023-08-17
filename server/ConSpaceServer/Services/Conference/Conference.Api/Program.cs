@@ -7,7 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddScoped<ISeminarRepository, SeminarRepository>()
-                .AddScoped<IConferenceContext, ConferanceContext>();
+                .AddScoped<IConferenceContext, ConferanceContext>()
+                .AddScoped<IFAQRepository, FAQRepository>()
+                .AddScoped<ISpeakersRepository, SpeakersRepository>()
+                .AddScoped<IExhibitorsRepository, ExhibitorsRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddMassTransit(x => 
   x.UsingRabbitMq((context, cfg) =>

@@ -22,7 +22,7 @@ INSERT INTO public."Seminar"(
 	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
 VALUES ('Death', 'Arena 2', '2023-04-30 12:44:41.873674','2023-04-30 14:44:41.873674',2, 'aaaaa',ARRAY ['htpp://aaaa']);
 
-TABLESPACE pg_default;
+--TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."Seminar"
     OWNER to admin;
