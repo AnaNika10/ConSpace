@@ -1,11 +1,11 @@
 export interface Seminar {
     name : string,
-    floor: number,
+    hall: number,
     speakers: [number],
     exhibitors: number,
     description: string,
     filesUrls: [string],
-    dateTime: string,
+    startDateTime: string,
+    endDateTime: string,
     conferenceId: number
-  
 }

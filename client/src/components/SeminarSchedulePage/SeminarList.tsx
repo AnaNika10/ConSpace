@@ -106,8 +106,8 @@ function SeminarListItem({ seminar }: { seminar: Seminar }) {
         <ListItemButton onClick={() => displayEventInfo(true)}>
           <ListItemText
             sx={{ width: 500 }}
-            primary={formatDate(seminar.dateTime) + " " + seminar.name}
-            secondary={"Floor: " + seminar.floor}
+            primary={formatDate(seminar.startDateTime) + " " + seminar.name}
+            secondary={"Hall: " + seminar.hall}
           />
           <ListItemIcon sx={{ display: "flex", justifyContent: "flex-end" }}>
             {isAddedToSchedule ? <TaskAltIcon /> : <AddIcon />}
@@ -116,10 +116,10 @@ function SeminarListItem({ seminar }: { seminar: Seminar }) {
       </Stack>
       <EventInformation
         name={seminar.name}
-        date={formatDate(seminar.dateTime)}
+        date={formatDate(seminar.startDateTime)}
         isOpened={infoIsDisplayed}
         setOpen={setOpen}
-        destination={"Floor: " + seminar.floor}
+        destination={"Hall: " + seminar.hall}
         isAdded={isAddedToSchedule}
         updateSchedule={updateSchedule}
       />
@@ -187,7 +187,9 @@ export default function SeminarList() {
 
   const seminarsByDay = () => {
     const dates = new Set(
-      data.map((seminar: Seminar) => seminar.dateTime.substring(0, 10))
+      data.map((seminar: Seminar) =>
+        dayjs(seminar.startDateTime).format("YYYY-MM-DD")
+      )
     );
     const sortedByDate = Array.from(dates)
       .sort()
@@ -196,7 +198,8 @@ export default function SeminarList() {
           date: it,
           day: i + 1,
           seminarsOfDay: data.filter(
-            (seminar: Seminar) => seminar.dateTime.substring(0, 10) === it
+            (seminar: Seminar) =>
+              dayjs(seminar.startDateTime).format("YYYY-MM-DD") === it
           ),
         };
       });

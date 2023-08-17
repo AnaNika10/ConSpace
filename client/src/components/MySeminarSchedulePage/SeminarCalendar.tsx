@@ -91,7 +91,6 @@ export default function SeminarCalendar() {
     };
     fetchData();
   }, [auth, data]);
-
   return (
     <Paper>
       <Grid
