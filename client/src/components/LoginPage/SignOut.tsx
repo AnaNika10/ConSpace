@@ -1,8 +1,8 @@
 import jwt_decode from "jwt-decode";
-import axios from "../api/axios";
+import axios from "../../api/axios";
 import { NavigateFunction } from "react-router";
 import { Dispatch, SetStateAction } from "react";
-import { Auth } from "../context/AuthProvider";
+import { Auth } from "../../context/AuthProvider";
 
 const LOGOUT_URL = "/api/v1/Authentication/Logout";
 

@@ -1,17 +1,17 @@
 import { ThemeProvider } from "@emotion/react";
 import SeminarList from "./components/SeminarSchedulePage/SeminarList";
 import SeminarCalendar from "./components/MySeminarSchedulePage/SeminarCalendar";
-import { themeOptions } from "./components/DarkTheme";
+import { themeOptions } from "./components/Common/DarkTheme";
 import { CssBaseline } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import NavBarAndMenu from "./components/Menu";
-import SignUp from "./components/SignUp";
-import SignIn from "./components/SignIn";
+import NavBarAndMenu from "./components/Common/Menu";
+import RequireAuth from "./components/Common/RequireAuth";
+import HomePage from "./components/Common/HomePage";
+import Missing from "./components/Common/Missing";
+import SignIn from "./components/LoginPage/SignIn";
+import SignUp from "./components/LoginPage/SignUp";
+import Unauthorized from "./components/LoginPage/Unauthorized";
 import AuthProvider from "./context/AuthProvider";
-import RequireAuth from "./components/RequireAuth";
-import Unauthorized from "./components/Unauthorized";
-import HomePage from "./components/HomePage";
-import Missing from "./components/Missing";
 import Notes from "./components/NotesPage/Notes";
 
 function App() {

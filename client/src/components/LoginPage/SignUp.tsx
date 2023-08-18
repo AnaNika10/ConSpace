@@ -24,8 +24,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import axios from "../api/axios";
-import useAuth from "../hooks/useAuth";
+import axios from "../../api/axios";
+import useAuth from "../../hooks/useAuth";
 
 const REGISTER_USER_URL = "/api/v1/Authentication/RegisterUser";
 const LOGIN_URL = "/api/v1/Authentication/Login";

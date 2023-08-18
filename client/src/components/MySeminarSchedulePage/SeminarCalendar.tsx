@@ -28,12 +28,7 @@ import { Appointment } from "../../models/Appointment";
 import GroupByScheduleSection from "./GroupScheduleBySection";
 import { ResourceUtil } from "./ResourcesUtil";
 import { AppointmentContent } from "./AppointmentContent";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import { DateFormatUtil } from "../Common/DateFormatUtil";
 
 function deleteAppointment(
   appointments: Appointment[],
@@ -60,7 +55,7 @@ export default function SeminarCalendar() {
   const [isGroupedByDate, setGroupByDate] = useState(false);
   const [currentViewName, currentViewNameChange] = useState("Week");
   const setCalendarView = (view: string) => currentViewNameChange(view);
-  const currentDate = dayjs().format("YYYY-MM-DD");
+  const currentDate = DateFormatUtil.getCurrentDate();
   const commitChanges = ({ deleted }: { deleted: string }) => {
     setData((appointments: Appointment[]) =>
       deleteAppointment(appointments, deleted, auth.accessToken)
@@ -91,7 +86,6 @@ export default function SeminarCalendar() {
     };
     fetchData();
   }, [auth, data]);
-
   return (
     <Paper>
       <Grid
