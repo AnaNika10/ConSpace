@@ -12,6 +12,7 @@ import {
   DialogContent,
   DialogActions,
   Box,
+  Fab,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
@@ -159,6 +160,12 @@ function EmptyNotesList({ token }: { token: string }) {
   );
 }
 
+const fabStyle = {
+  position: "absolute",
+  bottom: 16,
+  right: 16,
+};
+
 function FormDialog({
   error,
   onChange,
@@ -198,7 +205,56 @@ function FormDialog({
     </>
   );
 }
-
+function AddNote({ token }: { token: string }) {
+  const [error, setError] = useState(false);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const addNote = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    let title = null;
+    let content = null;
+    if (data.get("title") !== undefined) {
+      title = data.get("title")?.toString();
+    }
+    if (data.get("content") !== undefined) {
+      content = data.get("content")?.toString();
+    }
+    if (title === "" || content === "") {
+      setError(true);
+      return;
+    }
+    const note: Note = {
+      title: title!,
+      content: content!,
+    };
+    UserDataProvider.addNote(note, token);
+  };
+  const isFilled = (e: any) => {
+    if (e.target.value !== "") {
+      setError(false);
+    }
+  };
+  return (
+    <>
+      <Fab sx={fabStyle} color="primary" aria-label="add">
+        <Add onClick={handleOpen} />
+      </Fab>
+      <Box minHeight={100}>
+        <Dialog open={open} onClose={handleClose}>
+          <Box component="form" onSubmit={addNote}>
+            <FormDialog error={error} onChange={isFilled} />
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button type="submit">Add</Button>
+            </DialogActions>
+          </Box>
+        </Dialog>
+      </Box>
+    </>
+  );
+}
 export default function Notes() {
   const [data, setData] = useState<Note[]>([]);
   const [isLoading, setLoading] = useState(true);
@@ -244,6 +300,7 @@ export default function Notes() {
                 </Grid>
               );
             })}
+          <AddNote token={auth.accessToken} />
         </Grid>
       )}
     </>
