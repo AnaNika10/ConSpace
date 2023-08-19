@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Conference.Api.Repositories;
 using Conference.Api.DTOs.Exhibitors;
+using Microsoft.AspNetCore.Authorization;
+using Common.Security;
 
 namespace Conference.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class ExhibitorController : ControllerBase
     {
         private readonly IExhibitorsRepository _repository;
@@ -16,6 +19,7 @@ namespace Conference.Api.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ExhibitorDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ExhibitorDTO>>> GetAllExhibitors()
         {
             var exhibitors = await _repository.GetAllExhibitors();
@@ -28,6 +32,7 @@ namespace Conference.Api.Controllers
         [HttpGet("{exhibitorId}", Name = nameof(GetExhibitorById))]
         [ProducesResponseType(typeof(ExhibitorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<ExhibitorDTO>> GetExhibitorById(int exhibitorId)
         {
             var exhibitor = await _repository.GetExhibitor(exhibitorId);
@@ -41,6 +46,7 @@ namespace Conference.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(ExhibitorDTO), StatusCodes.Status201Created)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<ExhibitorDTO>> CreateExhibitor([FromBody] CreateExhibitorDTO request)
         {
             int Id = await _repository.CreateExhibitor(request);
@@ -50,6 +56,7 @@ namespace Conference.Api.Controllers
         }
         [HttpPut]
         [ProducesResponseType(typeof(ExhibitorDTO), StatusCodes.Status200OK)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<ExhibitorDTO>> UpdateExhibitor([FromBody] UpdateExhibitorDTO request)
         {
             await _repository.UpdateExhibitor(request);
@@ -59,6 +66,7 @@ namespace Conference.Api.Controllers
         }
         [HttpDelete("{exhibitorId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<bool>> DeleteExhibitor(int exhibitorId)
         {
             var success = await _repository.DeleteExhibitor(exhibitorId);

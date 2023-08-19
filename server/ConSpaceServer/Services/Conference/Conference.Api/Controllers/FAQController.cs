@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Conference.Api.Repositories;
 using Conference.Api.DTOs.FAQ;
+using Microsoft.AspNetCore.Authorization;
+using Common.Security;
 
 namespace Conference.Api.Controllers
 {
@@ -16,6 +18,7 @@ namespace Conference.Api.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<FAQDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<FAQDTO>>> GetAllFAQ()
         {
             var seminars = await _repository.GetAllFAQs();
@@ -28,6 +31,7 @@ namespace Conference.Api.Controllers
         [HttpGet("{questionId}", Name = nameof(GetFAQById))]
         [ProducesResponseType(typeof(FAQDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<FAQDTO>> GetFAQById(int questionId)
         {
             var faq = await _repository.GetFAQ(questionId);
@@ -41,6 +45,7 @@ namespace Conference.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(FAQDTO), StatusCodes.Status201Created)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<FAQDTO>> CreateFAQ([FromBody] CreateFAQDTO request)
         {
             int Id = await _repository.CreateFAQ(request);
@@ -50,6 +55,7 @@ namespace Conference.Api.Controllers
         }
         [HttpPut]
         [ProducesResponseType(typeof(FAQDTO), StatusCodes.Status200OK)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<FAQDTO>> UpdateFAQ([FromBody] UpdateFAQDTO request)
         {
             await _repository.UpdateFAQ(request);
@@ -59,6 +65,7 @@ namespace Conference.Api.Controllers
         }
         [HttpDelete("{questionId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<bool>> DeleteFAQ(int questionId)
         {
             var success = await _repository.DeleteFAQ(questionId);
