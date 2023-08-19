@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Conference.Api.Repositories;
 using Conference.Api.DTOs.Speakers;
+using Microsoft.AspNetCore.Authorization;
+using Common.Security;
 
 namespace Conference.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class SpeakerController : ControllerBase
     {
         private readonly ISpeakersRepository _repository;
@@ -16,6 +19,7 @@ namespace Conference.Api.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<SpeakerDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<SpeakerDTO>>> GetAllSpeakers()
         {
             var speakers = await _repository.GetAllSpeakers();
@@ -28,6 +32,7 @@ namespace Conference.Api.Controllers
         [HttpGet("{speakerId}", Name = nameof(GetSpeakerById))]
         [ProducesResponseType(typeof(SpeakerDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<SpeakerDTO>> GetSpeakerById(int speakerId)
         {
             var speaker = await _repository.GetSpeaker(speakerId);
@@ -40,6 +45,7 @@ namespace Conference.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(SpeakerDTO), StatusCodes.Status201Created)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<SpeakerDTO>> CreateSpeaker([FromBody] CreateSpeakerDTO request)
         {
             int Id = await _repository.CreateSpeaker(request);
@@ -49,6 +55,7 @@ namespace Conference.Api.Controllers
         }
         [HttpPut]
         [ProducesResponseType(typeof(SpeakerDTO), StatusCodes.Status200OK)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<SpeakerDTO>> UpdateSpeaker([FromBody] UpdateSpeakerDTO request)
         {
             await _repository.UpdateSpeaker(request);
@@ -58,6 +65,7 @@ namespace Conference.Api.Controllers
         }
         [HttpDelete("{speakerId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<bool>> DeleteSpeaker(int speakerId)
         {
             var success = await _repository.DeleteSpeaker(speakerId);
