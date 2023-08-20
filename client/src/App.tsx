@@ -13,10 +13,13 @@ import SignUp from "./components/LoginPage/SignUp";
 import Unauthorized from "./components/LoginPage/Unauthorized";
 import AuthProvider from "./context/AuthProvider";
 import Notes from "./components/NotesPage/Notes";
+import { Notifications } from "./components/NotificationsPage/Notifications";
 
 function App() {
   return (
     <>
+      <script src="~/src/wwwroot/lib/signalr/signalr.js"></script>
+      <script src="~/src/hubs/InviteHub.tsx"></script>
       <ThemeProvider theme={themeOptions}>
         <CssBaseline />
         <BrowserRouter>
@@ -29,6 +32,7 @@ function App() {
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
+              <Route path="/notifications" element={<Notifications />} />
 
               {/* protected routes */}
               {/* TODO: add your protected routes here, examples are commented out */}
