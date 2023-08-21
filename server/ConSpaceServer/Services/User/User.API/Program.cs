@@ -11,6 +11,7 @@ using User.Common.Extensions;
 using System.Reflection;
 using User.API.Commands;
 using EventBus.Messages.Events;
+using Microsoft.AspNetCore.SignalR;
 using User.API.Controllers.Hubs;
 using User.Common.DTOs;
 

@@ -18,8 +18,6 @@ import { Notifications } from "./components/NotificationsPage/Notifications";
 function App() {
   return (
     <>
-      <script src="~/src/wwwroot/lib/signalr/signalr.js"></script>
-      <script src="~/src/hubs/InviteHub.tsx"></script>
       <ThemeProvider theme={themeOptions}>
         <CssBaseline />
         <BrowserRouter>
@@ -32,7 +30,6 @@ function App() {
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
-              <Route path="/notifications" element={<Notifications />} />
 
               {/* protected routes */}
               {/* TODO: add your protected routes here, examples are commented out */}
@@ -43,11 +40,8 @@ function App() {
                   path="/calendar-schedule"
                   element={<SeminarCalendar />}
                 />
-              </Route>
-              <Route
-                element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
-              >
                 <Route path="/notes" element={<Notes />} />
+                <Route path="/notifications" element={<Notifications />} />
               </Route>
               {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>
                 <Route path="/seminar-schedule" element={<SeminarList />} />

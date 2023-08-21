@@ -1,40 +1,45 @@
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { Typography } from "@mui/material";
-import { Component, ReactNode, useState } from "react";
+import {
+  Button,
+  Grid,
+  List,
+  ListItem,
+  Snackbar,
+  Typography,
+} from "@mui/material";
+import InvitationConnector from "../../hubs/InvitationConnector";
+import useAuth from "../../hooks/useAuth";
+import { useEffect, useState } from "react";
 
-export class Notifications extends Component {
-  constructor(props: any) {
-    super(props);
-    this.state = { recentGameResults: [] };
-  }
-
-  componentDidMount(): void {
-    const newConnection = new HubConnectionBuilder()
-      .withUrl("http://localhost:8080/notifications")
-      .withAutomaticReconnect()
-      .build();
-
-    this.setState({ connection: newConnection });
-
-    newConnection
-      .start()
-      .then((result) => {
-        console.log("Connected!");
-
-        this.state.connection.on('Invite received"', (it) => {
-          console.log(it);
-        });
-      })
-      .catch((e) => console.log("Connection failed: ", e));
-  }
-
-  render(): ReactNode {
-    return (
-      <>
-        <div>
-          <Typography>Notifications</Typography>
-        </div>
-      </>
-    );
-  }
+export function Notifications() {
+  const { auth } = useAuth();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("Invite received");
+  const { newMessage, events } = InvitationConnector(auth.accessToken);
+  const inviteSpeaker = () => {
+    newMessage("new");
+  };
+  useEffect(() => {
+    events((message) => {
+      setOpen(true);
+      setMessage(message);
+    });
+  });
+  return (
+    <>
+      <Grid paddingLeft={25}>
+        <List>
+          <ListItem>
+            <Typography>Speaker: Snape</Typography>
+            <Button onClick={inviteSpeaker}>Invite</Button>
+          </ListItem>
+        </List>
+      </Grid>
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={() => setOpen(false)}
+        message={`Invite received from: ${message}`}
+      />
+    </>
+  );
 }

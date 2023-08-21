@@ -689,6 +689,18 @@
       },
       "UpstreamPathTemplate": "/Speaker/{id}",
       "UpstreamHttpMethod": [ "Get", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/{catchAll}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 50000
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/{catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
     }
   ],
   "GlobalConfiguration": {

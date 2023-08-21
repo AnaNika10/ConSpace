@@ -10,6 +10,14 @@ namespace User.Common.Entities;
 [Table("invites")]
 public class Invite
 {
+    
+    public Invite(Guid userId, Guid inviteeId, InviteStatus status)
+    {
+        UserId = userId;
+        InviteeId = inviteeId;
+        this.status = status;
+    }
+    
     [Column("id")]
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

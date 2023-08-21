@@ -6,15 +6,13 @@ public class InviteDto
         Guid id,
         Guid userId,
         Guid inviteeId,
-        InviteStatusDto status,
-        DateTimeOffset timestamp
+        InviteStatusDto status
     )
     {
         this.id = id;
         this.userId = userId;
         this.inviteeId = inviteeId;
         this.status = status;
-        this.timestamp = timestamp;
     }
     
     public Guid id {get;set;}
