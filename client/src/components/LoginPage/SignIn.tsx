@@ -45,7 +45,7 @@ function Copyright(props: any) {
   );
 }
 
-function SignIn() {
+export default function SignIn() {
   const { setAuth } = useAuth();
 
   const navigate = useNavigate();
@@ -155,5 +155,3 @@ function SignIn() {
     </Container>
   );
 }
-
-export default withSnackbar(SignIn);

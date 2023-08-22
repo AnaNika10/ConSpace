@@ -1,7 +1,8 @@
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import withSnackbar from "./SnackBarWrapper";
 
-export default function HomePage() {
+function HomePage() {
   return (
     <Container maxWidth="sm" style={{ textAlign: "center", marginTop: "2rem" }}>
       <Typography variant="h4" gutterBottom>
@@ -13,3 +14,4 @@ export default function HomePage() {
     </Container>
   );
 }
+export default withSnackbar(HomePage);

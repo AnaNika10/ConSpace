@@ -5,8 +5,9 @@ import { Seminar } from "../../models/Seminar";
 import { ConferenceDateUtil } from "./ConferenceDateUtil";
 import { SeminarTabs } from "./SeminarTabs";
 import { SeminarListItem } from "./SeminarListItem";
+import withSnackbar from "../Common/SnackBarWrapper";
 
-export default function SeminarList() {
+function SeminarList() {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [, setError] = useState(null);
@@ -63,3 +64,5 @@ export default function SeminarList() {
     </Grid>
   );
 }
+
+export default withSnackbar(SeminarList);

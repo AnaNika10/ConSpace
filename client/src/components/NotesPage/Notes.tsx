@@ -7,6 +7,7 @@ import { Add } from "@mui/icons-material";
 import { EmptyNotesList } from "./EmptyNotesList";
 import { FormBox } from "./FormBox";
 import { NoteCard } from "./NoteCard";
+import withSnackbar from "../Common/SnackBarWrapper";
 
 const fabStyle = {
   position: "absolute",
@@ -60,7 +61,7 @@ function AddNote({ token }: { token: string }) {
     </>
   );
 }
-export default function Notes() {
+function Notes() {
   const [data, setData] = useState<Note[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
@@ -111,3 +112,5 @@ export default function Notes() {
     </>
   );
 }
+
+export default withSnackbar(Notes);

@@ -29,6 +29,7 @@ import GroupByScheduleSection from "./GroupScheduleBySection";
 import { ResourceUtil } from "./ResourcesUtil";
 import { AppointmentContent } from "./AppointmentContent";
 import { DateFormatUtil } from "../Common/DateFormatUtil";
+import withSnackbar from "../Common/SnackBarWrapper";
 
 function deleteAppointment(
   appointments: Appointment[],
@@ -44,7 +45,7 @@ function deleteAppointment(
   return appointments;
 }
 
-export default function SeminarCalendar() {
+function SeminarCalendar() {
   const [data, setData] = useState<Appointment[]>([]);
   const resources = useMemo(() => ResourceUtil.mapResources(data), [data]);
   const [isLoading, setLoading] = useState(true);
@@ -146,3 +147,5 @@ export default function SeminarCalendar() {
     </Paper>
   );
 }
+
+export default withSnackbar(SeminarCalendar);
