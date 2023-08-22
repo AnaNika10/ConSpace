@@ -3,6 +3,7 @@ import axios from "../../api/axios";
 import { NavigateFunction } from "react-router";
 import { Dispatch, SetStateAction } from "react";
 import { Auth } from "../../context/AuthProvider";
+import InvitationConnector from "../../hubs/InvitationConnector";
 
 const LOGOUT_URL = "/api/v1/Authentication/Logout";
 
@@ -16,6 +17,8 @@ export default function SignOut(
     : undefined;
 
   try {
+    const { disconnect } = InvitationConnector(auth.accessToken);
+    disconnect();
     axios.post(
       LOGOUT_URL,
       JSON.stringify({

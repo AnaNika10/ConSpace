@@ -1,26 +1,28 @@
-import {
-  Button,
-  Grid,
-  List,
-  ListItem,
-  Snackbar,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, List, ListItem, Typography } from "@mui/material";
 import InvitationConnector from "../../hubs/InvitationConnector";
 import useAuth from "../../hooks/useAuth";
 import { useEffect, useState } from "react";
+import withSnackbar from "../Common/SnackBarWrapper";
 
-export function Notifications() {
+function Notifications({
+  setMessage,
+  message,
+  setOpen,
+}: {
+  setMessage: (msg: string) => void;
+  message: string;
+  open: boolean;
+  setOpen: () => void;
+}) {
   const { auth } = useAuth();
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("Invite received");
   const { newMessage, events } = InvitationConnector(auth.accessToken);
   const inviteSpeaker = () => {
-    newMessage("new");
+    setMessage(`Invite received from: ${auth.accessToken}`);
+    newMessage(message);
+    setOpen();
   };
   useEffect(() => {
     events((message) => {
-      setOpen(true);
       setMessage(message);
     });
   });
@@ -34,12 +36,8 @@ export function Notifications() {
           </ListItem>
         </List>
       </Grid>
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={() => setOpen(false)}
-        message={`Invite received from: ${message}`}
-      />
     </>
   );
 }
+
+export default withSnackbar(Notifications);

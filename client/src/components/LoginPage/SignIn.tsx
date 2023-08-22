@@ -22,6 +22,8 @@ import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { useState } from "react";
+import withSnackbar from "../Common/SnackBarWrapper";
+import InvitationConnector from "../../hubs/InvitationConnector";
 
 const LOGIN_URL = "/api/v1/Authentication/Login";
 
@@ -43,7 +45,7 @@ function Copyright(props: any) {
   );
 }
 
-export default function SignIn() {
+function SignIn() {
   const { setAuth } = useAuth();
 
   const navigate = useNavigate();
@@ -77,6 +79,7 @@ export default function SignIn() {
       });
 
       navigate(from, { replace: true });
+      InvitationConnector(response?.data.accessToken);
     } catch (err) {
       console.log(err);
     }
@@ -152,3 +155,5 @@ export default function SignIn() {
     </Container>
   );
 }
+
+export default withSnackbar(SignIn);

@@ -11,7 +11,9 @@ class Connector {
       .withUrl(URL, { accessTokenFactory: () => token }) // todo refresh token in accessTokenFactory
       .withAutomaticReconnect()
       .build();
+
     this.connection.start().catch((err) => console.log(err));
+
     this.events = (onMessageReceived) => {
       this.connection.on("InviteReceived", (message) => {
         console.log(message);
@@ -24,6 +26,10 @@ class Connector {
     this.connection
       .send("NotifyInvitee", messages)
       .then((x) => console.log("sent"));
+  };
+
+  public disconnect = () => {
+    this.connection.stop().then(() => console.log("disconnected"));
   };
 
   public static getInstance(token: string): Connector {

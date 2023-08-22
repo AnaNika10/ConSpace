@@ -13,7 +13,7 @@ import SignUp from "./components/LoginPage/SignUp";
 import Unauthorized from "./components/LoginPage/Unauthorized";
 import AuthProvider from "./context/AuthProvider";
 import Notes from "./components/NotesPage/Notes";
-import { Notifications } from "./components/NotificationsPage/Notifications";
+import Notifications from "./components/NotificationsPage/Notifications";
 
 function App() {
   return (
