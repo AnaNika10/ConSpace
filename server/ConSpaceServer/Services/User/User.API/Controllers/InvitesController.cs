@@ -30,7 +30,6 @@ public class InvitesController : ControllerBase
     public async Task<ActionResult<IEnumerable<InviteDto>>> GetInvites()
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
-        _logger.LogInformation(userId.ToString());
         var invites = await _repository.FindAll(userId);
         var result = new List<InviteDto>();
         foreach (var invite in invites)

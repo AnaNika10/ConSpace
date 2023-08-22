@@ -26,6 +26,6 @@ public class InvitesRepository : IInvitesRepository
     
     public async Task<IEnumerable<Invite>> FindAll(Guid userId)
     {
-        return await _context.Invites.Where(invite => invite.UserId == userId).ToListAsync();
+        return await _context.Invites.Where(invite => invite.InviteeId == userId).ToListAsync();
     }
 }
