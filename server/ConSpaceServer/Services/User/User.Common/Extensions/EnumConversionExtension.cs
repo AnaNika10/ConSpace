@@ -1,6 +1,10 @@
 #region
 
+using User.Common.DTOs;
 using User.Common.Entities;
+using AttendeeType = User.Common.Entities.AttendeeType;
+using ReminderType = User.Common.Entities.ReminderType;
+
 #endregion
 
 namespace User.Common.Extensions;
@@ -57,6 +61,40 @@ public static class EnumConversionExtension
                 return DTOs.AttendeeType.ATTENDEE;
             default:
                 throw new ArgumentException("Illegal argument when mapping AttendeeType");
+        }
+    }
+    
+    public static InviteStatus mapToEntity(DTOs.InviteStatusDto type)
+    {
+        switch (type)
+        {
+            case InviteStatusDto.PENDING_ANSWER:
+                return InviteStatus.PENDING_ANSWER;
+            case InviteStatusDto.MEET_SCHEDULED:
+                return InviteStatus.MEET_SCHEDULED;
+            case InviteStatusDto.PLACE_AND_TIME_NEGOTIATION:
+                return InviteStatus.PLACE_AND_TIME_NEGOTIATION;
+            case InviteStatusDto.DECLINED:
+                return InviteStatus.DECLINED;
+            default:
+                throw new ArgumentException("Illegal argument when mapping InviteStatus");
+        }
+    }
+
+    public static DTOs.InviteStatusDto mapToDto(InviteStatus type)
+    {
+        switch (type)
+        {
+            case InviteStatus.PENDING_ANSWER:
+            return InviteStatusDto.PENDING_ANSWER;
+            case InviteStatus.MEET_SCHEDULED:
+                return InviteStatusDto.MEET_SCHEDULED;
+            case InviteStatus.PLACE_AND_TIME_NEGOTIATION:
+                return InviteStatusDto.PLACE_AND_TIME_NEGOTIATION;
+            case InviteStatus.DECLINED:
+                return InviteStatusDto.DECLINED;
+            default:
+                throw new ArgumentException("Illegal argument when mapping InviteStatus");
         }
     }
 }

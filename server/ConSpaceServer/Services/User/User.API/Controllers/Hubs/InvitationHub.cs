@@ -24,7 +24,8 @@ public class InvitationHub : Hub
     public async Task NotifyInvitee(string invite)
     {
         var inviteeId = "d32b3594-07d8-4b60-84ad-2ef44b152972";
-        await _invitesRepository.SaveInvite(new InviteDto(Guid.NewGuid(), Guid.NewGuid(), Guid.Parse(inviteeId),
+        var userId = ClaimExtractor.ExtractUserId(Context.User.Claims);
+        await _invitesRepository.SaveInvite(new InviteDto(Guid.NewGuid(), userId, Guid.Parse(inviteeId),
             InviteStatusDto.PENDING_ANSWER));
         string connectionId;
         Connections.TryGetValue(inviteeId, out connectionId);

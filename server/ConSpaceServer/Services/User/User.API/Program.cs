@@ -3,17 +3,14 @@
 using System.Text.Json.Serialization;
 using Common.Security.Extensions;
 using EventBus.Messages.Contsants;
+using EventBus.Messages.Events;
 using MassTransit;
 using Microsoft.OpenApi.Models;
 using User.API.Controllers.Exceptions;
-using User.API.EventBusConsumers;
-using User.Common.Extensions;
-using System.Reflection;
-using User.API.Commands;
-using EventBus.Messages.Events;
-using Microsoft.AspNetCore.SignalR;
 using User.API.Controllers.Hubs;
+using User.API.EventBusConsumers;
 using User.Common.DTOs;
+using User.Common.Extensions;
 
 #endregion
 

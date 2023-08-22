@@ -29,4 +29,8 @@ export class UserDataProvider {
     public static async editNote(note: Note, token : string) {
         return await AuthenticationWrapper.fetchWithAuth(`${this.gateway}/EditNote`, "PATCH", token, note);
     }
+
+    public static async getAllInvites(token : string) {
+        return await AuthenticationWrapper.fetchWithAuth(`${this.gateway}/GetAllInvites`, "GET", token);
+    }
 }
