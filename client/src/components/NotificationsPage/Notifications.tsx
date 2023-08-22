@@ -2,6 +2,7 @@ import { Button, Grid, List, ListItem, Typography } from "@mui/material";
 import InvitationConnector from "../../hubs/InvitationConnector";
 import useAuth from "../../hooks/useAuth";
 import withSnackbar from "../Common/SnackBarWrapper";
+import jwt_decode from "jwt-decode";
 
 function Notifications({
   setMessage,
@@ -13,8 +14,12 @@ function Notifications({
   const { auth } = useAuth();
   const { newMessage } = InvitationConnector(auth.accessToken);
   const inviteSpeaker = () => {
-    setMessage(`Invite received from: ${auth.accessToken}`);
-    newMessage(message);
+    const decodedToken: { Name: string } = jwt_decode(auth.accessToken)!;
+    const username = decodedToken.Name;
+
+    const msg = `Invite received from: ${username}`;
+    setMessage(msg);
+    newMessage(msg);
   };
   return (
     <>
