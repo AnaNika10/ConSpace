@@ -1,8 +1,7 @@
 import axios from '../api/axios';
+import { REFRESH_URL } from '../constants/api';
 import useAuth from './useAuth';
 import jwt_decode from 'jwt-decode';
-
-const REFRESH_URL = "/api/v1/Authentication/Refresh";
 
 const useRefreshToken = () => {
     const { auth, setAuth } = useAuth();

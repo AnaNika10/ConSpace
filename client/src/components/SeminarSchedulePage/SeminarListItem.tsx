@@ -18,7 +18,7 @@ export function SeminarListItem({ seminar }: { seminar: Seminar }) {
     addSchedule(!isAdded);
   };
   const [infoIsDisplayed, displayEventInfo] = useState(false);
-  const setOpen = (isOpened: boolean) => {
+  const setOpen = (_isOpened: boolean) => {
     displayEventInfo(!infoIsDisplayed);
   };
 

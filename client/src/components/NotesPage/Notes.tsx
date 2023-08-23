@@ -1,25 +1,26 @@
 import { Grid, Fab } from "@mui/material";
 import { useEffect, useState } from "react";
-import useAuth from "../../hooks/useAuth";
-import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 import { Note } from "../../models/Note";
 import { Add } from "@mui/icons-material";
 import { EmptyNotesList } from "./EmptyNotesList";
 import { FormBox } from "./FormBox";
 import { NoteCard } from "./NoteCard";
-
+import axios from "../../api/axios";
+import { CREATE_NOTE_URL, GET_ALL_NOTES_URL } from "../../constants/api";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 const fabStyle = {
   position: "absolute",
   bottom: 16,
   right: 16,
 };
-
 function AddNote({ token }: { token: string }) {
   const [error, setError] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const addNote = (event: React.FormEvent<HTMLFormElement>) => {
+  const addNote = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let title = null;
@@ -38,7 +39,15 @@ function AddNote({ token }: { token: string }) {
       title: title!,
       content: content!,
     };
-    UserDataProvider.addNote(note, token);
+
+    await axios.post(CREATE_NOTE_URL, JSON.stringify(note), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    handleClose();
   };
   const isFilled = (e: any) => {
     if (e.target.value !== "") {
@@ -60,31 +69,51 @@ function AddNote({ token }: { token: string }) {
     </>
   );
 }
+
 export default function Notes() {
   const [data, setData] = useState<Note[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
+
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const { auth } = useAuth();
+
   useEffect(() => {
-    const fetchData = async () => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getAllNotes = async () => {
       try {
-        const response = await UserDataProvider.getAllNotes(auth.accessToken);
-        if (!response.ok) {
-          throw new Error(`Failed fetching data. Status: ${response.status}`);
-        }
-        const actual = await response.json();
-        setLoading(false);
-        setError(null);
-        setData(actual);
+        const response = await axiosPrivate.get(GET_ALL_NOTES_URL, {
+          signal: controller.signal,
+        });
+
+        isMounted && setLoading(false);
+        isMounted && setError(null);
+        isMounted && setData(response.data);
       } catch (err: any) {
-        setError(err.message);
-        setData([]);
+        isMounted && setError(err.message);
+        isMounted && setData([]);
+        navigate("/sign-in", { state: { from: location }, replace: true });
       } finally {
-        setLoading(false);
+        isMounted && setLoading(false);
       }
     };
-    fetchData();
-  }, [data, auth]);
+
+    getAllNotes();
+
+    return () => {
+      isMounted = false;
+
+      if (!location.pathname.startsWith("/notes")) {
+        controller.abort();
+      }
+    };
+  }, [location.pathname, data, auth]);
+
   return (
     <>
       {data.length === 0 ? (

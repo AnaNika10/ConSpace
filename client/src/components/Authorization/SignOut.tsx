@@ -3,8 +3,7 @@ import axios from "../../api/axios";
 import { NavigateFunction } from "react-router";
 import { Dispatch, SetStateAction } from "react";
 import { Auth } from "../../context/AuthProvider";
-
-const LOGOUT_URL = "/api/v1/Authentication/Logout";
+import { LOGOUT_URL } from "../../constants/api";
 
 export default function SignOut(
   auth: { accessToken: any; refreshToken: any },

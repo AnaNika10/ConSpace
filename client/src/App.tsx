@@ -8,9 +8,9 @@ import NavBarAndMenu from "./components/Common/Menu";
 import RequireAuth from "./components/Common/RequireAuth";
 import HomePage from "./components/Common/HomePage";
 import Missing from "./components/Common/Missing";
-import SignIn from "./components/LoginPage/SignIn";
-import SignUp from "./components/LoginPage/SignUp";
-import Unauthorized from "./components/LoginPage/Unauthorized";
+import SignIn from "./components/Authorization/SignIn";
+import SignUp from "./components/Authorization/SignUp";
+import Unauthorized from "./components/Authorization/Unauthorized";
 import AuthProvider from "./context/AuthProvider";
 import Notes from "./components/NotesPage/Notes";
 
@@ -45,6 +45,7 @@ function App() {
               >
                 <Route path="/notes" element={<Notes />} />
               </Route>
+
               {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>
                 <Route path="/seminar-schedule" element={<SeminarList />} />
               </Route> */}

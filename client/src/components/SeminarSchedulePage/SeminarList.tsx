@@ -1,10 +1,11 @@
 import { Grid, List, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
-import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
 import { Seminar } from "../../models/Seminar";
 import { ConferenceDateUtil } from "./ConferenceDateUtil";
 import { SeminarTabs } from "./SeminarTabs";
 import { SeminarListItem } from "./SeminarListItem";
+import axios from "../../api/axios";
+import { GET_CONFERENCES_URL } from "../../constants/api";
 
 export default function SeminarList() {
   const [data, setData] = useState([]);
@@ -17,14 +18,10 @@ export default function SeminarList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await SeminarDataProvider.fetchSeminarSchedule();
-        if (!response.ok) {
-          throw new Error("Failed fetching data");
-        }
-        const actual = await response.json();
+        const response = await axios.get(GET_CONFERENCES_URL);
         setLoading(false);
         setError(null);
-        setData(actual);
+        setData(response.data);
       } catch (err: any) {
         setError(err.message);
         setData([]);
