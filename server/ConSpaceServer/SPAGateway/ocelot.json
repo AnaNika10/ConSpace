@@ -715,9 +715,6 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
-      "RouteClaimsRequirement": {
-        "Role": "User"
-      },
       "UpstreamPathTemplate": "/GetAllInvites",
       "UpstreamHttpMethod": [ "Get" ]
     }

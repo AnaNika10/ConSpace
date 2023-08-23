@@ -1,17 +1,15 @@
-using System.Text.Json.Serialization;
+namespace User.Common.Models;
 
-namespace User.Common.DTOs;
-
-public class InviteDto
+public class InviteNotification
 {
-    public InviteDto(
+    public InviteNotification(
         Guid id,
         Guid userId,
         string userName,
         Guid inviteeId,
         string inviteeName, 
         DateTimeOffset timestamp,
-        InviteStatusDto status
+        InviteNotificationStatus status
     )
     {
         this.id = id;
@@ -23,24 +21,17 @@ public class InviteDto
         this.status = status;
     }
     
-    [JsonPropertyName("id")]
     public Guid id {get;set;}
-    [JsonPropertyName("userId")]
     public Guid userId {get;set;}
-    [JsonPropertyName("userName")]
     public string userName {get;set;}
-    [JsonPropertyName("inviteeId")]
     public Guid inviteeId {get;set;}
-    [JsonPropertyName("inviteeName")]
     public string inviteeName {get;set;}
-    [JsonPropertyName("status")]
-    public InviteStatusDto status {get;set;}
-    [JsonPropertyName("timestamp")]
+    public InviteNotificationStatus status {get;set;}
     public DateTimeOffset timestamp {get;set;}
     
 }
 
-public enum InviteStatusDto
+public enum InviteNotificationStatus
 {
     PENDING_ANSWER,
     MEET_SCHEDULED,

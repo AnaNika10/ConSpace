@@ -38,6 +38,7 @@
 
     <ItemGroup>
       <Compile Remove="Controllers\Hubs\RegisterConnectionFilter.cs" />
+      <Compile Remove="Controllers\Hubs\IInviteClient.cs" />
     </ItemGroup>
 
 </Project>

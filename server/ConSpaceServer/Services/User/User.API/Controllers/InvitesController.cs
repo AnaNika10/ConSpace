@@ -33,7 +33,8 @@ public class InvitesController : ControllerBase
         var invites = await _repository.FindAll(userId);
         var result = new List<InviteDto>();
         foreach (var invite in invites)
-            result.Add(new InviteDto(invite.Id, invite.UserId, invite.InviteeId,
+            result.Add(new InviteDto(invite.id, invite.userId, invite.userName, invite.inviteeId,
+                invite.inviteeName, invite.timestamp,
                 EnumConversionExtension.mapToDto(invite.status)));
         return result;
     }

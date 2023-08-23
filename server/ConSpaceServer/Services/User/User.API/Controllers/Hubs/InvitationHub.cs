@@ -21,14 +21,11 @@ public class InvitationHub : Hub
         _invitesRepository = invitesRepository;
     }
 
-    public async Task NotifyInvitee(string invite)
+    public async Task NotifyInvitee(InviteDto invite)
     {
-        var inviteeId = "d32b3594-07d8-4b60-84ad-2ef44b152972";
-        var userId = ClaimExtractor.ExtractUserId(Context.User.Claims);
-        await _invitesRepository.SaveInvite(new InviteDto(Guid.NewGuid(), userId, Guid.Parse(inviteeId),
-            InviteStatusDto.PENDING_ANSWER));
+        await _invitesRepository.UpsertInvite(invite);
         string connectionId;
-        Connections.TryGetValue(inviteeId, out connectionId);
+        Connections.TryGetValue(invite.inviteeId.ToString(), out connectionId);
         await Clients.Client(connectionId).SendAsync("InviteReceived", invite);
     }
 
