@@ -3,7 +3,7 @@ export const BASE_URL = 'http://localhost:8001';
 export const REGISTER_USER_URL = '/RegisterUser';
 export const LOGIN_URL = '/Login';
 export const LOGOUT_URL = '/Logout';
-export const REFRESH_URL = "/Refresh";
+export const REFRESH_URL = "/RefreshToken";
 
 export const GET_ALL_NOTES_URL = '/GetAllNotes';
 export const CREATE_NOTE_URL = '/CreateNote';
