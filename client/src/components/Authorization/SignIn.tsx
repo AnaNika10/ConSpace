@@ -22,8 +22,7 @@ import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { useState } from "react";
-
-const LOGIN_URL = "/api/v1/Authentication/Login";
+import { LOGIN_URL } from "../../constants/api";
 
 function Copyright(props: any) {
   return (

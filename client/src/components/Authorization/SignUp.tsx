@@ -26,9 +26,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
-
-const REGISTER_USER_URL = "/api/v1/Authentication/RegisterUser";
-const LOGIN_URL = "/api/v1/Authentication/Login";
+import { LOGIN_URL, REGISTER_USER_URL } from "../../constants/api";
 
 const registerSchema = object({
   firstName: string()

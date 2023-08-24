@@ -1,11 +1,17 @@
 import { Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import SignOut from "../LoginPage/SignOut";
+import useLogout from "../../hooks/useLogout";
 
 export default function NavBar() {
-  const { auth, setAuth } = useAuth();
+  const { auth } = useAuth();
   const navigate = useNavigate();
+  const logout = useLogout();
+
+  const signOut = async () => {
+    await logout();
+    navigate("/");
+  };
 
   return (
     <Container maxWidth={false}>
@@ -27,20 +33,20 @@ export default function NavBar() {
           <Link to={"/floorplan"}>
             <Button sx={{ color: "white" }}>Floorplan</Button>
           </Link>
-          {!auth.refreshToken && (
+          {!auth.accessToken && (
             <Link to="/sign-up" style={{ marginLeft: "10px" }}>
               <Button variant="contained">Sign Up</Button>
             </Link>
           )}
-          {!auth.refreshToken && (
+          {!auth.accessToken && (
             <Link to="/sign-in" style={{ marginLeft: "10px" }}>
               <Button variant="contained">Sign In</Button>
             </Link>
           )}
-          {auth.refreshToken && (
+          {auth.accessToken && (
             <Button
               variant="contained"
-              onClick={() => SignOut(auth, setAuth, navigate)}
+              onClick={signOut}
               style={{ marginLeft: "10px" }}
             >
               Sign Out
