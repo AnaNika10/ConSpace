@@ -21,9 +21,9 @@ public class InvitesRepository : IInvitesRepository
 
     public async Task<bool> UpsertInvite(InviteDto invite)
     {
-        Invite inviteDb = await _context.Invites.SingleAsync(it => it.Id == invite.id);
-        if (inviteDb != null)
+        if (invite.id != null)
         {
+            Invite inviteDb = await _context.Invites.SingleAsync(it => it.Id == invite.id);
             inviteDb.status = EnumConversionExtension.mapToEntity(invite.status);
             _logger.LogInformation($"Updating invite for user {invite.inviteeId} from user: {invite.userId}");
         }

@@ -4,13 +4,14 @@ namespace User.Common.DTOs;
 
 public class InviteDto
 {
+    [JsonConstructor]
     public InviteDto(
-        Guid id,
+        Guid? id,
         Guid userId,
         string userName,
         Guid inviteeId,
         string inviteeName, 
-        DateTimeOffset timestamp,
+        DateTimeOffset? timestamp,
         InviteStatusDto status
     )
     {
@@ -23,20 +24,20 @@ public class InviteDto
         this.status = status;
     }
     
-    [JsonPropertyName("id")]
-    public Guid id {get;set;}
-    [JsonPropertyName("userId")]
+    [JsonInclude]
+    public Guid? id {get;set;}
+    [JsonInclude]
     public Guid userId {get;set;}
-    [JsonPropertyName("userName")]
+    [JsonInclude]
     public string userName {get;set;}
-    [JsonPropertyName("inviteeId")]
+    [JsonInclude]
     public Guid inviteeId {get;set;}
-    [JsonPropertyName("inviteeName")]
+    [JsonInclude]
     public string inviteeName {get;set;}
-    [JsonPropertyName("status")]
+    [JsonInclude]
     public InviteStatusDto status {get;set;}
-    [JsonPropertyName("timestamp")]
-    public DateTimeOffset timestamp {get;set;}
+    [JsonInclude]
+    public DateTimeOffset? timestamp {get;set;}
     
 }
 
