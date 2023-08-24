@@ -1,12 +1,16 @@
 import {
-  Button,
   Card,
-  Grid,
-  List,
   ListItem,
   ListItemText,
+  Paper,
   Stack,
-  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tooltip,
 } from "@mui/material";
 import InvitationConnector from "../../hubs/InvitationConnector";
 import useAuth from "../../hooks/useAuth";
@@ -23,6 +27,7 @@ function ListHeader() {
     <Card>
       <ListItem alignItems="flex-start">
         <Stack spacing={2} direction={"row"} justifyContent="space-around">
+          <ListItemText sx={{ width: 500 }} primary={"Status"} />
           <ListItemText sx={{ width: 500 }} primary={"Invite from:"} />
           <ListItemText sx={{ width: 500 }} primary={"Received:"} />
         </Stack>
@@ -34,30 +39,43 @@ function ListHeader() {
 function StatusIcon({ status }: { status: InviteStatus }) {
   switch (status) {
     case InviteStatus.MEET_SCHEDULED:
-      return <Close></Close>;
+      return (
+        <>
+          <Tooltip title="Meet scheduled">
+            <Close />
+          </Tooltip>
+        </>
+      );
     case InviteStatus.DECLINED:
-      return <CheckCircle></CheckCircle>;
+      return (
+        <>
+          <Tooltip title="Declined">
+            <CheckCircle />
+          </Tooltip>
+        </>
+      );
     default:
-      return <Pending></Pending>;
+      return (
+        <>
+          <Tooltip title="Waiting for answer">
+            <Pending />
+          </Tooltip>
+        </>
+      );
   }
 }
 function InviteItem({ invite }: { invite: Invite }) {
   return (
     <>
-      <ListItem alignItems="flex-start" key={invite.id}>
-        <Stack spacing={2} direction={"row"}>
-          <StatusIcon status={invite.status}></StatusIcon>
-          <ListItemText sx={{ width: 500 }} primary={invite.invitee} />
-          <ListItemText
-            sx={{ width: 500 }}
-            primary={
-              DateFormatUtil.extractDate(invite.timestamp) +
-              ", " +
-              DateFormatUtil.extractTime(invite.timestamp)
-            }
-          />
-        </Stack>
-      </ListItem>
+      <TableCell component="th" scope="row">
+        <StatusIcon status={invite.status}></StatusIcon>
+      </TableCell>
+      <TableCell align="center">{invite.inviteeName}</TableCell>
+      <TableCell align="center">
+        {DateFormatUtil.extractDate(invite.timestamp) +
+          ", " +
+          DateFormatUtil.extractTime(invite.timestamp)}
+      </TableCell>
     </>
   );
 }
@@ -109,20 +127,35 @@ function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
 
   return (
     <>
-      <Grid paddingLeft={25}>
-        <List>
-          <ListItem>
-            <Typography>Speaker: Snape</Typography>
-            <Button onClick={inviteSpeaker}>Invite</Button>
-          </ListItem>
-          <ListHeader />
-          {!isLoading ? (
-            data?.map((it) => <InviteItem invite={it}></InviteItem>)
-          ) : (
-            <></>
-          )}
-        </List>
-      </Grid>
+      <TableContainer component={Paper} sx={{ paddingLeft: 20 }}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Status</TableCell>
+              <TableCell align="center">Invite from:</TableCell>
+              <TableCell align="center">Received at:</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {!isLoading ? (
+              data?.map((it) => {
+                return (
+                  <>
+                    <TableRow
+                      key={it.inviteeId + it.userId + it.timestamp}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <InviteItem invite={it}></InviteItem>
+                    </TableRow>
+                  </>
+                );
+              })
+            ) : (
+              <></>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 }
