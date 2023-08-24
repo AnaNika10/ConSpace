@@ -4,7 +4,9 @@ const URL = config.INVITATIONS_HUB;
 class Connector {
   private connection: signalR.HubConnection;
   static instance: Connector;
-  public events: (onMessageReceived: (message: string) => void) => void;
+  public events: (
+    onMessageReceived: (invite: string, message: string) => void
+  ) => void;
 
   constructor(token: string) {
     this.connection = new signalR.HubConnectionBuilder()
@@ -15,16 +17,16 @@ class Connector {
     this.connection.start().catch((err) => console.log(err));
 
     this.events = (onMessageReceived) => {
-      this.connection.on("InviteReceived", (message) => {
+      this.connection.on("InviteReceived", (invite, message) => {
         console.log(message);
-        onMessageReceived(message);
+        onMessageReceived(invite, message);
       });
     };
   }
 
-  public newMessage = (messages: string) => {
+  public newMessage = (invite: string, message: string) => {
     this.connection
-      .send("NotifyInvitee", messages)
+      .send("NotifyInvitee", invite, message)
       .then((x) => console.log("sent"));
   };
 

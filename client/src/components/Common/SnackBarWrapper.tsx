@@ -30,7 +30,7 @@ const withSnackbar = (WrappedComponent: any) => {
     };
     const updateMessage = (msg: string) => setMessage(msg);
     useEffect(() => {
-      events((message) => {
+      events((invite, message) => {
         setMessage(message);
         setOpen(true);
       });
