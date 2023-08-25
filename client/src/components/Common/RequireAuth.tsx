@@ -1,6 +1,6 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import jwt_decode from "jwt-decode";
+import { useDecodedToken } from "../../hooks/useTokenDecoder";
 
 interface Props {
   allowedRoles: string[];
@@ -10,11 +10,9 @@ const RequireAuth: React.FC<Props> = ({ allowedRoles }) => {
   const { auth } = useAuth();
   const location = useLocation();
 
-  const decoded: any = auth?.accessToken
-    ? jwt_decode(auth.accessToken)
-    : undefined;
+  const decodedToken = useDecodedToken(auth.accessToken);
 
-  const role = decoded?.Role || "";
+  const role = decodedToken?.Role || "";
 
   return allowedRoles?.includes(role) ? (
     <Outlet />
