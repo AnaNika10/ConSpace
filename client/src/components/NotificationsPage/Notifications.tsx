@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Card,
   Dialog,
@@ -59,18 +58,20 @@ function ConfirmMeetForm({
   setMessage,
   inviteId,
   status,
+  isInitiator,
 }: {
   open: boolean;
   handleClose: () => void;
   setMessage: (msg: string) => void;
   inviteId: string;
   status: InviteStatus;
+  isInitiator: boolean;
 }) {
   const { auth } = useAuth();
   const decodedToken: { Name: string } = jwt_decode(auth.accessToken)!;
   const username = decodedToken.Name;
   const handleConfirm = () => {
-    if (status !== InviteStatus.MEET_SCHEDULED) {
+    if (status !== InviteStatus.MEET_SCHEDULED && !isInitiator) {
       const invite: Invite = {
         id: inviteId,
         userId: "71e70a13-3b32-4c52-bf85-77eb0a751355",
@@ -85,7 +86,7 @@ function ConfirmMeetForm({
     handleClose();
   };
   const handleDecline = () => {
-    if (status !== InviteStatus.MEET_SCHEDULED) {
+    if (status !== InviteStatus.MEET_SCHEDULED && !isInitiator) {
       const invite: Invite = {
         id: inviteId,
         userId: "71e70a13-3b32-4c52-bf85-77eb0a751355",
@@ -102,7 +103,8 @@ function ConfirmMeetForm({
   const handleNewRequest = () => {
     if (
       status !== InviteStatus.DECLINED &&
-      status !== InviteStatus.MEET_SCHEDULED
+      status !== InviteStatus.MEET_SCHEDULED &&
+      !isInitiator
     ) {
       const invite: Invite = {
         id: inviteId,
@@ -173,6 +175,7 @@ function InviteItem({
         setMessage={setMessage}
         inviteId={invite.id!}
         status={invite.status}
+        isInitiator={username === invite.userName}
       ></ConfirmMeetForm>
     </>
   );
@@ -188,7 +191,7 @@ function inviteUser(
     const decodedToken: { Name: string } = jwt_decode(token)!;
     const username = decodedToken.Name;
 
-    const msg = `Invite received from: ${username}`;
+    const msg = `Notification from: ${username}`;
 
     setMessage(msg);
     newMessage(JSON.stringify(invite), msg);

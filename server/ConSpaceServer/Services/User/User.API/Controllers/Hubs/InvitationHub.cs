@@ -35,7 +35,10 @@ public class InvitationHub : Hub
         var inviteDto = JsonSerializer.Deserialize<InviteDto>(invite, options);
         await _invitesRepository.UpsertInvite(inviteDto);
         string connectionId;
-        Connections.TryGetValue(inviteDto.inviteeId.ToString(), out connectionId);
+        string recipient = inviteDto.userId == ClaimExtractor.ExtractUserId(Context.User.Claims) 
+            ? inviteDto.inviteeId.ToString()
+            : inviteDto.userId.ToString(); 
+        Connections.TryGetValue(recipient, out connectionId);
         await Clients.Client(connectionId).SendAsync("InviteReceived", invite, message);
     }
 
