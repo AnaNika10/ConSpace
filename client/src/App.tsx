@@ -5,7 +5,7 @@ import { themeOptions } from "./components/Common/DarkTheme";
 import { CssBaseline } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NavBarAndMenu from "./components/Common/Menu";
-import RequireAuth from "./components/Common/RequireAuth";
+import RequireAuth from "./components/Authorization/RequireAuth";
 import HomePage from "./components/Common/HomePage";
 import Missing from "./components/Common/Missing";
 import SignIn from "./components/Authorization/SignIn";
@@ -26,7 +26,9 @@ function App() {
             <Routes>
               {/* public routes */}
               <Route path="/" element={<HomePage />} />
+
               <Route path="/seminar-schedule" element={<SeminarList />} />
+
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
