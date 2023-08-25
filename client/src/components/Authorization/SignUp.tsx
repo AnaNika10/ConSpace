@@ -65,7 +65,6 @@ function Copyright(props: any) {
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
-
   const { setAuth } = useAuth();
 
   const navigate = useNavigate();

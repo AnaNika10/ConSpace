@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Checkbox,
   Container,
   CssBaseline,
@@ -12,6 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import {
   LockOutlined as LockOutlinedIcon,
   Visibility,
@@ -43,6 +43,7 @@ function Copyright(props: any) {
 }
 
 export default function SignIn() {
+  const [loading, setLoading] = useState(false);
   const { setAuth, persist, setPersist } = useAuth();
 
   const navigate = useNavigate();
@@ -56,6 +57,9 @@ export default function SignIn() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    setLoading(true);
+
     const data = new FormData(event.currentTarget);
 
     try {
@@ -82,6 +86,8 @@ export default function SignIn() {
       navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -150,14 +156,15 @@ export default function SignIn() {
             }
             label="Remember me"
           />
-          <Button
+          <LoadingButton
             type="submit"
             fullWidth
             variant="contained"
+            loading={loading}
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In
-          </Button>
+          </LoadingButton>
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link component={RouterLink} to="/sign-up" variant="body2">
