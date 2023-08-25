@@ -43,7 +43,8 @@ public class InvitesRepository : IInvitesRepository
             .Join(_context.Attendees, response => response.inviteeId, attendee => attendee.Id,
                 (response, attendee) =>
                     new InviteNotification(response.id, response.userId, response.userName, response.inviteeId,
-                        attendee.Name, response.timestamp, response.status));
+                        attendee.Name, response.timestamp, response.status))
+            .Where(notification => notification.userId == userId || notification.inviteeId == userId);
         return result.ToList();
     }
 

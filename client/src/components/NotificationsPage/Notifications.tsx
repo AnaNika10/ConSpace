@@ -1,9 +1,11 @@
 import {
+  Box,
+  Button,
   Card,
+  Dialog,
+  DialogActions,
   ListItem,
-  ListItemText,
   Paper,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -11,6 +13,7 @@ import {
   TableHead,
   TableRow,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import InvitationConnector from "../../hubs/InvitationConnector";
 import useAuth from "../../hooks/useAuth";
@@ -22,27 +25,13 @@ import { Invite, InviteStatus } from "../../models/Invite";
 import { CheckCircle, Close, Pending } from "@mui/icons-material";
 import { DateFormatUtil } from "../Common/DateFormatUtil";
 
-function ListHeader() {
-  return (
-    <Card>
-      <ListItem alignItems="flex-start">
-        <Stack spacing={2} direction={"row"} justifyContent="space-around">
-          <ListItemText sx={{ width: 500 }} primary={"Status"} />
-          <ListItemText sx={{ width: 500 }} primary={"Invite from:"} />
-          <ListItemText sx={{ width: 500 }} primary={"Received:"} />
-        </Stack>
-      </ListItem>
-    </Card>
-  );
-}
-
 function StatusIcon({ status }: { status: InviteStatus }) {
   switch (status) {
     case InviteStatus.MEET_SCHEDULED:
       return (
         <>
           <Tooltip title="Meet scheduled">
-            <Close />
+            <CheckCircle />
           </Tooltip>
         </>
       );
@@ -50,7 +39,7 @@ function StatusIcon({ status }: { status: InviteStatus }) {
       return (
         <>
           <Tooltip title="Declined">
-            <CheckCircle />
+            <Close />
           </Tooltip>
         </>
       );
@@ -64,45 +53,168 @@ function StatusIcon({ status }: { status: InviteStatus }) {
       );
   }
 }
-function InviteItem({ invite }: { invite: Invite }) {
+function ConfirmMeetForm({
+  open,
+  handleClose,
+  setMessage,
+  inviteId,
+  status,
+}: {
+  open: boolean;
+  handleClose: () => void;
+  setMessage: (msg: string) => void;
+  inviteId: string;
+  status: InviteStatus;
+}) {
+  const { auth } = useAuth();
+  const decodedToken: { Name: string } = jwt_decode(auth.accessToken)!;
+  const username = decodedToken.Name;
+  const handleConfirm = () => {
+    if (status !== InviteStatus.MEET_SCHEDULED) {
+      const invite: Invite = {
+        id: inviteId,
+        userId: "71e70a13-3b32-4c52-bf85-77eb0a751355",
+        userName: username,
+        inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
+        inviteeName: "snape_confirmed",
+        status: InviteStatus.MEET_SCHEDULED,
+        timestamp: "2023-08-23T09:44:38",
+      };
+      inviteUser(auth.accessToken, { setMessage }, invite)();
+    }
+    handleClose();
+  };
+  const handleDecline = () => {
+    if (status !== InviteStatus.MEET_SCHEDULED) {
+      const invite: Invite = {
+        id: inviteId,
+        userId: "71e70a13-3b32-4c52-bf85-77eb0a751355",
+        userName: username,
+        inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
+        inviteeName: "snape_declined",
+        status: InviteStatus.DECLINED,
+        timestamp: "2023-08-23T09:44:38",
+      };
+      inviteUser(auth.accessToken, { setMessage }, invite)();
+    }
+    handleClose();
+  };
+  const handleNewRequest = () => {
+    if (
+      status !== InviteStatus.DECLINED &&
+      status !== InviteStatus.MEET_SCHEDULED
+    ) {
+      const invite: Invite = {
+        id: inviteId,
+        userId: "71e70a13-3b32-4c52-bf85-77eb0a751355",
+        userName: username,
+        inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
+        inviteeName: "snape_negotiation",
+        status: InviteStatus.PLACE_AND_TIME_NEGOTIATION,
+        timestamp: "2023-08-23T09:44:38",
+      };
+      inviteUser(auth.accessToken, { setMessage }, invite);
+    }
+    handleClose();
+  };
   return (
     <>
-      <TableCell component="th" scope="row">
-        <StatusIcon status={invite.status}></StatusIcon>
-      </TableCell>
-      <TableCell align="center">{invite.inviteeName}</TableCell>
-      <TableCell align="center">
-        {DateFormatUtil.extractDate(invite.timestamp) +
-          ", " +
-          DateFormatUtil.extractTime(invite.timestamp)}
-      </TableCell>
+      <Dialog open={open} onClose={handleClose}>
+        <Card>
+          <DialogActions>
+            <Button onClick={handleConfirm}>Confirm</Button>
+            <Button onClick={handleDecline} type="submit">
+              Decline
+            </Button>
+            <Button onClick={handleNewRequest} type="submit">
+              Request another meeting place and/or time
+            </Button>
+          </DialogActions>
+        </Card>
+      </Dialog>
+    </>
+  );
+}
+function InviteItem({
+  invite,
+  setMessage,
+}: {
+  invite: Invite;
+  setMessage: (msg: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const { auth } = useAuth();
+  const decodedToken: { Name: string } = jwt_decode(auth.accessToken)!;
+  const username = decodedToken.Name;
+
+  return (
+    <>
+      <TableRow
+        key={invite.inviteeId + invite.userId + invite.timestamp}
+        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+        onClick={() => setOpen(!open)}
+      >
+        <TableCell component="th" scope="row">
+          <StatusIcon status={invite.status}></StatusIcon>
+        </TableCell>
+        <TableCell align="center">
+          {username === invite.userName ? "You" : invite.inviteeName}
+        </TableCell>
+        <TableCell align="center">{invite.inviteeName}</TableCell>
+        <TableCell align="center">
+          {DateFormatUtil.extractDate(invite.timestamp) +
+            ", " +
+            DateFormatUtil.extractTime(invite.timestamp)}
+        </TableCell>
+      </TableRow>
+      <ConfirmMeetForm
+        open={open}
+        handleClose={() => setOpen(false)}
+        setMessage={setMessage}
+        inviteId={invite.id!}
+        status={invite.status}
+      ></ConfirmMeetForm>
     </>
   );
 }
 
+function inviteUser(
+  token: string,
+  { setMessage }: { setMessage: (msg: string) => void },
+  invite: Invite
+) {
+  const { newMessage } = InvitationConnector(token);
+  const invitation = () => {
+    const decodedToken: { Name: string } = jwt_decode(token)!;
+    const username = decodedToken.Name;
+
+    const msg = `Invite received from: ${username}`;
+
+    setMessage(msg);
+    newMessage(JSON.stringify(invite), msg);
+  };
+  return invitation;
+}
 function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
   const [data, setData] = useState<Invite[]>();
   const [isLoading, setLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
   const { auth } = useAuth();
   const { newMessage } = InvitationConnector(auth.accessToken);
-  const inviteSpeaker = () => {
-    const decodedToken: { Name: string } = jwt_decode(auth.accessToken)!;
-    const username = decodedToken.Name;
-
-    const msg = `Invite received from: ${username}`;
-    const invite: Invite = {
-      id: null,
-      userId: "71e70a13-3b32-4c52-bf85-77eb0a751355",
-      userName: username,
-      inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
-      inviteeName: "snape",
-      status: InviteStatus.PENDING_ANSWER,
-      timestamp: "2023-08-23T09:44:38",
-    };
-    setMessage(msg);
-    newMessage(JSON.stringify(invite), msg);
+  const decodedToken: { Name: string } = jwt_decode(auth.accessToken)!;
+  const username = decodedToken.Name;
+  //todo populate invite with data of a speaker user wants to invite
+  const invite: Invite = {
+    id: null,
+    userId: "71e70a13-3b32-4c52-bf85-77eb0a751355",
+    userName: username,
+    inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
+    inviteeName: "snape",
+    status: InviteStatus.PENDING_ANSWER,
+    timestamp: "2023-08-23T09:44:38",
   };
+  const inviteSpeaker = () =>
+    inviteUser(auth.accessToken, { setMessage }, invite)();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -127,12 +239,17 @@ function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
 
   return (
     <>
-      <TableContainer component={Paper} sx={{ paddingLeft: 20 }}>
+      <ListItem>
+        <Typography>Speaker: Snape</Typography>
+        <Button onClick={inviteSpeaker}>Invite</Button>
+      </ListItem>
+      <TableContainer component={Paper} sx={{ marginX: 50, maxWidth: 850 }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
-            <TableRow>
+            <TableRow key="header">
               <TableCell>Status</TableCell>
               <TableCell align="center">Invite from:</TableCell>
+              <TableCell align="center">Sent to:</TableCell>
               <TableCell align="center">Received at:</TableCell>
             </TableRow>
           </TableHead>
@@ -141,12 +258,10 @@ function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
               data?.map((it) => {
                 return (
                   <>
-                    <TableRow
-                      key={it.inviteeId + it.userId + it.timestamp}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <InviteItem invite={it}></InviteItem>
-                    </TableRow>
+                    <InviteItem
+                      invite={it}
+                      setMessage={setMessage}
+                    ></InviteItem>
                   </>
                 );
               })
