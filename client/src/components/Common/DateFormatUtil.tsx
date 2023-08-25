@@ -17,4 +17,8 @@ export abstract class DateFormatUtil {
   public static getCurrentDate() {
     return dayjs().format("YYYY-MM-DD");
   }
+
+  public static getCurrentDateTimeOffset() {
+    return dayjs();
+  }
 }

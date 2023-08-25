@@ -79,7 +79,9 @@ function ConfirmMeetForm({
         inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
         inviteeName: "snape_confirmed",
         status: InviteStatus.MEET_SCHEDULED,
-        timestamp: "2023-08-23T09:44:38",
+        timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
+        time: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
+        place: "Hogwarts",
       };
       inviteUser(auth.accessToken, { setMessage }, invite)();
     }
@@ -94,7 +96,9 @@ function ConfirmMeetForm({
         inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
         inviteeName: "snape_declined",
         status: InviteStatus.DECLINED,
-        timestamp: "2023-08-23T09:44:38",
+        timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
+        time: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
+        place: "Hogwarts",
       };
       inviteUser(auth.accessToken, { setMessage }, invite)();
     }
@@ -113,7 +117,9 @@ function ConfirmMeetForm({
         inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
         inviteeName: "snape_negotiation",
         status: InviteStatus.PLACE_AND_TIME_NEGOTIATION,
-        timestamp: "2023-08-23T09:44:38",
+        timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
+        time: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
+        place: "Hogwarts",
       };
       inviteUser(auth.accessToken, { setMessage }, invite);
     }
@@ -168,6 +174,16 @@ function InviteItem({
             ", " +
             DateFormatUtil.extractTime(invite.timestamp)}
         </TableCell>
+        <TableCell align="center">
+          {invite.place ? invite.place : "Not set"}
+        </TableCell>
+        <TableCell align="center">
+          {invite.time
+            ? DateFormatUtil.extractDate(invite.time) +
+              ", " +
+              DateFormatUtil.extractTime(invite.time)
+            : "Not set"}
+        </TableCell>
       </TableRow>
       <ConfirmMeetForm
         open={open}
@@ -214,7 +230,9 @@ function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
     inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
     inviteeName: "snape",
     status: InviteStatus.PENDING_ANSWER,
-    timestamp: "2023-08-23T09:44:38",
+    timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
+    time: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
+    place: "Hogwarts",
   };
   const inviteSpeaker = () =>
     inviteUser(auth.accessToken, { setMessage }, invite)();
@@ -254,6 +272,8 @@ function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
               <TableCell align="center">Invite from:</TableCell>
               <TableCell align="center">Sent to:</TableCell>
               <TableCell align="center">Received at:</TableCell>
+              <TableCell align="center">Meeting place:</TableCell>
+              <TableCell align="center">Meeting time:</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

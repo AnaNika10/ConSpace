@@ -13,7 +13,6 @@ export interface Invite {
     inviteeName: string,
     timestamp: string
     status: InviteStatus
-    
-    
-    
+    time: string,
+    place: string
 }
