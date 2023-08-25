@@ -27,9 +27,6 @@ export default function NavBar() {
           <Link to={"/seminar-schedule"}>
             <Button sx={{ color: "white" }}>Seminar Schedule</Button>
           </Link>
-          <Link to={"/exhibitors"}>
-            <Button sx={{ color: "white" }}>Exhibitors</Button>
-          </Link>
           <Link to={"/floorplan"}>
             <Button sx={{ color: "white" }}>Floorplan</Button>
           </Link>
