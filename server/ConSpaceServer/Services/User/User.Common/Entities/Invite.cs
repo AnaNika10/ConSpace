@@ -30,6 +30,8 @@ public class Invite
     [Column("status")] public InviteStatus status { get; set; }
 
     [Column("timestamp")] public DateTimeOffset timestamp { get; set; }
+    [Column("time")] public DateTimeOffset?  time{ get; set; }
+    [Column("place")] public string?  place{ get; set; }
 }
 
 public enum InviteStatus

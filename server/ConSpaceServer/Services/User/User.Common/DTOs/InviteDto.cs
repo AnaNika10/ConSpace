@@ -12,7 +12,9 @@ public class InviteDto
         Guid inviteeId,
         string inviteeName, 
         DateTimeOffset? timestamp,
-        InviteStatusDto status
+        InviteStatusDto status,
+        DateTimeOffset? time,
+        String? place
     )
     {
         this.id = id;
@@ -22,6 +24,8 @@ public class InviteDto
         this.inviteeName = inviteeName;
         this.timestamp = timestamp;
         this.status = status;
+        this.time = time;
+        this.place = place;
     }
     
     [JsonInclude]
@@ -38,6 +42,10 @@ public class InviteDto
     public InviteStatusDto status {get;set;}
     [JsonInclude]
     public DateTimeOffset? timestamp {get;set;}
+    [JsonInclude]
+    public DateTimeOffset? time {get;set;}
+    [JsonInclude]
+    public String? place {get;set;}
     
 }
 

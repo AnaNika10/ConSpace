@@ -8,7 +8,9 @@ public class UserResponse
         string userName,
         Guid inviteeId,
         InviteNotificationStatus status,
-        DateTimeOffset timestamp
+        DateTimeOffset timestamp,
+        DateTimeOffset? time,
+        string? place
     )
     {
         this.id = id;
@@ -17,6 +19,8 @@ public class UserResponse
         this.inviteeId = inviteeId;
         this.timestamp = timestamp;
         this.status = status;
+        this.time = time;
+        this.place = place;
     }
     
     public Guid id {get;set;}
@@ -25,5 +29,7 @@ public class UserResponse
     public Guid inviteeId {get;set;}
     public InviteNotificationStatus status {get;set;}
     public DateTimeOffset timestamp {get;set;}
+    public DateTimeOffset? time {get;set;}
+    public string? place {get;set;}
     
 }

@@ -43,7 +43,7 @@ public class InvitesRepository : IInvitesRepository
             .Join(_context.Attendees, response => response.inviteeId, attendee => attendee.Id,
                 (response, attendee) =>
                     new InviteNotification(response.id, response.userId, response.userName, response.inviteeId,
-                        attendee.Name, response.timestamp, response.status))
+                        attendee.Name, response.timestamp, response.status, response.time, response.place))
             .Where(notification => notification.userId == userId || notification.inviteeId == userId);
         return result.ToList();
     }
@@ -53,7 +53,9 @@ public class InvitesRepository : IInvitesRepository
         return await _context.Invites
             .Join(_context.Attendees, invite => invite.UserId, attendee => attendee.Id,
                 (invite, attendee) => 
-                    new UserResponse(invite.Id, invite.UserId, attendee.Name, invite.InviteeId, EnumConversionExtension.mapToModel(invite.status), invite.timestamp))
+                    new UserResponse(invite.Id, invite.UserId, attendee.Name, invite.InviteeId, 
+                        EnumConversionExtension.mapToModel(invite.status), invite.timestamp, invite.time, invite.place)
+                )
             .ToListAsync();
     }
 }
