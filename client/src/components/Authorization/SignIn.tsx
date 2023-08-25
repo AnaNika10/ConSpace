@@ -21,7 +21,7 @@ import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LOGIN_URL } from "../../constants/api";
 
 function Copyright(props: any) {
@@ -43,7 +43,7 @@ function Copyright(props: any) {
 }
 
 export default function SignIn() {
-  const { setAuth } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -75,11 +75,24 @@ export default function SignIn() {
         refreshToken: response?.data.refreshToken,
       });
 
+      if (persist) {
+        localStorage.setItem("accessToken", response?.data.accessToken);
+      }
+
       navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
     }
   };
+
+  const togglePersist = () => {
+    setPersist((prev) => !prev);
+  };
+
+  useEffect(
+    () => localStorage.setItem("persist", persist.toString()),
+    [persist]
+  );
 
   return (
     <Container component="main" maxWidth="xs">
@@ -127,7 +140,14 @@ export default function SignIn() {
             }}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={
+              <Checkbox
+                value="remember"
+                color="primary"
+                onChange={togglePersist}
+                checked={persist}
+              />
+            }
             label="Remember me"
           />
           <Button
