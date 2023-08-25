@@ -1,14 +1,12 @@
 import axios from "../api/axios";
 import { LOGOUT_URL } from "../constants/api";
 import useAuth from "./useAuth";
-import jwt_decode from "jwt-decode";
+import { useDecodedToken } from "./useTokenDecoder";
 
 export default function useLogout() {
     const { auth, setAuth } = useAuth();
 
-    const decoded: any = auth?.accessToken
-    ? jwt_decode(auth.accessToken)
-    : undefined;
+    const decodedToken = useDecodedToken(auth.accessToken);
 
     const logout = async () => {
         setAuth({
@@ -22,7 +20,7 @@ export default function useLogout() {
             axios.post(
                 LOGOUT_URL,
                 JSON.stringify({
-                  email: decoded?.Email,
+                  email: decodedToken?.Email,
                   refreshToken: auth.refreshToken,
                 }),
                 {
