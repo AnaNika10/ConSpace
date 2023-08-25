@@ -6,9 +6,16 @@ import jwt_decode from 'jwt-decode';
 export default function useRefreshToken() {
   const { auth, setAuth } = useAuth();
 
-  const decoded: any = auth?.accessToken
-  ? jwt_decode(auth.accessToken)
-  : undefined;
+  let decoded: any;
+  
+  if (auth.accessToken) {
+    decoded = jwt_decode(auth.accessToken);
+  } else {
+    const storedAccessToken = localStorage.getItem("accessToken");
+    if (storedAccessToken) {
+      decoded = jwt_decode(storedAccessToken);
+    }
+  }
   
   async function refresh() {
     const response = await axios.post(
@@ -22,7 +29,6 @@ export default function useRefreshToken() {
         }
     );
 
-    console.log("refresh")
     setAuth(prev => {
         console.log(JSON.stringify(prev));
         console.log(response.data.accessToken);

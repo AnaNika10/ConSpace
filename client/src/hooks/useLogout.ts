@@ -15,7 +15,9 @@ export default function useLogout() {
             accessToken: "",
             refreshToken: "",
         });
-
+        
+        localStorage.removeItem("accessToken");
+        
         try {
             axios.post(
                 LOGOUT_URL,

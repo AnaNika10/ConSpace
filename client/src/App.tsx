@@ -13,6 +13,7 @@ import SignUp from "./components/Authorization/SignUp";
 import Unauthorized from "./components/Authorization/Unauthorized";
 import AuthProvider from "./context/AuthProvider";
 import Notes from "./components/NotesPage/Notes";
+import PersistLogin from "./components/Authorization/PersistLogin";
 
 function App() {
   return (
@@ -32,20 +33,21 @@ function App() {
 
               {/* protected routes */}
               {/* TODO: add your protected routes here, examples are commented out */}
-              <Route
-                element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
-              >
+              <Route element={<PersistLogin />}>
                 <Route
-                  path="/calendar-schedule"
-                  element={<SeminarCalendar />}
-                />
+                  element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
+                >
+                  <Route
+                    path="/calendar-schedule"
+                    element={<SeminarCalendar />}
+                  />
+                </Route>
+                <Route
+                  element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
+                >
+                  <Route path="/notes" element={<Notes />} />
+                </Route>
               </Route>
-              <Route
-                element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
-              >
-                <Route path="/notes" element={<Notes />} />
-              </Route>
-
               {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>
                 <Route path="/seminar-schedule" element={<SeminarList />} />
               </Route> */}
