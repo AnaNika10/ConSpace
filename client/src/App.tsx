@@ -34,18 +34,18 @@ function App() {
 
               {/* protected routes */}
               {/* TODO: add your protected routes here, examples are commented out */}
-                <Route element={<PersistLogin />}>
-                    <Route
-                        element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
-                    >
-                        <Route
-                            path="/calendar-schedule"
-                            element={<SeminarCalendar />}
-                        />
-                        <Route path="/notes" element={<Notes />} />
-                        <Route path="/notifications" element={<Notifications />} />
-                    </Route>
+              <Route element={<PersistLogin />}>
+                <Route
+                  element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
+                >
+                  <Route
+                    path="/calendar-schedule"
+                    element={<SeminarCalendar />}
+                  />
+                  <Route path="/notes" element={<Notes />} />
+                  <Route path="/notifications" element={<Notifications />} />
                 </Route>
+              </Route>
               {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>
                 <Route path="/seminar-schedule" element={<SeminarList />} />
               </Route> */}

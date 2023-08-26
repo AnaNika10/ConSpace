@@ -11,12 +11,13 @@ import useAuth from "../../hooks/useAuth";
 import withSnackbar from "../Common/SnackBarWrapper";
 import jwt_decode from "jwt-decode";
 import { useState, useEffect } from "react";
-import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 import { Invite, InviteStatus } from "../../models/Invite";
 import { DateFormatUtil } from "../Common/DateFormatUtil";
 import { InviteItem } from "./InviteItem";
 import { inviteUser } from "../../hubs/InviteUser";
 import { NotificationsHeader } from "./NotificationsHeader";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
   const [data, setData] = useState<Invite[]>();
@@ -25,12 +26,13 @@ function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
   const { auth } = useAuth();
   const decodedToken: { Name: string } = jwt_decode(auth.accessToken)!;
   const username = decodedToken.Name;
+  const axiosPrivate = useAxiosPrivate();
   //todo populate invite with data of a speaker user wants to invite
   const invite: Invite = {
     id: null,
-    userId: "71e70a13-3b32-4c52-bf85-77eb0a751355",
+    userId: "eba6d3a8-7625-4608-b911-9eefc043b1c9",
     userName: username,
-    inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
+    inviteeId: "21404fca-d133-4718-8955-6cdd7c7ba5da",
     inviteeName: "snape",
     status: InviteStatus.PENDING_ANSWER,
     timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
@@ -39,26 +41,40 @@ function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
   };
   const inviteSpeaker = () =>
     inviteUser(auth.accessToken, { setMessage }, invite)();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const fetchData = async () => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getAllInvites = async () => {
       try {
-        const response = await UserDataProvider.getAllInvites(auth.accessToken);
-        if (!response.ok) {
-          throw new Error(`Failed fetching data. Status: ${response.status}`);
-        }
-        const actual = await response.json();
-        setLoading(false);
-        setError(null);
-        setData(actual);
+        const response = await axiosPrivate.get("/GetAllInvites", {
+          signal: controller.signal,
+        });
+
+        isMounted && setLoading(false);
+        isMounted && setError(null);
+        isMounted && setData(response.data);
       } catch (err: any) {
-        setError(err.message);
-        setData([]);
+        isMounted && setError(err.message);
+        isMounted && setData([]);
+        navigate("/sign-in", { state: { from: location }, replace: true });
       } finally {
-        setLoading(false);
+        isMounted && setLoading(false);
       }
     };
-    fetchData();
+
+    getAllInvites();
+
+    return () => {
+      isMounted = false;
+
+      if (!location.pathname.startsWith("/notifications")) {
+        controller.abort();
+      }
+    };
   }, [data, auth]);
 
   return (

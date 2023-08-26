@@ -1,4 +1,5 @@
 import { IdentityDataProvider } from "../dataProviders/IdentityDataProvider";
+import InvitationConnector from "../hubs/InvitationConnector";
 import useAuth from "./useAuth";
 import { useDecodedToken } from "./useTokenDecoder";
 
@@ -16,6 +17,7 @@ export default function useLogout() {
         localStorage.removeItem("accessToken");
         
         try {
+          InvitationConnector(auth.accessToken).disconnect();
           IdentityDataProvider.logout(auth.accessToken, {
             email: decodedToken?.Email,
             refreshToken: auth.refreshToken,

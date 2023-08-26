@@ -30,9 +30,9 @@ export function ConfirmMeetForm({
     if (status !== InviteStatus.MEET_SCHEDULED && !isInitiator) {
       const invite: Invite = {
         id: inviteId,
-        userId: "71e70a13-3b32-4c52-bf85-77eb0a751355",
+        userId: "eba6d3a8-7625-4608-b911-9eefc043b1c9",
         userName: username,
-        inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
+        inviteeId: "21404fca-d133-4718-8955-6cdd7c7ba5da",
         inviteeName: "snape_confirmed",
         status: InviteStatus.MEET_SCHEDULED,
         timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
@@ -47,9 +47,9 @@ export function ConfirmMeetForm({
     if (status !== InviteStatus.MEET_SCHEDULED && !isInitiator) {
       const invite: Invite = {
         id: inviteId,
-        userId: "71e70a13-3b32-4c52-bf85-77eb0a751355",
+        userId: "eba6d3a8-7625-4608-b911-9eefc043b1c9",
         userName: username,
-        inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
+        inviteeId: "21404fca-d133-4718-8955-6cdd7c7ba5da",
         inviteeName: "snape_declined",
         status: InviteStatus.DECLINED,
         timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),

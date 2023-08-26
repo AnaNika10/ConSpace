@@ -77,7 +77,7 @@ export default function SignIn() {
       }
 
       navigate(from, { replace: true });
-      InvitationConnector(response?.data.accessToken).reconnect();
+      InvitationConnector(response?.data.accessToken);
     } catch (err) {
       console.log(err);
     } finally {

@@ -31,6 +31,7 @@ const withSnackbar = (WrappedComponent: any) => {
     const updateMessage = (msg: string) => setMessage(msg);
     useEffect(() => {
       events((invite, message) => {
+        console.log("received");
         setMessage(message);
         setOpen(true);
       });
