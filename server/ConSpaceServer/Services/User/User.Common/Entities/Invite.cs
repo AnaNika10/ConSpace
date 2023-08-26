@@ -11,11 +11,13 @@ namespace User.Common.Entities;
 public class Invite
 {
     
-    public Invite(Guid userId, Guid inviteeId, InviteStatus status)
+    public Invite(Guid userId, Guid inviteeId, InviteStatus status, DateTimeOffset? time, string? place)
     {
         UserId = userId;
         InviteeId = inviteeId;
         this.status = status;
+        this.place = place;
+        this.time = time;
     }
     
     [Column("id")]

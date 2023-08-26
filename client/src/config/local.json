@@ -1,4 +1,4 @@
 {
     "API_GATEWAY": "http://localhost:8001",
-    "INVITATIONS_HUB": "http://localhost:5292/notifications"
+    "INVITATIONS_HUB": "http://localhost:8080/notifications"
 }

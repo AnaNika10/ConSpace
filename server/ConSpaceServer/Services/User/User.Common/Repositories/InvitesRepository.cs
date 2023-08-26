@@ -25,11 +25,13 @@ public class InvitesRepository : IInvitesRepository
         {
             Invite inviteDb = await _context.Invites.SingleAsync(it => it.Id == invite.id);
             inviteDb.status = EnumConversionExtension.mapToEntity(invite.status);
+            inviteDb.time = invite.time;
+            inviteDb.place = invite.place;
             _logger.LogInformation($"Updating invite for user {invite.inviteeId} from user: {invite.userId}");
         }
         else
         {
-            await _context.Invites.AddAsync(new Invite(invite.userId, invite.inviteeId, InviteStatus.PENDING_ANSWER));
+            await _context.Invites.AddAsync(new Invite(invite.userId, invite.inviteeId, InviteStatus.PENDING_ANSWER, invite.time, invite.place));
             _logger.LogInformation($"Creating invite for user: {invite.inviteeId}");   
         }
         return await _context.SaveChangesAsync() > 0;
