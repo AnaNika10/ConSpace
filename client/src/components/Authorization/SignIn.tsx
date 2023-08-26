@@ -18,16 +18,10 @@ import {
   VisibilityOff,
 } from "@mui/icons-material";
 import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
-
-import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { useEffect, useState } from "react";
-import { LOGIN_URL } from "../../constants/api";
-import { useState } from "react";
-import withSnackbar from "../Common/SnackBarWrapper";
 import InvitationConnector from "../../hubs/InvitationConnector";
-
-const LOGIN_URL = "/api/v1/Authentication/Login";
+import { IdentityDataProvider } from "../../dataProviders/IdentityDataProvider";
 
 function Copyright(props: any) {
   return (
@@ -68,16 +62,10 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
 
     try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({
-          email: data.get("email"),
-          password: data.get("password"),
-        }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await IdentityDataProvider.loginUser({
+        email: data.get("email"),
+        password: data.get("password"),
+      });
 
       setAuth({
         accessToken: response?.data.accessToken,

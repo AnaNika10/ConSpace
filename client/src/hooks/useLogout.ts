@@ -1,5 +1,4 @@
-import axios from "../api/axios";
-import { LOGOUT_URL } from "../constants/api";
+import { IdentityDataProvider } from "../dataProviders/IdentityDataProvider";
 import useAuth from "./useAuth";
 import { useDecodedToken } from "./useTokenDecoder";
 
@@ -17,19 +16,10 @@ export default function useLogout() {
         localStorage.removeItem("accessToken");
         
         try {
-            axios.post(
-                LOGOUT_URL,
-                JSON.stringify({
-                  email: decodedToken?.Email,
-                  refreshToken: auth.refreshToken,
-                }),
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${auth.accessToken}`,
-                  },
-                }
-              );
+          IdentityDataProvider.logout(auth.accessToken, {
+            email: decodedToken?.Email,
+            refreshToken: auth.refreshToken,
+          });
         } catch (err) {
             console.error(err);
         }

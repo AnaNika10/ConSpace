@@ -6,12 +6,11 @@ import { EmptyNotesList } from "./EmptyNotesList";
 import { FormBox } from "./FormBox";
 import { NoteCard } from "./NoteCard";
 import withSnackbar from "../Common/SnackBarWrapper";
-
-import axios from "../../api/axios";
-import { CREATE_NOTE_URL, GET_ALL_NOTES_URL } from "../../constants/api";
+import { GET_ALL_NOTES_URL } from "../../constants/api";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 const fabStyle = {
   position: "absolute",
   bottom: 16,
@@ -43,13 +42,7 @@ function AddNote({ token }: { token: string }) {
       content: content!,
     };
 
-    await axios.post(CREATE_NOTE_URL, JSON.stringify(note), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
+    await UserDataProvider.addNote(note, token);
     handleClose();
   };
   const isFilled = (e: any) => {

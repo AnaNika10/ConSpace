@@ -4,25 +4,28 @@ import { Seminar } from "../../models/Seminar";
 import { ConferenceDateUtil } from "./ConferenceDateUtil";
 import { SeminarTabs } from "./SeminarTabs";
 import { SeminarListItem } from "./SeminarListItem";
-import axios from "../../api/axios";
-import { GET_CONFERENCES_URL } from "../../constants/api";
 import withSnackbar from "../Common/SnackBarWrapper";
+import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
+import useAuth from "../../hooks/useAuth";
 
 function SeminarList() {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [, setError] = useState(null);
   const [dayOfSeminar, setDay] = useState(1);
+  const { auth } = useAuth();
   const setDayOfSeminar = (day: number) => {
     setDay(day);
   };
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(GET_CONFERENCES_URL);
+        const response = await SeminarDataProvider.fetchSeminarSchedule(
+          auth.accessToken
+        );
         setLoading(false);
         setError(null);
-        setData(response.data);
+        setData(response?.data);
       } catch (err: any) {
         setError(err.message);
         setData([]);

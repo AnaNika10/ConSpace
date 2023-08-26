@@ -10,10 +10,9 @@ import {
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import axios from "../../api/axios";
-import { LOGIN_URL } from "../../constants/api";
 import useAuth from "../../hooks/useAuth";
 import { useDecodedToken } from "../../hooks/useTokenDecoder";
+import { IdentityDataProvider } from "../../dataProviders/IdentityDataProvider";
 
 interface PasswordEditDialogProps {
   open: boolean;
@@ -61,16 +60,10 @@ export default function PasswordEditDialog({
 
     if (oldPasswordValidation.isValid && newPasswordValidation.isValid) {
       try {
-        const response = await axios.post(
-          LOGIN_URL,
-          JSON.stringify({
-            email: decodedToken.Email,
-            password: oldPassword,
-          }),
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+        const response = await IdentityDataProvider.loginUser({
+          email: decodedToken.Email,
+          password: oldPassword,
+        });
 
         setAuth({
           accessToken: response?.data.accessToken,

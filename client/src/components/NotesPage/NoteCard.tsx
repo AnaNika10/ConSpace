@@ -10,20 +10,14 @@ import {
 import { useState } from "react";
 import { Note } from "../../models/Note";
 import { FormBox } from "./FormBox";
-import axios from "../../api/axios";
-import { DELETE_NOTE_URL, EDIT_NOTE_URL } from "../../constants/api";
+import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 
 export function NoteCard({ note, token }: { note: Note; token: string }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState(false);
   const handleDelete = async () => {
     console.log(note.id);
-    await axios.delete(`${DELETE_NOTE_URL}/${note.id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    await UserDataProvider.deleteNote(note.id!, token);
   };
   const handleEdit = () => {
     setOpen(true);
@@ -48,12 +42,7 @@ export function NoteCard({ note, token }: { note: Note; token: string }) {
       title: title!,
       content: content!,
     };
-    await axios.patch(EDIT_NOTE_URL, JSON.stringify(updatedNote), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    await UserDataProvider.editNote(updatedNote, token);
     setOpen(false);
   };
   const isFilled = (e: any) => {
