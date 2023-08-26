@@ -475,10 +475,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "RouteClaimsRequirement": {
         "Role": "Administrator"
       },
@@ -494,10 +490,7 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
+
       "UpstreamPathTemplate": "/Conferences",
       "UpstreamHttpMethod": [ "Get" ]
     },
@@ -510,10 +503,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "UpstreamPathTemplate": "/Seminar/{seminarId}",
       "UpstreamHttpMethod": [ "Get", "Delete" ]
     },
@@ -526,10 +515,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "UpstreamPathTemplate": "/FilterConferences",
       "UpstreamHttpMethod": [ "Get" ]
     },
@@ -543,10 +528,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "RouteClaimsRequirement": {
         "Role": "Administrator"
       },
@@ -562,10 +543,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "UpstreamPathTemplate": "/Exhibitor",
       "UpstreamHttpMethod": [ "Get" ]
     },
@@ -578,10 +555,7 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
+
       "UpstreamPathTemplate": "/Exhibitor/{exhibitorId}",
       "UpstreamHttpMethod": [ "Delete", "Get" ]
     },
@@ -595,10 +569,7 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
+
       "RouteClaimsRequirement": {
         "Role": "Administrator"
       },
@@ -614,10 +585,7 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
+
       "UpstreamPathTemplate": "/FAQ",
       "UpstreamHttpMethod": [ "Get" ]
 
@@ -631,10 +599,7 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
+
       "UpstreamPathTemplate": "/FAQ/{id}",
       "UpstreamHttpMethod": [ "Get", "Delete" ]
     },
@@ -648,10 +613,7 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
+
       "UpstreamPathTemplate": "/Speaker",
       "UpstreamHttpMethod": [ "Get" ]
     },
@@ -664,13 +626,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "Administrator"
-      },
       "UpstreamPathTemplate": "/Speaker",
       "UpstreamHttpMethod": [ "Post", "Put" ]
     },
@@ -683,10 +638,7 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
+
       "UpstreamPathTemplate": "/Speaker/{id}",
       "UpstreamHttpMethod": [ "Get", "Delete" ]
     }

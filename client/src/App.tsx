@@ -13,6 +13,7 @@ import SignUp from "./components/LoginPage/SignUp";
 import Unauthorized from "./components/LoginPage/Unauthorized";
 import AuthProvider from "./context/AuthProvider";
 import Notes from "./components/NotesPage/Notes";
+import SpeakerList from "./components/Speaker/SpeakerList";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               {/* public routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/seminar-schedule" element={<SeminarList />} />
+              <Route path="/speakers" element={<SpeakerList />} />
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
