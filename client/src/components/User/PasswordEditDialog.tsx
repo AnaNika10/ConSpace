@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -45,6 +45,11 @@ export default function PasswordEditDialog({
   const [oldPasswordError, setOldPasswordError] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
 
+  useEffect(() => {
+    setShowPassword(false);
+    setShowNewPassword(false);
+  }, [open]);
+
   const clearFields = () => {
     setOldPassword("");
     setNewPassword("");
@@ -69,8 +74,6 @@ export default function PasswordEditDialog({
           accessToken: response?.data.accessToken,
           refreshToken: response?.data.refreshToken,
         });
-
-        // console.log(response?.data.accessToken);
 
         if (response?.data.accessToken) {
           setIsOldPasswordCorrect(true);

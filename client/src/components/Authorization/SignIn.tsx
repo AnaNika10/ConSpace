@@ -54,6 +54,8 @@ export default function SignIn() {
     setShowPassword(!showPassword);
   };
 
+  const [error, setError] = useState<string | null>(null);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -79,7 +81,9 @@ export default function SignIn() {
       navigate(from, { replace: true });
       InvitationConnector(response?.data.accessToken);
     } catch (err) {
-      console.log(err);
+      setError(
+        "The email or password you entered is incorrect. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -159,6 +163,11 @@ export default function SignIn() {
           >
             Sign In
           </LoadingButton>
+          {error && (
+            <Typography variant="body2" color="error">
+              {error}
+            </Typography>
+          )}
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link component={RouterLink} to="/sign-up" variant="body2">

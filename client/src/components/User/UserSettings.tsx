@@ -30,6 +30,8 @@ export default function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const [name, setName] = useState(decodedToken.Name || "");
   const [surname, setSurname] = useState(decodedToken.Surname || "");
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     setName(decodedToken.Name || "");
     setSurname(decodedToken.Surname || "");
@@ -73,13 +75,24 @@ export default function SettingsDialog({ open, onClose }: SettingsDialogProps) {
         currentpassword: oldPassword,
         newpassword: newPassword,
       });
+        setError(null);
     } catch {
-      console.log("Error updating password");
+      setError(
+        "Something went wrong while updating your password. Please try again."
+      );
     }
 
     setEditingPassword(false);
   };
 
+  const clearErrors = () => {
+    setError(null);
+  };
+
+  const handleClose = () => {
+    clearErrors();
+    onClose();
+  };
   return (
     <Dialog
       open={open}
@@ -114,20 +127,23 @@ export default function SettingsDialog({ open, onClose }: SettingsDialogProps) {
           >
             Change password
           </Button>
+          {error && (
+            <Typography variant="body2" color="error">
+              {error}
+            </Typography>
+          )}
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Close</Button>
+        <Button onClick={handleClose}>Close</Button>
       </DialogActions>
 
-      {/* Name Edit Dialog */}
       <NameEditDialog
         open={editingName}
         onClose={() => setEditingName(false)}
         onSave={handleNameSave}
       />
 
-      {/* Password Edit Dialog */}
       <PasswordEditDialog
         open={editingPassword}
         onClose={() => setEditingPassword(false)}
