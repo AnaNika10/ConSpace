@@ -78,19 +78,26 @@ export default function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     oldPassword: string,
     newPassword: string
   ) => {
-    await axios.put(
-      UPDATE_USER_PASSWORD_URL,
-      JSON.stringify({
-        currentpassword: oldPassword,
-        newpassword: newPassword,
-      }),
-      {
-        headers: {
-          Authorization: `Bearer ${auth.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    try {
+      // console.log(oldPassword);
+      // console.log(newPassword);
+      // console.log(auth.accessToken);
+      await axios.put(
+        UPDATE_USER_PASSWORD_URL,
+        JSON.stringify({
+          currentpassword: oldPassword,
+          newpassword: newPassword,
+        }),
+        {
+          headers: {
+            Authorization: `Bearer ${auth.accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch {
+      console.log("Error updating password");
+    }
 
     setEditingPassword(false);
   };
