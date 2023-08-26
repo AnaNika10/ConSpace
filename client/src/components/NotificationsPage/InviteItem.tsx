@@ -1,7 +1,7 @@
 import { TableRow, TableCell } from "@mui/material";
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { Invite } from "../../models/Invite";
+import { Invite, InviteStatus } from "../../models/Invite";
 import { DateFormatUtil } from "../Common/DateFormatUtil";
 import { StatusIcon } from "./StatusIcon";
 import jwt_decode from "jwt-decode";
@@ -50,7 +50,11 @@ export function InviteItem({
         </TableCell>
       </TableRow>
       <ConfirmMeetForm
-        open={open}
+        open={
+          open &&
+          (invite.status === InviteStatus.PENDING_ANSWER ||
+            invite.status === InviteStatus.PLACE_AND_TIME_NEGOTIATION)
+        }
         handleClose={() => setOpen(false)}
         setMessage={setMessage}
         inviteId={invite.id!}

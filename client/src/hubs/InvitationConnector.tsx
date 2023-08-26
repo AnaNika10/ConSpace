@@ -34,6 +34,9 @@ class Connector {
     this.connection.stop().then(() => console.log("disconnected"));
   };
 
+  public reconnect = () => {
+    this.connection.start().then(() => console.log("reconnected"));
+  };
   public static getInstance(token: string): Connector {
     if (!Connector.instance) Connector.instance = new Connector(token);
     return Connector.instance;

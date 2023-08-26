@@ -79,7 +79,7 @@ export default function SignIn() {
       });
 
       navigate(from, { replace: true });
-      InvitationConnector(response?.data.accessToken);
+      InvitationConnector(response?.data.accessToken).reconnect();
     } catch (err) {
       console.log(err);
     }
