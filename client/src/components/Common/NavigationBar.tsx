@@ -1,17 +1,13 @@
 import { Button, Container, Grid, Stack, Typography } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import useLogout from "../../hooks/useLogout";
+import UserButton from "../User/UserButton";
+import { useEffect } from "react";
 
 export default function NavBar() {
   const { auth } = useAuth();
-  const navigate = useNavigate();
-  const logout = useLogout();
 
-  const signOut = async () => {
-    await logout();
-    navigate("/");
-  };
+  useEffect(() => {}, [auth]);
 
   return (
     <Container maxWidth={false}>
@@ -25,30 +21,32 @@ export default function NavBar() {
         </Typography>
         <Grid container justifyContent="flex-end">
           <Link to={"/seminar-schedule"}>
-            <Button sx={{ color: "white" }}>Seminar Schedule</Button>
+            <Button sx={{ color: "white" }} style={{ marginTop: "10px" }}>
+              Seminar Schedule
+            </Button>
           </Link>
           <Link to={"/floorplan"}>
-            <Button sx={{ color: "white" }}>Floorplan</Button>
+            <Button sx={{ color: "white" }} style={{ marginTop: "10px" }}>
+              Floorplan
+            </Button>
           </Link>
           {!auth.accessToken && (
-            <Link to="/sign-up" style={{ marginLeft: "10px" }}>
+            <Link
+              to="/sign-up"
+              style={{ marginLeft: "10px", marginTop: "10px" }}
+            >
               <Button variant="contained">Sign Up</Button>
             </Link>
           )}
           {!auth.accessToken && (
-            <Link to="/sign-in" style={{ marginLeft: "10px" }}>
+            <Link
+              to="/sign-in"
+              style={{ marginLeft: "10px", marginTop: "10px" }}
+            >
               <Button variant="contained">Sign In</Button>
             </Link>
           )}
-          {auth.accessToken && (
-            <Button
-              variant="contained"
-              onClick={signOut}
-              style={{ marginLeft: "10px" }}
-            >
-              Sign Out
-            </Button>
-          )}
+          {auth.accessToken && <UserButton />}
         </Grid>
       </Stack>
     </Container>

@@ -5,6 +5,9 @@ export const LOGIN_URL = '/Login';
 export const LOGOUT_URL = '/Logout';
 export const REFRESH_URL = "/RefreshToken";
 
+export const UPDATE_USER_NAME_SURNAME_URL = '/UpdateName';
+export const UPDATE_USER_PASSWORD_URL = '/UpdatePassword';
+
 export const GET_ALL_NOTES_URL = '/GetAllNotes';
 export const CREATE_NOTE_URL = '/CreateNote';
 export const DELETE_NOTE_URL = '/DeleteNote';
