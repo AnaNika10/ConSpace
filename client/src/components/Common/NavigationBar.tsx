@@ -1,11 +1,13 @@
 import { Button, Container, Grid, Stack, Typography } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import SignOut from "../LoginPage/SignOut";
+import UserButton from "../User/UserButton";
+import { useEffect } from "react";
 
 export default function NavBar() {
-  const { auth, setAuth } = useAuth();
-  const navigate = useNavigate();
+  const { auth } = useAuth();
+
+  useEffect(() => {}, [auth]);
 
   return (
     <Container maxWidth={false}>
@@ -19,33 +21,32 @@ export default function NavBar() {
         </Typography>
         <Grid container justifyContent="flex-end">
           <Link to={"/seminar-schedule"}>
-            <Button sx={{ color: "white" }}>Seminar Schedule</Button>
-          </Link>
-          <Link to={"/exhibitors"}>
-            <Button sx={{ color: "white" }}>Exhibitors</Button>
+            <Button sx={{ color: "white" }} style={{ marginTop: "10px" }}>
+              Seminar Schedule
+            </Button>
           </Link>
           <Link to={"/floorplan"}>
-            <Button sx={{ color: "white" }}>Floorplan</Button>
+            <Button sx={{ color: "white" }} style={{ marginTop: "10px" }}>
+              Floorplan
+            </Button>
           </Link>
-          {!auth.refreshToken && (
-            <Link to="/sign-up" style={{ marginLeft: "10px" }}>
+          {!auth.accessToken && (
+            <Link
+              to="/sign-up"
+              style={{ marginLeft: "10px", marginTop: "10px" }}
+            >
               <Button variant="contained">Sign Up</Button>
             </Link>
           )}
-          {!auth.refreshToken && (
-            <Link to="/sign-in" style={{ marginLeft: "10px" }}>
+          {!auth.accessToken && (
+            <Link
+              to="/sign-in"
+              style={{ marginLeft: "10px", marginTop: "10px" }}
+            >
               <Button variant="contained">Sign In</Button>
             </Link>
           )}
-          {auth.refreshToken && (
-            <Button
-              variant="contained"
-              onClick={() => SignOut(auth, setAuth, navigate)}
-              style={{ marginLeft: "10px" }}
-            >
-              Sign Out
-            </Button>
-          )}
+          {auth.accessToken && <UserButton />}
         </Grid>
       </Stack>
     </Container>

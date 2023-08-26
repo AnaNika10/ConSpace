@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Checkbox,
   Container,
   CssBaseline,
@@ -12,6 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import {
   LockOutlined as LockOutlinedIcon,
   Visibility,
@@ -21,6 +21,8 @@ import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
+import { useEffect, useState } from "react";
+import { LOGIN_URL } from "../../constants/api";
 import { useState } from "react";
 import withSnackbar from "../Common/SnackBarWrapper";
 import InvitationConnector from "../../hubs/InvitationConnector";
@@ -46,7 +48,8 @@ function Copyright(props: any) {
 }
 
 export default function SignIn() {
-  const { setAuth } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { setAuth, persist, setPersist } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,6 +62,9 @@ export default function SignIn() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    setLoading(true);
+
     const data = new FormData(event.currentTarget);
 
     try {
@@ -78,12 +84,27 @@ export default function SignIn() {
         refreshToken: response?.data.refreshToken,
       });
 
+      if (persist) {
+        localStorage.setItem("accessToken", response?.data.accessToken);
+      }
+
       navigate(from, { replace: true });
       InvitationConnector(response?.data.accessToken).reconnect();
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
+
+  const togglePersist = () => {
+    setPersist((prev) => !prev);
+  };
+
+  useEffect(
+    () => localStorage.setItem("persist", persist.toString()),
+    [persist]
+  );
 
   return (
     <Container component="main" maxWidth="xs">
@@ -131,17 +152,25 @@ export default function SignIn() {
             }}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={
+              <Checkbox
+                value="remember"
+                color="primary"
+                onChange={togglePersist}
+                checked={persist}
+              />
+            }
             label="Remember me"
           />
-          <Button
+          <LoadingButton
             type="submit"
             fullWidth
             variant="contained"
+            loading={loading}
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In
-          </Button>
+          </LoadingButton>
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link component={RouterLink} to="/sign-up" variant="body2">

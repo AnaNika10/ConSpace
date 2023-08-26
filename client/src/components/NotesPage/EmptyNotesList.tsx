@@ -9,13 +9,14 @@ import {
   DialogActions,
 } from "@mui/material";
 import { useState } from "react";
-import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 import { Note } from "../../models/Note";
 import { FormDialog } from "./FormDialog";
+import axios from "../../api/axios";
+import { CREATE_NOTE_URL } from "../../constants/api";
 
 export function EmptyNotesList({ token }: { token: string }) {
   const [error, setError] = useState(false);
-  const addNote = (event: React.FormEvent<HTMLFormElement>) => {
+  const addNote = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let title = null;
@@ -34,7 +35,13 @@ export function EmptyNotesList({ token }: { token: string }) {
       title: title!,
       content: content!,
     };
-    UserDataProvider.addNote(note, token);
+
+    await axios.post(CREATE_NOTE_URL, JSON.stringify(note), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
   };
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
