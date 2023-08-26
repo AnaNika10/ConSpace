@@ -76,6 +76,8 @@ export default function SignUp() {
     setShowPassword(!showPassword);
   };
 
+  const [error, setError] = useState<string | null>(null);
+
   const {
     register,
     formState: { errors, isSubmitSuccessful },
@@ -123,7 +125,7 @@ export default function SignUp() {
 
       navigate(from, { replace: true });
     } catch (error) {
-      console.error(error);
+      setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -226,6 +228,11 @@ export default function SignUp() {
           >
             Sign Up
           </LoadingButton>
+          {error && (
+            <Typography variant="body2" color="error">
+              {error}
+            </Typography>
+          )}
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link component={RouterLink} to="/sign-in" variant="body2">
