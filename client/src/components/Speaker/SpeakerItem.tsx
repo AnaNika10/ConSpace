@@ -51,10 +51,7 @@ import { SpeakerForm } from "./SpeakerForm";
   export function SpeakerItem({ speaker }: { speaker: Speaker }) {
     const [values,setValues] = useState(initialValues);
     const [infoIsDisplayed, displayEventInfo] = useState(false);
-    const setClose = (a:boolean) => {
-        displayEventInfo(false);
-        console.log("handleClose");
-      };
+
     return (
         <ListItem alignItems="flex-start" key={speaker.speakerId}>
         <Stack spacing={2} direction={"row"}>
@@ -63,13 +60,13 @@ import { SpeakerForm } from "./SpeakerForm";
               <ListItemAvatar>
               <Avatar {...stringAvatar(speaker.name)} />
               </ListItemAvatar>
-              <ListItemText sx={{ width: 500 }} id={speaker.speakerId.toString()} primary={speaker.name + ' : ' + speaker.position} />
+              <ListItemText sx={{ width: 500 }} id={speaker.speakerId?.toString()} primary={speaker.name + ' : ' + speaker.position} />
             </ListItemButton>
         </Stack>
         { <SpeakerForm
          
           isOpened={infoIsDisplayed}
-          setClose={setClose}
+          displayEventInfo = {displayEventInfo}
           speaker={speaker}
 
         /> }

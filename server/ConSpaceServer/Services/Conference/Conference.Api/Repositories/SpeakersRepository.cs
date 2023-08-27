@@ -23,7 +23,8 @@ namespace Conference.Api.Repositories
               "SELECT * FROM \"Speakers\""
 
               );
-            return _mapper.Map<IEnumerable<SpeakerDTO>>(speakers);
+            var speakersSorted = speakers.OrderBy(x=> x.SpeakerId);
+            return _mapper.Map<IEnumerable<SpeakerDTO>>(speakersSorted);
         }
         public async Task<SpeakerDTO> GetSpeaker(int id)
         {

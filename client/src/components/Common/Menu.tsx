@@ -147,7 +147,7 @@ export default function NavBarAndMenu() {
 
 const MenuList = () => (
   <>
-    <List>
+    <List>          
       {[
         {
           section: "Notifications",
@@ -160,7 +160,7 @@ const MenuList = () => (
           link: "/calendar-schedule",
         },
         { section: "Notes", icon: <StickyNote2Icon />, link: "/notes" },
-        { section: "Speakers", icon: <MicIcon />, link: "speakers" },
+        { section: "Speakers", icon: <MicIcon />, link: "/speakers" },
       ].map(({ section, icon, link }) => (
         <ListItem key={section}>
           <ListItemIcon>{icon}</ListItemIcon>
