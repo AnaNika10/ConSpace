@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Grpc.Core;
 using User.Common.DTOs;
-using User.GRPC.Protos;
 using User.Common.Repositories;
+using User.GRPC.Protos;
 
 namespace User.GRPC.Services;
 
@@ -26,7 +26,6 @@ public class UserService : UserProtoService.UserProtoServiceBase
         if (Guid.TryParse(request.Id, out var id) && Enum.TryParse<AttendeeType>(requestType, out var attendeeType))
         {
             var attendee = new AttendeeDto(id, request.Name, attendeeType, request.Email);
-
             var response = await _attendeeRepository.create(attendee);
             UserCreationDto userCreationDto = new UserCreationDto
             {
@@ -35,13 +34,14 @@ public class UserService : UserProtoService.UserProtoServiceBase
 
             return _mapper.Map<CreateUserResponse>(userCreationDto);
         }
-        else 
+        else
         {
-            _logger.LogInformation("There is an error creating user on User Service : Id: {id}, Name : {name}, Type: {type}",
-            request.Id, request.Name, request.Type);
+            _logger.LogInformation(
+                "There is an error creating user on User Service : Id: {id}, Name : {name}, Type: {type}",
+                request.Id, request.Name, request.Type);
 
-            throw new RpcException(new Status(StatusCode.NotFound, $"User with Id = {request.Id} is not created at User Service"));
+            throw new RpcException(new Status(StatusCode.NotFound,
+                $"User with Id = {request.Id} is not created at User Service"));
         }
-
     }
 }

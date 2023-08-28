@@ -5,7 +5,9 @@ using Common.Security.Extensions;
 using EventBus.Messages.Contsants;
 using EventBus.Messages.Events;
 using MassTransit;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.OpenApi.Models;
+using User.API.Controllers.Authorization;
 using User.API.Controllers.Exceptions;
 using User.API.Controllers.Hubs;
 using User.API.EventBusConsumers;
@@ -75,6 +77,7 @@ builder.Services.AddMassTransit(x =>
 
 builder.Services.RegisterServices();
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 builder.Services.ConfigureJWT(builder.Configuration);
 var cors = builder.Services.ConfigureCors();
 var app = builder.Build();
