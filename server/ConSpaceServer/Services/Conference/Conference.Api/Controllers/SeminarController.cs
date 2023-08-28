@@ -38,6 +38,21 @@ namespace Conference.Api.Controllers
             }
             return Ok(seminars);
         }
+
+        [HttpGet("Halls")]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<string>>> GetDistinctHallNames()
+        {
+            var halls = await _repository.GetDistinctHallNames();
+            if (halls == null)
+            {
+                return NotFound();
+            }
+            return Ok(halls);
+        }
+
         [HttpGet("{seminarId}", Name = nameof(GetSeminarsById))]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]

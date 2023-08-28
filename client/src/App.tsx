@@ -6,7 +6,6 @@ import { CssBaseline } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NavBarAndMenu from "./components/Common/Menu";
 import RequireAuth from "./components/Authorization/RequireAuth";
-import HomePage from "./components/Common/HomePage";
 import Missing from "./components/Common/Missing";
 import SignIn from "./components/Authorization/SignIn";
 import SignUp from "./components/Authorization/SignUp";
@@ -15,6 +14,8 @@ import AuthProvider from "./context/AuthProvider";
 import Notes from "./components/NotesPage/Notes";
 import PersistLogin from "./components/Authorization/PersistLogin";
 import Faqs from "./components/FAQs/Faqs";
+import HomePage from "./components/Common/HomePage";
+import Floorplan from "./components/Floorplan/Floorplan";
 
 function App() {
   return (
@@ -47,10 +48,17 @@ function App() {
                     element={<SeminarCalendar />}
                   />
                 </Route>
+
                 <Route
                   element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
                 >
                   <Route path="/notes" element={<Notes />} />
+                </Route>
+
+                <Route
+                  element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
+                >
+                  <Route path="/floorplan" element={<Floorplan />} />
                 </Route>
               </Route>
               {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>
