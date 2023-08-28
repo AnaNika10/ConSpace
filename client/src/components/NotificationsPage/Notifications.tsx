@@ -30,9 +30,9 @@ function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
   //todo populate invite with data of a speaker user wants to invite
   const invite: Invite = {
     id: null,
-    userId: "eba6d3a8-7625-4608-b911-9eefc043b1c9",
+    userEmail: "anchy@gmail.com",
     userName: username,
-    inviteeId: "21404fca-d133-4718-8955-6cdd7c7ba5da",
+    inviteeEmail: "snape@gmail.com",
     inviteeName: "snape",
     status: InviteStatus.PENDING_ANSWER,
     timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),

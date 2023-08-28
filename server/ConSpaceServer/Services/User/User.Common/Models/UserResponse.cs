@@ -4,9 +4,9 @@ public class UserResponse
 {
     public UserResponse(
         Guid id,
-        Guid userId,
+        string userEmail,
         string userName,
-        Guid inviteeId,
+        string inviteeEmail,
         InviteNotificationStatus status,
         DateTimeOffset timestamp,
         DateTimeOffset? time,
@@ -14,9 +14,9 @@ public class UserResponse
     )
     {
         this.id = id;
-        this.userId = userId;
+        this.userEmail = userEmail;
         this.userName = userName;
-        this.inviteeId = inviteeId;
+        this.inviteeEmail = inviteeEmail;
         this.timestamp = timestamp;
         this.status = status;
         this.time = time;
@@ -24,9 +24,9 @@ public class UserResponse
     }
     
     public Guid id {get;set;}
-    public Guid userId {get;set;}
+    public string userEmail {get;set;}
     public string userName {get;set;}
-    public Guid inviteeId {get;set;}
+    public string inviteeEmail {get;set;}
     public InviteNotificationStatus status {get;set;}
     public DateTimeOffset timestamp {get;set;}
     public DateTimeOffset? time {get;set;}
