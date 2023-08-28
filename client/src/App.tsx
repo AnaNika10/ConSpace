@@ -14,6 +14,7 @@ import Unauthorized from "./components/Authorization/Unauthorized";
 import AuthProvider from "./context/AuthProvider";
 import Notes from "./components/NotesPage/Notes";
 import PersistLogin from "./components/Authorization/PersistLogin";
+import Faqs from "./components/FAQs/Faqs";
 import Notifications from "./components/NotificationsPage/Notifications";
 
 function App() {
@@ -31,6 +32,8 @@ function App() {
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
+
+              <Route path="/faqs" element={<Faqs />} />
 
               {/* protected routes */}
               {/* TODO: add your protected routes here, examples are commented out */}

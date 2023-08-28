@@ -14,9 +14,9 @@ import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 const GET_ALL_NOTES_URL = "/GetAllNotes";
 
 const fabStyle = {
-  position: "absolute",
-  bottom: 16,
-  right: 16,
+  position: "fixed",
+  bottom: 20,
+  right: 20,
 };
 
 function AddNote({ token }: { token: string }) {

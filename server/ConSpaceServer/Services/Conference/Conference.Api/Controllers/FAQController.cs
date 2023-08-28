@@ -15,10 +15,10 @@ namespace Conference.Api.Controllers
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
+
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<FAQDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<FAQDTO>>> GetAllFAQ()
         {
             var seminars = await _repository.GetAllFAQs();
@@ -28,10 +28,11 @@ namespace Conference.Api.Controllers
             }
             return Ok(seminars);
         }
+
+
         [HttpGet("{questionId}", Name = nameof(GetFAQById))]
         [ProducesResponseType(typeof(FAQDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [Authorize]
         public async Task<ActionResult<FAQDTO>> GetFAQById(int questionId)
         {
             var faq = await _repository.GetFAQ(questionId);
@@ -53,6 +54,8 @@ namespace Conference.Api.Controllers
             return CreatedAtRoute("GetFAQById", new { question.QuestionId }, question);
 
         }
+
+
         [HttpPut]
         [ProducesResponseType(typeof(FAQDTO), StatusCodes.Status200OK)]
         [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
@@ -63,6 +66,8 @@ namespace Conference.Api.Controllers
             var question = await _repository.GetFAQ(request.QuestionId);
             return CreatedAtRoute("GetFAQById", new { question.QuestionId }, question);
         }
+
+
         [HttpDelete("{questionId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
