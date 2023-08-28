@@ -7,9 +7,9 @@ export enum InviteStatus {
 
 export interface Invite {
     id: string | null,
-    userId: string,
+    userEmail: string,
     userName: string,
-    inviteeId: string,
+    inviteeEmail: string,
     inviteeName: string,
     timestamp: string
     status: InviteStatus

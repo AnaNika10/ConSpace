@@ -35,9 +35,9 @@ public class InvitationHub : Hub
         var inviteDto = JsonSerializer.Deserialize<InviteDto>(invite, options);
         await _invitesRepository.UpsertInvite(inviteDto);
         string connectionId;
-        string recipient = inviteDto.userId == ClaimExtractor.ExtractUserId(Context.User.Claims) 
-            ? inviteDto.inviteeId.ToString()
-            : inviteDto.userId.ToString(); 
+        string recipient = inviteDto.userEmail == ClaimExtractor.ExtractEmail(Context.User.Claims) 
+            ? inviteDto.inviteeEmail
+            : inviteDto.userEmail; 
         Connections.TryGetValue(recipient, out connectionId);
         await Clients.Client(connectionId).SendAsync("InviteReceived", invite, message);
     }
@@ -46,7 +46,7 @@ public class InvitationHub : Hub
     {
         if (!Connections.ContainsKey(Context.ConnectionId))
         {
-            Connections.TryAdd(ClaimExtractor.ExtractUserId(Context.User.Claims).ToString(), Context.ConnectionId);
+            Connections.TryAdd(ClaimExtractor.ExtractEmail(Context.User.Claims).ToString(), Context.ConnectionId);
         }
 
         await base.OnConnectedAsync();
@@ -55,7 +55,7 @@ public class InvitationHub : Hub
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var connectionId = Context.ConnectionId;
-        Connections.Remove(ClaimExtractor.ExtractUserId(Context.User.Claims).ToString(), out connectionId);
+        Connections.Remove(ClaimExtractor.ExtractEmail(Context.User.Claims).ToString(), out connectionId);
         await base.OnDisconnectedAsync(exception);
     }
 }

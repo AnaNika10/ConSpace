@@ -29,11 +29,11 @@ public class InvitesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<InviteDto>>> GetInvites()
     {
-        var userId = ClaimExtractor.ExtractUserId(User.Claims);
-        var invites = await _repository.FindAll(userId);
+        var userEmail = ClaimExtractor.ExtractEmail(User.Claims);
+        var invites = await _repository.FindAll(userEmail);
         var result = new List<InviteDto>();
         foreach (var invite in invites)
-            result.Add(new InviteDto(invite.id, invite.userId, invite.userName, invite.inviteeId,
+            result.Add(new InviteDto(invite.id, invite.userEmail, invite.userName, invite.inviteeEmail,
                 invite.inviteeName, invite.timestamp, EnumConversionExtension.mapToDto(invite.status),
                 invite.time, invite.place));
         return result;

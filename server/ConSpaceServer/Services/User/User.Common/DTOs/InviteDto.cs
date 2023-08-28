@@ -7,9 +7,9 @@ public class InviteDto
     [JsonConstructor]
     public InviteDto(
         Guid? id,
-        Guid userId,
+        string userEmail,
         string userName,
-        Guid inviteeId,
+        string inviteeEmail,
         string inviteeName, 
         DateTimeOffset? timestamp,
         InviteStatusDto status,
@@ -18,9 +18,9 @@ public class InviteDto
     )
     {
         this.id = id;
-        this.userId = userId;
+        this.userEmail = userEmail;
         this.userName = userName;
-        this.inviteeId = inviteeId;
+        this.inviteeEmail = inviteeEmail;
         this.inviteeName = inviteeName;
         this.timestamp = timestamp;
         this.status = status;
@@ -31,11 +31,11 @@ public class InviteDto
     [JsonInclude]
     public Guid? id {get;set;}
     [JsonInclude]
-    public Guid userId {get;set;}
+    public string userEmail {get;set;}
     [JsonInclude]
     public string userName {get;set;}
     [JsonInclude]
-    public Guid inviteeId {get;set;}
+    public string inviteeEmail {get;set;}
     [JsonInclude]
     public string inviteeName {get;set;}
     [JsonInclude]
