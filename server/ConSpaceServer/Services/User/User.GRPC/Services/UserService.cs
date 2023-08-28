@@ -25,7 +25,7 @@ public class UserService : UserProtoService.UserProtoServiceBase
 
         if (Guid.TryParse(request.Id, out var id) && Enum.TryParse<AttendeeType>(requestType, out var attendeeType))
         {
-            var attendee = new AttendeeDto(id, request.Name, attendeeType);
+            var attendee = new AttendeeDto(id, request.Name, attendeeType, request.Email);
 
             var response = await _attendeeRepository.create(attendee);
             UserCreationDto userCreationDto = new UserCreationDto

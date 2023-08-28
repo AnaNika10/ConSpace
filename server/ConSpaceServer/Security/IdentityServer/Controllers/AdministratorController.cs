@@ -46,7 +46,7 @@ public class AdministratorController : RegistrationControllerBase
         {
             var user = await _repository.GetUserByEmail(newUser.Email);
             UserDetails userWithDetails = _mapper.Map<UserDetails>(user);
-            var isSuccessful = await _userGrpcService.CreateUser(userWithDetails.Id, userWithDetails.FirstName, Roles.SPEAKER);
+            var isSuccessful = await _userGrpcService.CreateUser(userWithDetails.Id, userWithDetails.FirstName, Roles.SPEAKER, userWithDetails.Email);
             _logger.LogInformation("Is successful {isSuccessful}", isSuccessful);
         }
         catch (RpcException e)
