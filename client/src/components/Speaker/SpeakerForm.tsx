@@ -93,6 +93,9 @@ const UpdateSpeaker = () => {
 
   setClose(true);
 };
+const handleNewRequest = () => {
+  setOpenRequest(true);
+};
 const onChange = (e: any) => {
   console.log(e);
   const value = e.target.value;
@@ -194,7 +197,7 @@ const onChange = (e: any) => {
         {isAdmin && <Button onClick={UpdateSpeaker}  variant="contained">Save</Button> }
         {isAdmin  && !isInsert && <Button onClick={DeleteSpeaker} variant="contained">Delete</Button> }
         {/* TODO i da nije speaker */}
-        {!isAdmin && <> <Button  variant="contained">Invite</Button> 
+        {!isAdmin && <> <Button onClick={handleNewRequest} variant="contained">Invite</Button> 
          <RequestTimePlaceForm
             open={openRequest}
             setOpen={setOpenRequest}

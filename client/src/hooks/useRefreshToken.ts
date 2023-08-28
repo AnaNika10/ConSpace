@@ -15,8 +15,6 @@ export default function useRefreshToken() {
     });
 
     setAuth(prev => {
-        InvitationConnector(auth.accessToken).disconnect();
-        InvitationConnector(response?.data.accessToken);
         console.log(JSON.stringify(prev));
         console.log(response?.data.accessToken);
         return { accessToken: response?.data.accessToken, refreshToken: response?.data.refreshToken }

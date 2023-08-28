@@ -98,7 +98,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function NavBarAndMenu() {
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);

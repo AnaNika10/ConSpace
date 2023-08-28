@@ -51,7 +51,7 @@ function App() {
                   <Route path="/notifications" element={<Notifications />} />
                 </Route>
                 <Route
-                  element={<RequireAuth allowedRoles={["User", "Speaker", "Admin"]} />}  >
+                  element={<RequireAuth allowedRoles={["User", "Speaker", "Administrator"]} />}  >
                              
                   <Route path="/speakers" element={<SpeakerList />} />
                 </Route>
