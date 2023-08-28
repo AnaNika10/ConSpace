@@ -30,7 +30,7 @@ function App() {
               {/* public routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/seminar-schedule" element={<SeminarList />} />
-              <Route path="/speakers" element={<SpeakerList />} />
+
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
@@ -49,6 +49,11 @@ function App() {
                   />
                   <Route path="/notes" element={<Notes />} />
                   <Route path="/notifications" element={<Notifications />} />
+                </Route>
+                <Route
+                  element={<RequireAuth allowedRoles={["User", "Speaker", "Admin"]} />}  >
+                             
+                  <Route path="/speakers" element={<SpeakerList />} />
                 </Route>
               </Route>
               {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>

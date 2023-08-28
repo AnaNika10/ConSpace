@@ -27,10 +27,10 @@ export default function NavBar() {
           </Link>
 
           <Link to={"/exhibitors"}>
-            <Button sx={{ color: "white" }}>Exhibitors</Button>
+            <Button sx={{ color: "white" }} style={{ marginTop: "10px" }}>Exhibitors</Button>
           </Link>
           <Link to={"/floorplan"}>
-            <Button sx={{ color: "white" }}>Floorplan</Button>
+            <Button sx={{ color: "white" }} style={{ marginTop: "10px" }}>Floorplan</Button>
           </Link>
           {!auth.accessToken && (
             <Link

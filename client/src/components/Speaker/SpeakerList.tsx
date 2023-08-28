@@ -8,6 +8,9 @@ import useAuth from "../../hooks/useAuth";
 import { SpeakerForm } from "./SpeakerForm";
 import { Add } from "@mui/icons-material";
 import jwtDecode from "jwt-decode";
+import withSnackbar from "../Common/SnackBarWrapper";
+import { useNavigate, useLocation } from "react-router-dom";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const emptySpeaker : Speaker = {
   name: "",
@@ -34,19 +37,27 @@ const AddButton = () => {
           <IconButton edge="end" color="inherit" onClick={() => setOpenForm(true)}>
             <AddCircleOutlineOutlinedIcon />
           </IconButton>
-          { <SpeakerForm
+          {/* { <SpeakerForm
          
          isOpened={openForm}
          displayEventInfo={() => setOpenForm(false)}
          speaker={emptySpeaker}
+         setMessage={setMessage}
 
-       /> }
+       /> } */}
         </Toolbar>
     </>
   );
 };
 
-export default function SeminarList() {
+function SeminarList({
+  setMessage
+}: {
+  speaker : Speaker
+  isOpened: boolean;
+  displayEventInfo : (a:boolean) => void;
+  setMessage: (msg: string) => void
+}) {
   const { auth } = useAuth();
   const decoded :any = auth?.accessToken ? jwtDecode(auth.accessToken) : undefined;
   const role = decoded?.Role || "";
@@ -56,26 +67,42 @@ export default function SeminarList() {
   const [, setError] = useState<string | null>(null);
   const [openForm, setOpenForm] = useState(false);
   const handleOpen = () => setOpenForm(true);
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   useEffect(() => {
-    const fetchData = async () => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getAllSpeakers = async () => {
       try {
-        const response = await SpeakerDataProvider.fetchSpeakers(auth.accessToken);
-        if (!response.ok) {
-          throw new Error("Failed fetching data");
-        }
-        const actual = await response.json();
-        setLoading(false);
-        setError(null);
-        setData(actual);
+        const response = await axiosPrivate.get("/Speaker", {
+          signal: controller.signal,
+        });
+
+        isMounted && setLoading(false);
+        isMounted && setError(null);
+        isMounted && setData(response.data);
       } catch (err: any) {
-        setError(err.message);
-        setData([]);
+        isMounted && setError(err.message);
+        isMounted && setData([]);
+        navigate("/sign-in", { state: { from: location }, replace: true });
       } finally {
-        setLoading(false);
+        isMounted && setLoading(false);
       }
     };
-    fetchData();
-  }, [auth,data]);
+
+    getAllSpeakers();
+
+    return () => {
+      isMounted = false;
+
+      if (!location.pathname.startsWith("/speakers")) {
+        controller.abort();
+      }
+    };
+  }, [location.pathname, data, auth]);
 
 
   return (
@@ -91,18 +118,19 @@ export default function SeminarList() {
           {!isLoading &&
             data.map((speaker: Speaker) => {
               return (
-                <SpeakerItem speaker={speaker}  key={speaker.speakerId} />
+                <SpeakerItem  speaker={speaker} setMessage={setMessage}  key={speaker.speakerId} />
               );
             })}
         </List>
       { isAdmin &&  <Fab sx={fabStyle} color="primary" aria-label="add">
         <Add onClick={handleOpen} />
       </Fab> }
-      { isAdmin && <SpeakerForm
+      { isAdmin && !isLoading && !emptySpeaker && <SpeakerForm
          
          isOpened={openForm}
          displayEventInfo={() => setOpenForm(false)}
          speaker={emptySpeaker}
+         setMessage={setMessage}
 
        /> }
       </Paper>
@@ -111,3 +139,5 @@ export default function SeminarList() {
     
   );
 }
+
+export default withSnackbar(SpeakerForm);

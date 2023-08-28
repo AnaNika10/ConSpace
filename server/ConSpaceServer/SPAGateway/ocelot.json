@@ -686,25 +686,6 @@
         "Role": "Administrator"
       },
       "UpstreamPathTemplate": "/FAQ/{id}",
-      "UpstreamHttpMethod": [ "Get" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/FAQ/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "conference",
-          "Port": 80
-        }
-      ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "Administrator"
-      },
-      "UpstreamPathTemplate": "/FAQ/{id}",
       "UpstreamHttpMethod": [ "Delete" ]
     },
 

@@ -12,15 +12,7 @@ import {
   import { Speaker } from "../../models/Speaker";
 import { SpeakerForm } from "./SpeakerForm";
 
-    const initialValues = {
-
-    id: 0,
-    fullname:'',
-    bioinfo:'',
-    company:'',
-    title:''
-
-    }
+  
     function stringToColor(string: string) {
         let hash = 0;
         let i;
@@ -48,8 +40,13 @@ import { SpeakerForm } from "./SpeakerForm";
           children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
         };
       }
-  export function SpeakerItem({ speaker }: { speaker: Speaker }) {
-    const [values,setValues] = useState(initialValues);
+  export function SpeakerItem({
+  speaker, setMessage }
+  : { 
+    speaker: Speaker
+    setMessage: (msg: string) => void
+})
+  {
     const [infoIsDisplayed, displayEventInfo] = useState(false);
 
     return (
@@ -68,6 +65,7 @@ import { SpeakerForm } from "./SpeakerForm";
           isOpened={infoIsDisplayed}
           displayEventInfo = {displayEventInfo}
           speaker={speaker}
+          setMessage={setMessage}
 
         /> }
       </ListItem>

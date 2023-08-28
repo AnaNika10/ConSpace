@@ -8,6 +8,7 @@ namespace Conference.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class SpeakerController : ControllerBase
     {
         private readonly ISpeakersRepository _repository;
@@ -43,6 +44,7 @@ namespace Conference.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(SpeakerDTO), StatusCodes.Status201Created)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
 
         public async Task<ActionResult<SpeakerDTO>> CreateSpeaker([FromBody] CreateSpeakerDTO request)
         {
@@ -53,6 +55,7 @@ namespace Conference.Api.Controllers
         }
         [HttpPut]
         [ProducesResponseType(typeof(SpeakerDTO), StatusCodes.Status200OK)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
 
         public async Task<ActionResult<SpeakerDTO>> UpdateSpeaker([FromBody] UpdateSpeakerDTO request)
         {
@@ -63,6 +66,7 @@ namespace Conference.Api.Controllers
         }
         [HttpDelete("{speakerId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
 
         public async Task<ActionResult<bool>> DeleteSpeaker(int speakerId)
         {

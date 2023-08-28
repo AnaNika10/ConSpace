@@ -19,6 +19,9 @@ import { useState } from "react";
 import { SpeakerDataProvider } from "../../dataProviders/SpeakerDataProvider";
 import useAuth from "../../hooks/useAuth";
 import jwtDecode from "jwt-decode";
+import { RequestTimePlaceForm } from "../NotificationsPage/RequestTimePlaceForm";
+import { InviteStatus } from "../../models/Invite";
+
 
 const CloseButton = ({ setClose }: { setClose: ()=> void }) => {
   return (
@@ -38,19 +41,25 @@ const CloseButton = ({ setClose }: { setClose: ()=> void }) => {
 export function SpeakerForm({
   speaker,
   isOpened,
-  displayEventInfo
+  displayEventInfo,
+  setMessage
 }: {
   speaker : Speaker
   isOpened: boolean;
   displayEventInfo : (a:boolean) => void;
+  setMessage: (msg: string) => void
 }) {
   const { auth } = useAuth();
-
+  const [openRequest, setOpenRequest] = useState(false);
   const original : Speaker = JSON.parse(JSON.stringify(speaker)) as typeof speaker;
   const [currentSpeaker,setCurrentSpeaker] = useState(original);
   const decoded :any = auth?.accessToken ? jwtDecode(auth.accessToken) : undefined;
   const role = decoded?.Role || "";
   const isAdmin = role === "Administrator";
+  const inviteId=null;
+  const status = InviteStatus.PENDING_ANSWER;
+  const decodedToken: { Name: string } = jwtDecode(auth.accessToken)!;
+  const username = decodedToken.Name;
   const isInsert = speaker.speakerId === null || speaker.speakerId === undefined;
   const handleClose = (event : object, reason : string) => {
     if (reason && reason == "backdropClick") 
@@ -185,11 +194,24 @@ const onChange = (e: any) => {
         {isAdmin && <Button onClick={UpdateSpeaker}  variant="contained">Save</Button> }
         {isAdmin  && !isInsert && <Button onClick={DeleteSpeaker} variant="contained">Delete</Button> }
         {/* TODO i da nije speaker */}
-        {!isAdmin && <Button  variant="contained">Invite</Button> }
+        {!isAdmin && <> <Button  variant="contained">Invite</Button> 
+         <RequestTimePlaceForm
+            open={openRequest}
+            setOpen={setOpenRequest}
+            status={status}
+            inviteId={inviteId}
+            username={username}
+            token={auth.accessToken}
+            setMessage={setMessage}
+            inviteeEmail={speaker.email}
+          ></RequestTimePlaceForm> </> }
         </DialogActions>
 
       </Dialog>
      
     </div>
   );
+ 
 }
+
+
