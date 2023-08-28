@@ -6,11 +6,13 @@ import { EmptyNotesList } from "./EmptyNotesList";
 import { FormBox } from "./FormBox";
 import { NoteCard } from "./NoteCard";
 import withSnackbar from "../Common/SnackBarWrapper";
-import { GET_ALL_NOTES_URL } from "../../constants/api";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { UserDataProvider } from "../../dataProviders/UserDataProvider";
+
+const GET_ALL_NOTES_URL = "/GetAllNotes";
+
 const fabStyle = {
   position: "absolute",
   bottom: 16,

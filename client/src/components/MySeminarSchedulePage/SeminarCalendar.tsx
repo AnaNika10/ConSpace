@@ -29,10 +29,11 @@ import { ResourceUtil } from "./ResourcesUtil";
 import { AppointmentContent } from "./AppointmentContent";
 import { DateFormatUtil } from "../Common/DateFormatUtil";
 import withSnackbar from "../Common/SnackBarWrapper";
-import { GET_SCHEDULE_URL } from "../../constants/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { UserDataProvider } from "../../dataProviders/UserDataProvider";
+
+const GET_SCHEDULE_URL = "/GetSchedule";
 
 async function deleteAppointment(
   appointments: Appointment[],

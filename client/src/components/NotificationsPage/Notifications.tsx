@@ -75,7 +75,7 @@ function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
         controller.abort();
       }
     };
-  }, [data, auth]);
+  }, [location.pathname, data, auth]);
 
   return (
     <>
