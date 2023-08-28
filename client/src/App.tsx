@@ -16,6 +16,7 @@ import PersistLogin from "./components/Authorization/PersistLogin";
 import Faqs from "./components/FAQs/Faqs";
 import HomePage from "./components/Common/HomePage";
 import Floorplan from "./components/Floorplan/Floorplan";
+import Notifications from "./components/NotificationsPage/Notifications";
 
 function App() {
   return (
@@ -28,9 +29,7 @@ function App() {
             <Routes>
               {/* public routes */}
               <Route path="/" element={<HomePage />} />
-
               <Route path="/seminar-schedule" element={<SeminarList />} />
-
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
@@ -53,6 +52,7 @@ function App() {
                   element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
                 >
                   <Route path="/notes" element={<Notes />} />
+                  <Route path="/notifications" element={<Notifications />} />
                 </Route>
 
                 <Route

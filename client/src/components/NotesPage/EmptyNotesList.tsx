@@ -11,8 +11,7 @@ import {
 import { useState } from "react";
 import { Note } from "../../models/Note";
 import { FormDialog } from "./FormDialog";
-import axios from "../../api/axios";
-import { CREATE_NOTE_URL } from "../../constants/api";
+import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 
 export function EmptyNotesList({ token }: { token: string }) {
   const [error, setError] = useState(false);
@@ -36,12 +35,7 @@ export function EmptyNotesList({ token }: { token: string }) {
       content: content!,
     };
 
-    await axios.post(CREATE_NOTE_URL, JSON.stringify(note), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    await UserDataProvider.addNote(note, token);
   };
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);

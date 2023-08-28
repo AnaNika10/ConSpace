@@ -13,12 +13,13 @@ public class UserGrpcService
         _userProtoServiceClient = userProtoServiceClient ?? throw new ArgumentNullException(nameof(userProtoServiceClient));
     }
 
-    public async Task<CreateUserResponse> CreateUser(string id, string name, string type)
+    public async Task<CreateUserResponse> CreateUser(string id, string name, string type, string email)
     {
         var createUserRequest = new CreateUserRequest();
         createUserRequest.Id = id;
         createUserRequest.Name = name;
         createUserRequest.Type = type;
+        createUserRequest.Email = email;
         
         return await _userProtoServiceClient.CreateUserAsync(createUserRequest);
     }
