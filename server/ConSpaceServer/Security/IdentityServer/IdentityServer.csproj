@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
-    <Folder Include="Extensions\" />
     <Folder Include="Data\EntityTypeConfigurations\" />
     <Folder Include="Mapper\" />
     <Folder Include="Services\" />

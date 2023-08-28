@@ -15,6 +15,7 @@ import AuthProvider from "./context/AuthProvider";
 import Notes from "./components/NotesPage/Notes";
 import PersistLogin from "./components/Authorization/PersistLogin";
 import Faqs from "./components/FAQs/Faqs";
+import Notifications from "./components/NotificationsPage/Notifications";
 
 function App() {
   return (
@@ -27,9 +28,7 @@ function App() {
             <Routes>
               {/* public routes */}
               <Route path="/" element={<HomePage />} />
-
               <Route path="/seminar-schedule" element={<SeminarList />} />
-
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
@@ -46,11 +45,8 @@ function App() {
                     path="/calendar-schedule"
                     element={<SeminarCalendar />}
                   />
-                </Route>
-                <Route
-                  element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
-                >
                   <Route path="/notes" element={<Notes />} />
+                  <Route path="/notifications" element={<Notifications />} />
                 </Route>
               </Route>
               {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>

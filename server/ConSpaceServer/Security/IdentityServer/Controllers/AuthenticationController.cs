@@ -39,7 +39,7 @@ public class AuthenticationController : RegistrationControllerBase
         {
             var user = await _repository.GetUserByEmail(newUser.Email);
             UserDetails userWithDetails = _mapper.Map<UserDetails>(user);
-            var isSuccessful = await _userGrpcService.CreateUser(userWithDetails.Id, userWithDetails.FirstName, Roles.USER);
+            var isSuccessful = await _userGrpcService.CreateUser(userWithDetails.Id, userWithDetails.FirstName, Roles.USER, userWithDetails.Email);
             _logger.LogInformation("Is successful {isSuccessful}", isSuccessful);
         }
         catch (RpcException e)

@@ -12,12 +12,8 @@ import NameEditDialog from "./NameEditDialog"; // Import your NameEditDialog
 import PasswordEditDialog from "./PasswordEditDialog"; // Import your PasswordEditDialog
 import useAuth from "../../hooks/useAuth";
 import { useDecodedToken } from "../../hooks/useTokenDecoder";
-import axios from "../../api/axios";
-import {
-  UPDATE_USER_NAME_SURNAME_URL,
-  UPDATE_USER_PASSWORD_URL,
-} from "../../constants/api";
 import useRefreshToken from "../../hooks/useRefreshToken";
+import { IdentityDataProvider } from "../../dataProviders/IdentityDataProvider";
 
 interface SettingsDialogProps {
   open: boolean;
@@ -50,24 +46,18 @@ export default function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   };
 
   const handleNameSave = async (newName: string, newSurname: string) => {
-    let updatedName = newName === "" ? decodedToken.Name : newName;
-    let updatedSurname = newSurname === "" ? decodedToken.Surname : newSurname;
+    const updatedName = newName === "" ? decodedToken.Name : newName;
+    const updatedSurname =
+      newSurname === "" ? decodedToken.Surname : newSurname;
 
     if (newName === "" && newSurname === "") {
       setEditingName(false);
       return;
     }
-
-    await axios.put(
-      UPDATE_USER_NAME_SURNAME_URL,
-      JSON.stringify({ firstname: updatedName, lastname: updatedSurname }),
-      {
-        headers: {
-          Authorization: `Bearer ${auth.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    await IdentityDataProvider.updateUsername(auth.accessToken, {
+      firstname: updatedName,
+      lastname: updatedSurname,
+    });
 
     await refresh();
 
@@ -81,21 +71,11 @@ export default function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     newPassword: string
   ) => {
     try {
-      await axios.put(
-        UPDATE_USER_PASSWORD_URL,
-        JSON.stringify({
-          currentpassword: oldPassword,
-          newpassword: newPassword,
-        }),
-        {
-          headers: {
-            Authorization: `Bearer ${auth.accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      setError(null);
+      await IdentityDataProvider.updatePassword(auth.accessToken, {
+        currentpassword: oldPassword,
+        newpassword: newPassword,
+      });
+        setError(null);
     } catch {
       setError(
         "Something went wrong while updating your password. Please try again."

@@ -5,16 +5,20 @@ import { Add } from "@mui/icons-material";
 import { EmptyNotesList } from "./EmptyNotesList";
 import { FormBox } from "./FormBox";
 import { NoteCard } from "./NoteCard";
-import axios from "../../api/axios";
-import { CREATE_NOTE_URL, GET_ALL_NOTES_URL } from "../../constants/api";
+import withSnackbar from "../Common/SnackBarWrapper";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import { UserDataProvider } from "../../dataProviders/UserDataProvider";
+
+const GET_ALL_NOTES_URL = "/GetAllNotes";
+
 const fabStyle = {
   position: "fixed",
   bottom: 20,
   right: 20,
 };
+
 function AddNote({ token }: { token: string }) {
   const [error, setError] = useState(false);
   const [open, setOpen] = useState(false);
@@ -40,13 +44,7 @@ function AddNote({ token }: { token: string }) {
       content: content!,
     };
 
-    await axios.post(CREATE_NOTE_URL, JSON.stringify(note), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
+    await UserDataProvider.addNote(note, token);
     handleClose();
   };
   const isFilled = (e: any) => {
@@ -69,8 +67,7 @@ function AddNote({ token }: { token: string }) {
     </>
   );
 }
-
-export default function Notes() {
+function Notes() {
   const [data, setData] = useState<Note[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
@@ -140,3 +137,5 @@ export default function Notes() {
     </>
   );
 }
+
+export default withSnackbar(Notes);

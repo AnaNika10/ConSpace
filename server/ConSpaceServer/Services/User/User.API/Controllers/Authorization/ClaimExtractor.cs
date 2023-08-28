@@ -30,4 +30,19 @@ public class ClaimExtractor
 
         return Guid.Parse(userId);
     }
+    
+    public static string ExtractEmail(IEnumerable<Claim> claims)
+    {
+        var email = claims.FirstOrDefault(x =>
+                x.Type.Equals("Email", StringComparison.OrdinalIgnoreCase)
+            )
+            ?.Value;
+        if (email == null)
+        {
+            _logger.LogError("User id could not be extracted from authorization header.");
+            throw new MissingClaimException("Can't retrieve user claims");
+        }
+
+        return email;
+    }
 }

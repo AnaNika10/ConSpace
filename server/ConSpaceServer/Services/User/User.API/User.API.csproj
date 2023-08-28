@@ -14,6 +14,8 @@
         <PackageReference Include="MassTransit" Version="8.0.16" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.16" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.16" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="6.0.21" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="6.0.21" />
         <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -31,6 +33,12 @@
       <ProjectReference Include="..\..\..\Common\Security\Security.csproj" />
       <ProjectReference Include="..\User.Common\User.Common.csproj" />
       <ProjectReference Include="..\..\..\Common\EventBus\EventBus.Messages\EventBus.Messages.csproj" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Compile Remove="Controllers\Hubs\RegisterConnectionFilter.cs" />
+      <Compile Remove="Controllers\Hubs\IInviteClient.cs" />
     </ItemGroup>
 
 </Project>
