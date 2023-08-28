@@ -22,21 +22,27 @@ import {
   IntegratedGrouping,
 } from "@devexpress/dx-react-scheduler";
 import { useEffect, useMemo, useState } from "react";
-import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 import useAuth from "../../hooks/useAuth";
 import { Appointment } from "../../models/Appointment";
 import GroupByScheduleSection from "./GroupScheduleBySection";
 import { ResourceUtil } from "./ResourcesUtil";
 import { AppointmentContent } from "./AppointmentContent";
 import { DateFormatUtil } from "../Common/DateFormatUtil";
+import withSnackbar from "../Common/SnackBarWrapper";
+import { useLocation, useNavigate } from "react-router-dom";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 
-function deleteAppointment(
+const GET_SCHEDULE_URL = "/GetSchedule";
+
+async function deleteAppointment(
   appointments: Appointment[],
   deleted: string,
   token: string
 ) {
   if (deleted !== undefined) {
-    UserDataProvider.deleteSeminarFromSchedule(deleted, token);
+    await UserDataProvider.deleteSeminarFromSchedule(token, deleted);
+
     appointments = appointments.filter(
       (appointment: Appointment) => appointment.id !== deleted
     );
@@ -44,7 +50,7 @@ function deleteAppointment(
   return appointments;
 }
 
-export default function SeminarCalendar() {
+function SeminarCalendar() {
   const [data, setData] = useState<Appointment[]>([]);
   const resources = useMemo(() => ResourceUtil.mapResources(data), [data]);
   const [isLoading, setLoading] = useState(true);
@@ -56,36 +62,59 @@ export default function SeminarCalendar() {
   const [currentViewName, currentViewNameChange] = useState("Week");
   const setCalendarView = (view: string) => currentViewNameChange(view);
   const currentDate = DateFormatUtil.getCurrentDate();
-  const commitChanges = ({ deleted }: { deleted: string }) => {
-    setData((appointments: Appointment[]) =>
-      deleteAppointment(appointments, deleted, auth.accessToken)
-    );
+  const commitChanges = async ({ deleted }: { deleted: string }) => {
+    try {
+      const updatedAppointments = await deleteAppointment(
+        data,
+        deleted,
+        auth.accessToken
+      );
+      setData(updatedAppointments);
+    } catch (error: any) {
+      setError(error.message);
+    }
   };
   const selectGrouping = (group: { resourceName: string }[]) =>
     setGrouping(group);
   const selectedBoth = (both: boolean) => setBoth(both);
+
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   useEffect(() => {
-    const fetchData = async () => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getSchedule = async () => {
       try {
-        const response = await UserDataProvider.fetchUserSchedule(
-          auth.accessToken
-        );
-        if (!response.ok) {
-          throw new Error(`Failed fetching data. Status: ${response.status}`);
-        }
-        const actual = await response.json();
-        setLoading(false);
-        setError(null);
-        setData(actual);
+        const response = await axiosPrivate.get(GET_SCHEDULE_URL, {
+          signal: controller.signal,
+        });
+
+        isMounted && setLoading(false);
+        isMounted && setError(null);
+        isMounted && setData(response.data);
       } catch (err: any) {
-        setError(err.message);
-        setData([]);
+        isMounted && setError(err.message);
+        isMounted && setData([]);
+        navigate("/sign-in", { state: { from: location }, replace: true });
       } finally {
-        setLoading(false);
+        isMounted && setLoading(false);
       }
     };
-    fetchData();
-  }, [auth, data]);
+
+    getSchedule();
+
+    return () => {
+      isMounted = false;
+
+      if (!location.pathname.startsWith("/calendar-schedule")) {
+        controller.abort();
+      }
+    };
+  }, [location.pathname, data, auth]);
+
   return (
     <Paper>
       <Grid
@@ -146,3 +175,5 @@ export default function SeminarCalendar() {
     </Paper>
   );
 }
+
+export default withSnackbar(SeminarCalendar);

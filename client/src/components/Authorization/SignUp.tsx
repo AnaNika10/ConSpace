@@ -17,18 +17,13 @@ import {
   VisibilityOff,
 } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
-
 import { useForm, SubmitHandler } from "react-hook-form";
 import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
-
-const REGISTER_USER_URL = "/api/v1/Authentication/RegisterUser";
-const LOGIN_URL = "/api/v1/Authentication/Login";
+import { IdentityDataProvider } from "../../dataProviders/IdentityDataProvider";
+import InvitationConnector from "../../hubs/InvitationConnector";
 
 const registerSchema = object({
   firstName: string()
@@ -67,7 +62,6 @@ function Copyright(props: any) {
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
-
   const { setAuth } = useAuth();
 
   const navigate = useNavigate();
@@ -78,6 +72,8 @@ export default function SignUp() {
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const [error, setError] = useState<string | null>(null);
 
   const {
     register,
@@ -106,18 +102,14 @@ export default function SignUp() {
         username: values.email.replace(/[^a-zA-Z0-9]/g, ""),
       };
 
-      await axios.post(REGISTER_USER_URL, JSON.stringify(registrationData), {
-        headers: { "Content-Type": "application/json" },
-      });
+      await IdentityDataProvider.registerUser(registrationData);
 
       const loginData = {
         email: values.email,
         password: values.password,
       };
 
-      const response = await axios.post(LOGIN_URL, JSON.stringify(loginData), {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await IdentityDataProvider.loginUser(loginData);
 
       setAuth({
         accessToken: response?.data.accessToken,
@@ -125,8 +117,9 @@ export default function SignUp() {
       });
 
       navigate(from, { replace: true });
+      InvitationConnector(response?.data.accessToken);
     } catch (error) {
-      console.error(error);
+      setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -229,6 +222,11 @@ export default function SignUp() {
           >
             Sign Up
           </LoadingButton>
+          {error && (
+            <Typography variant="body2" color="error">
+              {error}
+            </Typography>
+          )}
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link component={RouterLink} to="/sign-in" variant="body2">

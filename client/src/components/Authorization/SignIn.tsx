@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Checkbox,
   Container,
   CssBaseline,
@@ -12,18 +11,17 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import {
   LockOutlined as LockOutlinedIcon,
   Visibility,
   VisibilityOff,
 } from "@mui/icons-material";
 import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
-
-import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
-import { useState } from "react";
-
-const LOGIN_URL = "/api/v1/Authentication/Login";
+import { useEffect, useState } from "react";
+import InvitationConnector from "../../hubs/InvitationConnector";
+import { IdentityDataProvider } from "../../dataProviders/IdentityDataProvider";
 
 function Copyright(props: any) {
   return (
@@ -44,7 +42,8 @@ function Copyright(props: any) {
 }
 
 export default function SignIn() {
-  const { setAuth } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { setAuth, persist, setPersist } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,32 +54,49 @@ export default function SignIn() {
     setShowPassword(!showPassword);
   };
 
+  const [error, setError] = useState<string | null>(null);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    setLoading(true);
+
     const data = new FormData(event.currentTarget);
 
     try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({
-          email: data.get("email"),
-          password: data.get("password"),
-        }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await IdentityDataProvider.loginUser({
+        email: data.get("email"),
+        password: data.get("password"),
+      });
 
       setAuth({
         accessToken: response?.data.accessToken,
         refreshToken: response?.data.refreshToken,
       });
 
+      if (persist) {
+        localStorage.setItem("accessToken", response?.data.accessToken);
+      }
+
       navigate(from, { replace: true });
+      InvitationConnector(response?.data.accessToken);
     } catch (err) {
-      console.log(err);
+      setError(
+        "The email or password you entered is incorrect. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
   };
+
+  const togglePersist = () => {
+    setPersist((prev) => !prev);
+  };
+
+  useEffect(
+    () => localStorage.setItem("persist", persist.toString()),
+    [persist]
+  );
 
   return (
     <Container component="main" maxWidth="xs">
@@ -128,17 +144,30 @@ export default function SignIn() {
             }}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={
+              <Checkbox
+                value="remember"
+                color="primary"
+                onChange={togglePersist}
+                checked={persist}
+              />
+            }
             label="Remember me"
           />
-          <Button
+          <LoadingButton
             type="submit"
             fullWidth
             variant="contained"
+            loading={loading}
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In
-          </Button>
+          </LoadingButton>
+          {error && (
+            <Typography variant="body2" color="error">
+              {error}
+            </Typography>
+          )}
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link component={RouterLink} to="/sign-up" variant="body2">

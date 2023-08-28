@@ -30,6 +30,11 @@ namespace User.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("email");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
@@ -60,10 +65,18 @@ namespace User.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
+                    b.Property<string>("place")
+                        .HasColumnType("text")
+                        .HasColumnName("place");
+
                     b.Property<string>("status")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("status");
+
+                    b.Property<DateTimeOffset?>("time")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("time");
 
                     b.Property<DateTimeOffset>("timestamp")
                         .ValueGeneratedOnAdd()

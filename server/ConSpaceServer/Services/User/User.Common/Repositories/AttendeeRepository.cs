@@ -23,7 +23,8 @@ public class AttendeeRepository : IAttendeeRepository
 
     public async Task<bool> create(AttendeeDto attendee)
     {
-        await _context.Attendees.AddAsync(new Attendee(attendee.Id, attendee.Name, EnumConversionExtension.mapToEntity(attendee.Type)));
+        await _context.Attendees.AddAsync(new Attendee(attendee.Id, attendee.Name,
+            EnumConversionExtension.mapToEntity(attendee.Type), attendee.Email));
         _logger.LogInformation($"Creating user: {attendee.Id}");
         return await _context.SaveChangesAsync() > 0;
     }

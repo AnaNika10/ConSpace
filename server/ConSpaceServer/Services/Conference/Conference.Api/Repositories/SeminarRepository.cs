@@ -120,7 +120,7 @@ namespace Conference.Api.Repositories
                 var value = prop.GetValue(filter);
                 if (value is not null && !value.GetType().IsArray)
                 {
-                     query.Append($" AND \"{prop.Name}\" = {value}");
+                    query.Append($" AND \"{prop.Name}\" = '{value}'");
                 }
             }
 

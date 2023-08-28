@@ -5,14 +5,17 @@ import { themeOptions } from "./components/Common/DarkTheme";
 import { CssBaseline } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NavBarAndMenu from "./components/Common/Menu";
-import RequireAuth from "./components/Common/RequireAuth";
+import RequireAuth from "./components/Authorization/RequireAuth";
 import HomePage from "./components/Common/HomePage";
 import Missing from "./components/Common/Missing";
-import SignIn from "./components/LoginPage/SignIn";
-import SignUp from "./components/LoginPage/SignUp";
-import Unauthorized from "./components/LoginPage/Unauthorized";
+import SignIn from "./components/Authorization/SignIn";
+import SignUp from "./components/Authorization/SignUp";
+import Unauthorized from "./components/Authorization/Unauthorized";
 import AuthProvider from "./context/AuthProvider";
 import Notes from "./components/NotesPage/Notes";
+import PersistLogin from "./components/Authorization/PersistLogin";
+import Faqs from "./components/FAQs/Faqs";
+import Notifications from "./components/NotificationsPage/Notifications";
 import SpeakerList from "./components/Speaker/SpeakerList";
 
 function App() {
@@ -32,20 +35,21 @@ function App() {
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
 
+              <Route path="/faqs" element={<Faqs />} />
+
               {/* protected routes */}
               {/* TODO: add your protected routes here, examples are commented out */}
-              <Route
-                element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
-              >
+              <Route element={<PersistLogin />}>
                 <Route
-                  path="/calendar-schedule"
-                  element={<SeminarCalendar />}
-                />
-              </Route>
-              <Route
-                element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
-              >
-                <Route path="/notes" element={<Notes />} />
+                  element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
+                >
+                  <Route
+                    path="/calendar-schedule"
+                    element={<SeminarCalendar />}
+                  />
+                  <Route path="/notes" element={<Notes />} />
+                  <Route path="/notifications" element={<Notifications />} />
+                </Route>
               </Route>
               {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>
                 <Route path="/seminar-schedule" element={<SeminarList />} />

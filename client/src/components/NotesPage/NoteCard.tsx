@@ -8,21 +8,21 @@ import {
   Button,
 } from "@mui/material";
 import { useState } from "react";
-import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 import { Note } from "../../models/Note";
 import { FormBox } from "./FormBox";
+import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 
 export function NoteCard({ note, token }: { note: Note; token: string }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState(false);
-  const handleDelete = () => {
+  const handleDelete = async () => {
     console.log(note.id);
-    UserDataProvider.deleteNote(note.id!, token);
+    await UserDataProvider.deleteNote(note.id!, token);
   };
   const handleEdit = () => {
     setOpen(true);
   };
-  const editNote = (event: React.FormEvent<HTMLFormElement>) => {
+  const editNote = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let title = null;
@@ -42,7 +42,8 @@ export function NoteCard({ note, token }: { note: Note; token: string }) {
       title: title!,
       content: content!,
     };
-    UserDataProvider.editNote(updatedNote, token);
+    await UserDataProvider.editNote(updatedNote, token);
+    setOpen(false);
   };
   const isFilled = (e: any) => {
     if (e.target.value !== "") {

@@ -21,4 +21,8 @@
       <ProjectReference Include="..\Common\Security\Security.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Extensions\OcelotJwtMiddleware.cs" />
+    </ItemGroup>
+
 </Project>

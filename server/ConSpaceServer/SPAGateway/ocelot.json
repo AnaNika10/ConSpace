@@ -653,10 +653,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "UpstreamPathTemplate": "/FAQ",
       "UpstreamHttpMethod": [ "Get" ]
 
@@ -670,9 +666,24 @@
           "Port": 80
         }
       ],
+      "UpstreamPathTemplate": "/FAQ/{id}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/FAQ/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Administrator"
       },
       "UpstreamPathTemplate": "/FAQ/{id}",
       "UpstreamHttpMethod": [ "Get" ]
@@ -766,6 +777,34 @@
       },
       "UpstreamPathTemplate": "/Speaker/{id}",
       "UpstreamHttpMethod": [ "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/{catchAll}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 50000
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/{catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Invites/GetInvites",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "UpstreamPathTemplate": "/GetAllInvites",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {

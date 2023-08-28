@@ -1,30 +1,31 @@
 import { Grid, List, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
-import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
 import { Seminar } from "../../models/Seminar";
 import { ConferenceDateUtil } from "./ConferenceDateUtil";
 import { SeminarTabs } from "./SeminarTabs";
 import { SeminarListItem } from "./SeminarListItem";
+import withSnackbar from "../Common/SnackBarWrapper";
+import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
+import useAuth from "../../hooks/useAuth";
 
-export default function SeminarList() {
+function SeminarList() {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [, setError] = useState(null);
   const [dayOfSeminar, setDay] = useState(1);
+  const { auth } = useAuth();
   const setDayOfSeminar = (day: number) => {
     setDay(day);
   };
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await SeminarDataProvider.fetchSeminarSchedule();
-        if (!response.ok) {
-          throw new Error("Failed fetching data");
-        }
-        const actual = await response.json();
+        const response = await SeminarDataProvider.fetchSeminarSchedule(
+          auth.accessToken
+        );
         setLoading(false);
         setError(null);
-        setData(actual);
+        setData(response?.data);
       } catch (err: any) {
         setError(err.message);
         setData([]);
@@ -63,3 +64,5 @@ export default function SeminarList() {
     </Grid>
   );
 }
+
+export default withSnackbar(SeminarList);

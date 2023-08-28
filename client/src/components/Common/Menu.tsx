@@ -15,6 +15,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import TodayIcon from "@mui/icons-material/Today";
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import MicIcon from "@mui/icons-material/Mic";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -161,6 +163,12 @@ const MenuList = () => (
         },
         { section: "Notes", icon: <StickyNote2Icon />, link: "/notes" },
         { section: "Speakers", icon: <MicIcon />, link: "/speakers" },
+        {
+          section: "Exhibitors",
+          icon: <StorefrontIcon />,
+          link: "/exhibitors",
+        },
+        { section: "FAQs", icon: <LightbulbIcon />, link: "/faqs" },
       ].map(({ section, icon, link }) => (
         <ListItem key={section}>
           <ListItemIcon>{icon}</ListItemIcon>
