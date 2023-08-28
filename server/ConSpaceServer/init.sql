@@ -1,8 +1,3 @@
-DROP TABLE "Seminar_Speakers";
-DROP TABLE "Speakers";
-DROP TABLE "Seminar";
-
-
 CREATE TABLE IF NOT EXISTS public."Seminar"
 (
     "SeminarId" UUID DEFAULT gen_random_uuid(),
