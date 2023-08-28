@@ -13,12 +13,13 @@ CREATE TABLE IF NOT EXISTS public."Seminar"
 
 INSERT INTO public."Seminar"(
 	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
-	VALUES ('Future of microservices', 'Arena 1', '2023-04-30 12:44:41.873674','2023-04-30 13:44:41.873674', 1,'Matf', ARRAY ['htpp://blabla']);
+VALUES ('Future of microservices', 'Arena 1', '2023-08-30T12:30:41','2023-08-30T14:30:41', 1,'Matf', ARRAY ['htpp://blabla']);
     
 INSERT INTO public."Seminar"(
 	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
-VALUES ('Death', 'Arena 2', '2023-04-30 12:44:41.873674','2023-04-30 14:44:41.873674',2, 'aaaaa',ARRAY ['htpp://aaaa']);
+VALUES ('Death', 'Arena 2', '2023-08-29T14:30:41','2023-08-29T16:30:41',2, 'aaaaa',ARRAY ['htpp://aaaa']);
 
+	
 
 CREATE TABLE IF NOT EXISTS public."Speakers"
 (

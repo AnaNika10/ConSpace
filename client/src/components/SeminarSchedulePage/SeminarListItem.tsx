@@ -41,11 +41,11 @@ export function SeminarListItem({ seminar }: { seminar: Seminar }) {
         </ListItemButton>
       </Stack>
       <EventInformation
-        name={seminar.name}
-        date={DateFormatUtil.extractTime(seminar.startDateTime)}
+        seminar={seminar}
+        // date={DateFormatUtil.extractTime(seminar.startDateTime)}
         isOpened={infoIsDisplayed}
         setOpen={setOpen}
-        destination={"Hall: " + seminar.hall}
+
         isAdded={isAddedToSchedule}
         updateSchedule={updateSchedule}
       />

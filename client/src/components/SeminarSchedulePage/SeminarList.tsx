@@ -4,8 +4,10 @@ import { Seminar } from "../../models/Seminar";
 import { ConferenceDateUtil } from "./ConferenceDateUtil";
 import { SeminarTabs } from "./SeminarTabs";
 import { SeminarListItem } from "./SeminarListItem";
-import axios from "../../api/axios";
-import { GET_CONFERENCES_URL } from "../../constants/api";
+import { GET_SEMINARS_URL } from "../../constants/api";
+import useAuth from "../../hooks/useAuth";
+import { useLocation, useNavigate } from "react-router-dom";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 export default function SeminarList() {
   const [data, setData] = useState([]);
@@ -15,22 +17,59 @@ export default function SeminarList() {
   const setDayOfSeminar = (day: number) => {
     setDay(day);
   };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(GET_CONFERENCES_URL);
+  //       setLoading(false);
+  //       setError(null);
+  //       setData(response.data);
+  //     } catch (err: any) {
+  //       setError(err.message);
+  //       setData([]);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { auth } = useAuth();
+
   useEffect(() => {
-    const fetchData = async () => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getAllSeminars = async () => {
       try {
-        const response = await axios.get(GET_CONFERENCES_URL);
-        setLoading(false);
-        setError(null);
-        setData(response.data);
+        const response = await axiosPrivate.get(GET_SEMINARS_URL, {
+          signal: controller.signal,
+        });
+
+        isMounted && setLoading(false);
+        isMounted && setError(null);
+        isMounted && setData(response.data);
       } catch (err: any) {
-        setError(err.message);
-        setData([]);
+        isMounted && setError(err.message);
+        isMounted && setData([]);
+        navigate("/sign-in", { state: { from: location }, replace: true });
       } finally {
-        setLoading(false);
+        isMounted && setLoading(false);
       }
     };
-    fetchData();
-  }, []);
+
+    getAllSeminars();
+    console.log(data);
+    return () => {
+      isMounted = false;
+
+      if (!location.pathname.startsWith("/seminar-schedule")) {
+        controller.abort();
+      }
+    };
+  }, [location.pathname, data, auth]);
 
   const getSeminarsForSelectedDay = () => {
     return ConferenceDateUtil.filterSeminarsByDay(data, dayOfSeminar);
