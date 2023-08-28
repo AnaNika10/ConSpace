@@ -3,6 +3,7 @@ export interface Speaker {
     name : string,
     position: string,
     company: string,
-    bioInfo: string
+    bioInfo: string,
+    email: string
 
 }

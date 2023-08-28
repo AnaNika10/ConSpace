@@ -104,7 +104,7 @@ const onChange = (e: any) => {
         <Box minHeight={400} marginTop={5}  component="form" noValidate
       autoComplete="off">
         <Grid container spacing={1} rowSpacing={5}>
-          <Grid  item xs={4}  > 
+          <Grid  item xs={6}  > 
       <TextField
           id="speaker-name"
           label="Name"
@@ -118,7 +118,21 @@ const onChange = (e: any) => {
           }}
         />
          </Grid > 
-        <Grid  item xs={4}  > 
+         <Grid  item xs={6}  > 
+      <TextField
+          id="speaker-email"
+          label="Email"
+          defaultValue={currentSpeaker.email}
+          name='email'
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            onChange(event);
+          }}
+          InputProps={{
+            readOnly: !isAdmin,
+          }}
+        />
+         </Grid >
+        <Grid  item xs={6}  > 
               <TextField
           id="speaker-position"
           label="Position"
@@ -132,7 +146,7 @@ const onChange = (e: any) => {
           }}
         />
          </Grid > 
-        <Grid  item xs={4}  > 
+        <Grid  item xs={6}  > 
               <TextField
           id="speaker-company"
           label="Company"
@@ -170,6 +184,8 @@ const onChange = (e: any) => {
 
         {isAdmin && <Button onClick={UpdateSpeaker}  variant="contained">Save</Button> }
         {isAdmin  && !isInsert && <Button onClick={DeleteSpeaker} variant="contained">Delete</Button> }
+        {/* TODO i da nije speaker */}
+        {!isAdmin && <Button  variant="contained">Invite</Button> }
         </DialogActions>
 
       </Dialog>

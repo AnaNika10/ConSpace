@@ -13,7 +13,8 @@ const emptySpeaker : Speaker = {
   name: "",
   position: "",
   company: "",
-  bioInfo : ""
+  bioInfo : "",
+  email : ""
 }
 const fabStyle = {
   position: "absolute",
