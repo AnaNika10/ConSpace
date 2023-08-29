@@ -41,6 +41,7 @@ namespace Conference.Api.Repositories
 
             return id;
         }
+
         public async Task<SeminarDTO> GetSeminar(Guid id)
         {
             using var connection = _context.GetConnection();
@@ -102,9 +103,16 @@ namespace Conference.Api.Repositories
         });
 
         return _mapper.Map<IEnumerable<SeminarDTO>>(seminars);
+        }
 
+        public async Task<IEnumerable<string>> GetDistinctHallNames()
+        {
+            using var connection = _context.GetConnection();
 
+            var hallNames = await connection.QueryAsync<string>(
+                "SELECT DISTINCT \"Hall\" FROM \"Seminar\"");
 
+            return hallNames;
         }
 
         public async Task<IEnumerable<SeminarDTO>> GetSeminarsWithFilter(FilterSeminarDTO filter)
