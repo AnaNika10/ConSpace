@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -11,6 +10,7 @@ import useAuth from "../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { format } from "date-fns";
+import { Fragment, useEffect, useState } from "react";
 
 interface Seminar {
   seminarId: string;
@@ -107,7 +107,7 @@ export default function Floorplan() {
 
   return (
     <Grid container justifyContent="center" alignItems="center" spacing={2}>
-      {halls.map((hall) => {
+      {halls.map((hall, index) => {
         const sortedSeminars = seminars[hall]
           ?.slice()
           .sort(
@@ -116,47 +116,113 @@ export default function Floorplan() {
               new Date(b.startDateTime).getTime()
           );
 
-        return (
-          <Grid item key={hall} xs={12} sm={6} md={4} lg={3}>
-            <Paper
-              elevation={3}
-              style={{
-                padding: "16px",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <Typography variant="h6">{hall}</Typography>
-              {sortedSeminars && sortedSeminars.length > 0 ? (
-                sortedSeminars.map((seminar) => (
-                  <div key={seminar.seminarId} style={{ margin: "8px 0" }}>
-                    <Card>
-                      <CardContent>
-                        <Typography variant="h6">{seminar.name}</Typography>
-                        <Divider style={{ margin: "12px 0" }} />
-                        <Typography variant="body2">
-                          <strong>Date:</strong>{" "}
-                          {format(
-                            new Date(seminar.startDateTime),
-                            "dd MMM yyyy"
-                          )}
-                        </Typography>
-                        <Typography variant="body2">
-                          <strong>Time:</strong>{" "}
-                          {format(new Date(seminar.startDateTime), "hh:mm a")} -{" "}
-                          {format(new Date(seminar.endDateTime), "hh:mm a")}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </div>
-                ))
-              ) : (
-                <Typography variant="body2">No seminars scheduled</Typography>
-              )}
-            </Paper>
-          </Grid>
-        );
+        if (index % 2 === 0) {
+          return (
+            <Fragment key={hall}>
+              <Grid item xs={12} md={6}>
+                <Paper
+                  elevation={3}
+                  style={{
+                    padding: "16px",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "500px",
+                    marginLeft: "150px",
+                  }}
+                >
+                  <Typography variant="h6">{hall}</Typography>
+                  {sortedSeminars && sortedSeminars.length > 0 ? (
+                    sortedSeminars.map((seminar) => (
+                      <div key={seminar.seminarId} style={{ margin: "8px 0" }}>
+                        <Card>
+                          <CardContent>
+                            <Typography variant="h6">{seminar.name}</Typography>
+                            <Divider style={{ margin: "12px 0" }} />
+                            <Typography variant="body2">
+                              <strong>Date:</strong>{" "}
+                              {format(
+                                new Date(seminar.startDateTime),
+                                "dd MMM yyyy"
+                              )}
+                            </Typography>
+                            <Typography variant="body2">
+                              <strong>Time:</strong>{" "}
+                              {format(
+                                new Date(seminar.startDateTime),
+                                "hh:mm a"
+                              )}{" "}
+                              -{" "}
+                              {format(new Date(seminar.endDateTime), "hh:mm a")}
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    ))
+                  ) : (
+                    <Typography variant="body2">
+                      No seminars scheduled
+                    </Typography>
+                  )}
+                </Paper>
+              </Grid>
+            </Fragment>
+          );
+        } else {
+          // For odd index, continue the previous row
+          const prevHall = halls[index - 1];
+          const prevSortedSeminars = seminars[prevHall]
+            ?.slice()
+            .sort(
+              (a, b) =>
+                new Date(a.startDateTime).getTime() -
+                new Date(b.startDateTime).getTime()
+            );
+
+          return (
+            <Grid item key={hall} xs={12} md={6}>
+              <Paper
+                elevation={3}
+                style={{
+                  padding: "16px",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "500px",
+                  marginLeft: "150px",
+                }}
+              >
+                <Typography variant="h6">{hall}</Typography>
+                {prevSortedSeminars && prevSortedSeminars.length > 0 ? (
+                  prevSortedSeminars.map((seminar) => (
+                    <div key={seminar.seminarId} style={{ margin: "8px 0" }}>
+                      <Card>
+                        <CardContent>
+                          <Typography variant="h6">{seminar.name}</Typography>
+                          <Divider style={{ margin: "12px 0" }} />
+                          <Typography variant="body2">
+                            <strong>Date:</strong>{" "}
+                            {format(
+                              new Date(seminar.startDateTime),
+                              "dd MMM yyyy"
+                            )}
+                          </Typography>
+                          <Typography variant="body2">
+                            <strong>Time:</strong>{" "}
+                            {format(new Date(seminar.startDateTime), "hh:mm a")}{" "}
+                            - {format(new Date(seminar.endDateTime), "hh:mm a")}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ))
+                ) : (
+                  <Typography variant="body2">No seminars scheduled</Typography>
+                )}
+              </Paper>
+            </Grid>
+          );
+        }
       })}
     </Grid>
   );
