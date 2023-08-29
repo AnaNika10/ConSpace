@@ -1,11 +1,9 @@
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   Typography,
   DialogActions,
   Button,
-  AppBar,
   IconButton,
   Toolbar,
   FormControl,
@@ -73,11 +71,8 @@ export function SpeakerForm({
     if (!isSaved) {
       setCurrentSpeaker(original);
     }
-
-    console.log("setClose speak item");
   };
   const DeleteSpeaker = () => {
-    console.log("clicked" + currentSpeaker.speakerId);
     const data = currentSpeaker.speakerId!;
     SpeakerDataProvider.DeleteSpeaker(data, auth.accessToken);
     setClose(true);
@@ -95,7 +90,6 @@ export function SpeakerForm({
     setOpenRequest(true);
   };
   const onChange = (e: any) => {
-    console.log(e);
     const value = e.target.value;
     setCurrentSpeaker({
       ...currentSpeaker,
