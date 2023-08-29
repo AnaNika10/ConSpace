@@ -11,10 +11,10 @@ namespace User.Common.Entities;
 public class Invite
 {
     
-    public Invite(Guid userId, Guid inviteeId, InviteStatus status, DateTimeOffset? time, string? place)
+    public Invite(string userEmail, string inviteeEmail, InviteStatus status, DateTimeOffset? time, string? place)
     {
-        UserId = userId;
-        InviteeId = inviteeId;
+        UserEmail = userEmail;
+        InviteeEmail = inviteeEmail;
         this.status = status;
         this.place = place;
         this.time = time;
@@ -25,9 +25,9 @@ public class Invite
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Column("user_id")] public Guid UserId { get; set; }
+    [Column("user_email")] public string UserEmail { get; set; }
 
-    [Column("invitee_id")] public Guid InviteeId { get; set; }
+    [Column("invitee_email")] public string InviteeEmail { get; set; }
 
     [Column("status")] public InviteStatus status { get; set; }
 
