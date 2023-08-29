@@ -22,7 +22,7 @@ export function InviteItem({
   return (
     <>
       <TableRow
-        key={invite.inviteeId + invite.userId + invite.timestamp}
+        key={invite.inviteeEmail + invite.userEmail + invite.timestamp}
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         onClick={() => setOpen(!open)}
       >
