@@ -12,14 +12,17 @@ export function RequestTimePlaceForm({
   inviteId,
   username,
   token,
-  setMessage,
+  inviteeEmail,
+  setMessage
+
 }: {
   open: boolean;
   setOpen: (a: boolean) => void;
   status: InviteStatus;
-  inviteId: string;
+  inviteId: string | null;
   username: string;
   token: string;
+  inviteeEmail: string;
   setMessage: (msg: string) => void;
 }) {
   const [error, setError] = useState(false);
@@ -49,14 +52,14 @@ export function RequestTimePlaceForm({
     ) {
       const invite: Invite = {
         id: inviteId,
-        userId: "71e70a13-3b32-4c52-bf85-77eb0a751355",
+        userId: "",
         userName: username,
         inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
         inviteeName: "snape_negotiation",
         status: InviteStatus.PLACE_AND_TIME_NEGOTIATION,
         timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
-        time: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
-        place: "Hogwarts",
+        time: DateFormatUtil.getUpdatedTime(time!).toISOString(),
+        place: place!,
       };
       inviteUser(token, { setMessage }, invite)();
       setOpen(false);

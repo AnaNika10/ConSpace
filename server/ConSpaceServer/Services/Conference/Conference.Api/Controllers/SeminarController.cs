@@ -12,7 +12,7 @@ namespace Conference.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Authorize]
+
     public class SeminarController : ControllerBase
     {
         private readonly ISeminarRepository _repository;
@@ -28,7 +28,7 @@ namespace Conference.Api.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<SeminarDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [Authorize]
+
         public async Task<ActionResult<IEnumerable<SeminarDTO>>> GetAllSeminars()
         {
             var seminars = await _repository.GetAllSeminars();
@@ -41,7 +41,7 @@ namespace Conference.Api.Controllers
         [HttpGet("{seminarId}", Name = nameof(GetSeminarsById))]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [Authorize]
+
         public async Task<ActionResult<SeminarDTO>> GetSeminarsById(Guid seminarId)
         {
             var seminar = await _repository.GetSeminar(seminarId);
@@ -55,7 +55,7 @@ namespace Conference.Api.Controllers
         [HttpGet("Filter")]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [Authorize]
+
         public async Task<ActionResult<SeminarDTO>> GetSeminarsWithFilters([FromQuery] FilterSeminarDTO seminar)
         {
             var seminars = await _repository.GetSeminarsWithFilter(seminar);
@@ -68,22 +68,22 @@ namespace Conference.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status201Created)]
-        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
+
         public async Task<ActionResult<SeminarDTO>> CreateSeminar([FromBody] CreateSeminarDTO request)
         {
             var Id = await _repository.CreateSeminar(request);
             var seminar = await _repository.GetSeminar(Id);
 
-            var changeSpeakersRequest = new ChangeSeminarSpeakersDTO { SeminarId = seminar.SeminarId, Speakers = seminar.Speakers};
+            var changeSpeakersRequest = new ChangeSeminarSpeakersDTO { SeminarId = seminar.SeminarId, Speakers = seminar.Speakers };
             await _repository.ChangeSeminarSpeakers(changeSpeakersRequest);
             return CreatedAtRoute("GetSeminarsById", new { seminar.SeminarId }, seminar);
 
         }
         [HttpPut]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
-        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
+
         public async Task<ActionResult<SeminarDTO>> UpdateSeminar([FromBody] UpdateSeminarDTO request)
-        {            
+        {
 
             var speakers = await _repository.GetSeminarSpeakers(request.SeminarId);
             var toBeInserted = request.Speakers.ExceptBy(speakers, x => x).ToList();
@@ -93,11 +93,11 @@ namespace Conference.Api.Controllers
                 var changeSpeakersRequest = new ChangeSeminarSpeakersDTO { SeminarId = request.SeminarId, Speakers = toBeInserted, RemovedSpeakers = toBeDeleted };
                 await _repository.ChangeSeminarSpeakers(changeSpeakersRequest);
             }
-            
+
             await _repository.UpdateSeminar(request);
             var seminar = await _repository.GetSeminar(request.SeminarId);
 
-            
+
             if (seminar == null)
             {
                 return BadRequest();
@@ -109,7 +109,7 @@ namespace Conference.Api.Controllers
         }
         [HttpDelete("{seminarId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
+
         public async Task<ActionResult<bool>> DeleteSeminar(Guid seminarId)
         {
             var success = await _repository.DeleteSeminar(seminarId);

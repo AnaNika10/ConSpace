@@ -19,6 +19,7 @@
     "@microsoft/signalr": "^7.0.10",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.14.4",
+    
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "dayjs": "^1.11.9",

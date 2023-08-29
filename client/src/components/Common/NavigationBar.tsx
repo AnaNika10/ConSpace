@@ -25,10 +25,12 @@ export default function NavBar() {
               Seminar Schedule
             </Button>
           </Link>
+
+          <Link to={"/exhibitors"}>
+            <Button sx={{ color: "white" }} style={{ marginTop: "10px" }}>Exhibitors</Button>
+          </Link>
           <Link to={"/floorplan"}>
-            <Button sx={{ color: "white" }} style={{ marginTop: "10px" }}>
-              Floorplan
-            </Button>
+            <Button sx={{ color: "white" }} style={{ marginTop: "10px" }}>Floorplan</Button>
           </Link>
           {!auth.accessToken && (
             <Link
