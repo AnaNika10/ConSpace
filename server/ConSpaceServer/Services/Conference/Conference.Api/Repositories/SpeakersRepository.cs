@@ -23,7 +23,8 @@ namespace Conference.Api.Repositories
               "SELECT * FROM \"Speakers\""
 
               );
-            return _mapper.Map<IEnumerable<SpeakerDTO>>(speakers);
+            var speakersSorted = speakers.OrderBy(x=> x.SpeakerId);
+            return _mapper.Map<IEnumerable<SpeakerDTO>>(speakersSorted);
         }
         public async Task<SpeakerDTO> GetSpeaker(int id)
         {
@@ -35,19 +36,20 @@ namespace Conference.Api.Repositories
             return _mapper.Map<SpeakerDTO>(speaker);
         }
 
-        public async Task<int> CreateSpeaker(CreateSpeakerDTO faq)
+        public async Task<int> CreateSpeaker(CreateSpeakerDTO speaker)
         {
             using var connection = _context.GetConnection();
 
             int id = await connection.QueryFirstAsync<int>(
-                  "insert into \"Speakers\" (\"Name\",\"Position\",\"Company\",\"BioInfo\")" +
-                  " values (@Name, @Position,@Company, @BioInfo) RETURNING \"SpeakerId\"",
+                  "insert into \"Speakers\" (\"Name\",\"Position\",\"Company\",\"BioInfo\",\"Email\")" +
+                  " values (@Name, @Position,@Company, @BioInfo, @Email) RETURNING \"SpeakerId\"",
                   new
                   {
-                      Name = faq.Name,
-                      Position = faq.Position,
-                      Company = faq.Company,
-                      BioInfo = faq.BioInfo
+                      Name = speaker.Name,
+                      Position = speaker.Position,
+                      Company = speaker.Company,
+                      BioInfo = speaker.BioInfo,
+                      Email = speaker.Email
 
                   });
 
@@ -59,7 +61,7 @@ namespace Conference.Api.Repositories
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "UPDATE \"Speakers\" SET \"Name\"=@Name, \"Position\" = @Position,\"Company\" = @Company,\"BioInfo\" = @BioInfo" +
+                "UPDATE \"Speakers\" SET \"Name\"=@Name, \"Position\" = @Position,\"Company\" = @Company,\"BioInfo\" = @BioInfo ,\"Email\" = @Email" +
                 " WHERE \"SpeakerId\" = @SpeakerId",
                new
                {
@@ -68,6 +70,7 @@ namespace Conference.Api.Repositories
                    Position = speaker.Position,
                    Company = speaker.Company,
                    BioInfo = speaker.BioInfo,
+                   Email = speaker.Email
                });
 
             if (affected == 0)

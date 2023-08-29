@@ -13,30 +13,32 @@ CREATE TABLE IF NOT EXISTS public."Seminar"
 
 INSERT INTO public."Seminar"(
 	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
-	VALUES ('Future of microservices', 'Arena 1', '2023-04-30 12:44:41.873674','2023-04-30 13:44:41.873674', 1,'Matf', ARRAY ['htpp://blabla']);
+VALUES ('Future of microservices', 'Arena 1', '2023-08-30T12:30:41','2023-08-30T14:30:41', 1,'Matf', ARRAY ['htpp://blabla']);
     
 INSERT INTO public."Seminar"(
 	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
-VALUES ('Death', 'Arena 2', '2023-04-30 12:44:41.873674','2023-04-30 14:44:41.873674',2, 'aaaaa',ARRAY ['htpp://aaaa']);
+VALUES ('Death', 'Arena 2', '2023-08-29T14:30:41','2023-08-29T16:30:41',2, 'aaaaa',ARRAY ['htpp://aaaa']);
 
+	
 
 CREATE TABLE IF NOT EXISTS public."Speakers"
 (
          "SpeakerId" SERIAL PRIMARY KEY ,
          "Name" text NOT NULL,
+	     "Email" text NOT NULL,
 		 "Position" text NOT NULL,
          "Company" text NOT NULL,
          "BioInfo" text
 );
 INSERT INTO public."Speakers"(
-	"Name", "Position","Company", "BioInfo")
-	VALUES ('Ana Nikacevic','FS','a1', 'bla1');
+	"Name", "Position","Company", "Email","BioInfo")
+	VALUES ('Ana Nikacevic','FS','a1', 'ana@gmail.com','bla1');
 INSERT INTO public."Speakers"(
-   "Name", "Position","Company", "BioInfo")
-	VALUES ('Marija Lakic','BE','a2', 'bla2');
+   "Name", "Position","Company", "Email","BioInfo")
+	VALUES ('Marija Lakic','BE','a2', 'marija@gmail.com','bla2');
 INSERT INTO public."Speakers"(
-    "Name", "Position","Company", "BioInfo")
-	VALUES ('Milica Radojicic','DA','a3', 'bla3'); 
+    "Name", "Position","Company","Email", "BioInfo")
+	VALUES ('Milica Radojicic','DA','a3', 'milica@gmail.com','bla3'); 
 
 
 CREATE TABLE IF NOT EXISTS public."Exhibitors"
