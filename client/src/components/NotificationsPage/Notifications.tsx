@@ -9,12 +9,9 @@ import {
 } from "@mui/material";
 import useAuth from "../../hooks/useAuth";
 import withSnackbar from "../Common/SnackBarWrapper";
-import jwt_decode from "jwt-decode";
 import { useState, useEffect } from "react";
-import { Invite, InviteStatus } from "../../models/Invite";
-import { DateFormatUtil } from "../Common/DateFormatUtil";
+import { Invite } from "../../models/Invite";
 import { InviteItem } from "./InviteItem";
-import { inviteUser } from "../../hubs/InviteUser";
 import { NotificationsHeader } from "./NotificationsHeader";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -24,23 +21,7 @@ function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
   const [isLoading, setLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
   const { auth } = useAuth();
-  const decodedToken: { Name: string } = jwt_decode(auth.accessToken)!;
-  const username = decodedToken.Name;
   const axiosPrivate = useAxiosPrivate();
-  //todo populate invite with data of a speaker user wants to invite
-  const invite: Invite = {
-    id: null,
-    userEmail: "anchy@gmail.com",
-    userName: username,
-    inviteeEmail: "snape@gmail.com",
-    inviteeName: "snape",
-    status: InviteStatus.PENDING_ANSWER,
-    timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
-    time: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
-    place: "Hogwarts",
-  };
-  const inviteSpeaker = () =>
-    inviteUser(auth.accessToken, { setMessage }, invite)();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -79,10 +60,6 @@ function Notifications({ setMessage }: { setMessage: (msg: string) => void }) {
 
   return (
     <>
-      <ListItem>
-        <Typography>Speaker: Snape</Typography>
-        <Button onClick={inviteSpeaker}>Invite</Button>
-      </ListItem>
       <TableContainer component={Paper} sx={{ marginX: 50, maxWidth: 850 }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <NotificationsHeader />

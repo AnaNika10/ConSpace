@@ -30,9 +30,11 @@ export function InviteItem({
           <StatusIcon status={invite.status}></StatusIcon>
         </TableCell>
         <TableCell align="center">
-          {username === invite.userName ? "You" : invite.inviteeName}
+          {username === invite.userName ? "You" : invite.userName}
         </TableCell>
-        <TableCell align="center">{invite.inviteeName}</TableCell>
+        <TableCell align="center">
+          {username === invite.inviteeName ? "Me" : invite.inviteeName}
+        </TableCell>
         <TableCell align="center">
           {DateFormatUtil.extractDate(invite.timestamp) +
             ", " +
