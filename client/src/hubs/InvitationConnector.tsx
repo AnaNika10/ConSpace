@@ -1,5 +1,6 @@
 import * as signalR from "@microsoft/signalr";
 import config from "../config/local.json";
+import jwt from "jwt-decode";
 const URL = config.INVITATIONS_HUB;
 class Connector {
   private connection: signalR.HubConnection;
@@ -9,8 +10,11 @@ class Connector {
   ) => void;
 
   constructor(token: string) {
+    const decodedToken = jwt(token);
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(URL, { accessTokenFactory: () => token }) // todo refresh token in accessTokenFactory
+      .withUrl(URL, {
+        accessTokenFactory: () => token,
+      })
       .withAutomaticReconnect()
       .build();
 
@@ -34,11 +38,16 @@ class Connector {
     this.connection.stop().then(() => console.log("disconnected"));
   };
 
-  public reconnect = () => {
-    this.connection.start().then(() => console.log("reconnected"));
+  public reconnect = (token: string) => {
+    if (this.connection.state === "Disconnected") {
+      Connector.instance = new Connector(token);
+      console.log("reconnected");
+    }
   };
   public static getInstance(token: string): Connector {
-    if (!Connector.instance) Connector.instance = new Connector(token);
+    if (!Connector.instance) {
+      Connector.instance = new Connector(token);
+    }
     return Connector.instance;
   }
 }

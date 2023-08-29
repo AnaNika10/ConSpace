@@ -117,7 +117,9 @@ export default function SignUp() {
       });
 
       navigate(from, { replace: true });
-      InvitationConnector(response?.data.accessToken);
+      InvitationConnector(response?.data.accessToken).reconnect(
+        response?.data.accessToken
+      );
     } catch (error) {
       setError("Something went wrong. Please try again.");
     } finally {

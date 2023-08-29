@@ -79,7 +79,11 @@ export default function SignIn() {
       }
 
       navigate(from, { replace: true });
-      InvitationConnector(response?.data.accessToken);
+      console.log("signing in");
+      const connector = InvitationConnector(
+        response?.data.accessToken
+      ).reconnect(response?.data.accessToken);
+      console.log(connector);
     } catch (err) {
       setError(
         "The email or password you entered is incorrect. Please try again."

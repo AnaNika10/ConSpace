@@ -98,6 +98,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseEndpoints(endpoints => endpoints.MapHub<InvitationHub>("/notifications"));
+app.UseEndpoints(endpoints =>
+    endpoints.MapHub<InvitationHub>("/notifications", options => options.CloseOnAuthenticationExpiration = true));
 
 app.Run();
