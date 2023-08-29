@@ -28,7 +28,7 @@ namespace Conference.Api.Repositories
             
             var id = await connection.QueryFirstAsync<Guid>(
                   "insert into \"Seminar\" (\"Name\",\"Hall\",\"StartDateTime\",\"EndDateTime\",\"Exhibitors\",\"Description\", \"FilesUrls\")" +
-                  " values (@Name, @Floor, @StartDateTime, @EndDateTime, @Exhibitors, @Description, @FilesUrls) RETURNING \"SeminarId\"",
+                  " values (@Name, @Hall, @StartDateTime, @EndDateTime, @Exhibitors, @Description, @FilesUrls) RETURNING \"SeminarId\"",
                   new { 
                       Name = seminar.Name,
                       Hall = seminar.Hall,

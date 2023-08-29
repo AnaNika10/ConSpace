@@ -48,7 +48,7 @@ export abstract class ConferenceDateUtil {
     const diffMs = (e.getTime() - s.getTime());
 
     let diffMins = Math.round((diffMs / 1000) / 60); 
-    console.log(diffMins);
+    //console.log(diffMins);
     return diffMins;
 
   } 
@@ -58,7 +58,7 @@ export abstract class ConferenceDateUtil {
     const s = new Date(start).getHours()+duration;
     const x = new Date(start)
     x.setHours(s);
-   console.log(x.toString());
+  // console.log(x.toString());
 
 return  dayjs(aa).format('YYYY-MM-DDTHH:mm:ss') ;
 } 

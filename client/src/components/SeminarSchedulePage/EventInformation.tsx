@@ -12,32 +12,35 @@ import {
   FormControl,
   Grid,
   TextField,
-  InputLabel,
-  Checkbox,
-  ListItemText,
-  MenuItem,
-  OutlinedInput,
-  Select,
   SelectChangeEvent,
-  duration,
+  Autocomplete,
+  Chip,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Seminar } from "../../models/Seminar";
-import { DateFormatUtil } from "../Common/DateFormatUtil";
+
 import { ConferenceDateUtil } from "./ConferenceDateUtil";
 import { useEffect, useState } from "react";
 import jwtDecode from "jwt-decode";
 import useAuth from "../../hooks/useAuth";
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs, { Dayjs } from 'dayjs';
-import { DateTimePicker, DatePicker, LocalizationProvider, PickerChangeHandlerContext, DateTimeValidationError } from '@mui/x-date-pickers';
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
+import {
+  DateTimePicker,
+  DatePicker,
+  LocalizationProvider,
+} from "@mui/x-date-pickers";
 import { useNavigate, useLocation } from "react-router-dom";
-import { GET_SEMINARS_URL, GET_EXHIBITORS_URL, GET_SPEAKERS_URL } from "../../constants/api";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { Speaker } from "../../models/Speaker";
+import {
+  GET_SEMINARS_URL,
+  GET_SPEAKERS_URL,
+  GET_EXHIBITORS_URL,
+} from "../../constants/api";
 import { Exhibitor } from "../../models/Exhibitor";
-import { FieldChangeHandlerContext } from "@mui/x-date-pickers/internals";
+import { Speaker } from "../../models/Speaker";
+
 const CloseButton = ({ setClose }: { setClose: () => void }) => {
   return (
     <>
@@ -78,107 +81,113 @@ export function EventInformation({
   isAdded: boolean;
   updateSchedule: (a: boolean) => void;
 }) {
- 
   const { auth } = useAuth();
-  const original : Seminar = JSON.parse(JSON.stringify(seminar)) as typeof seminar;
-  const [currentSeminar,setCurrentSeminar] = useState(original);
+  const original: Seminar = JSON.parse(
+    JSON.stringify(seminar)
+  ) as typeof seminar;
+  const [currentSeminar, setCurrentSeminar] = useState(original);
   const [allSpeakers, setAllSpeakers] = useState<Speaker[]>([]);
   const [allExhibitors, setAllExhibitors] = useState<Exhibitor[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [, setError] = useState(null);
-  const decoded :any = auth?.accessToken ? jwtDecode(auth.accessToken) : undefined;
+  const decoded: any = auth?.accessToken
+    ? jwtDecode(auth.accessToken)
+    : undefined;
   const role = decoded?.Role || "";
   const isAdmin = role === "Administrator";
-  const isInsert = seminar.seminarId === null || seminar.seminarId === undefined;
+  const isInsert =
+    seminar.seminarId === null || seminar.seminarId === undefined;
   const onChange = (e: any) => {
     console.log(e);
     const value = e.target.value;
-    if (e.target.name === 'duration'){
-      const newEnd = ConferenceDateUtil.calculateEndDateTime(currentSeminar.startDateTime,e.target.value);
+    if (e.target.name === "duration") {
+      const newEnd = ConferenceDateUtil.calculateEndDateTime(
+        currentSeminar.startDateTime,
+        e.target.value
+      );
       setCurrentSeminar({
         ...currentSeminar,
-        endDateTime: newEnd
+        endDateTime: newEnd,
       });
       return;
     }
     setCurrentSeminar({
       ...currentSeminar,
-      [e.target.name]: value
+      [e.target.name]: value,
     });
-  }
-  const handleChangeSelectMultiple = (event: SelectChangeEvent<typeof seminar.speakerNames>) => {
-    console.log(event.target);
-    console.log("aa");
-    const {
-      target: { value },
-    } = event;
-  
   };
-  const handleChangeDateTime = (value: Dayjs | null)=> {
-    const x =  dayjs(value).format('YYYY-MM-DDTHH:mm:ss') ;
+
+  const handleChangeDateTime = (value: Dayjs | null) => {
+    const x = dayjs(value).format("YYYY-MM-DDTHH:mm:ss");
     setCurrentSeminar({
       ...currentSeminar,
-      startDateTime: x
+      startDateTime: x,
     });
   };
-  const handleChangeSelect = (event: SelectChangeEvent) => {
-    console.log(event.target.value);
-    console.log(event.target.value);
-    console.log("aa");
+
+  const getFromExhibitorId = (id: number) => {
+    const x = allExhibitors.find((x) => x.exhibitorId === id);
+    return x;
   };
-  const getNameFromExhibitorId = (id : number) => {
-   const x= allExhibitors.find(x=>x.exhibitorId === id)?.name;   
-  return x;
-  };
-  const setClose = (isSaved : boolean) => {
+  const setClose = (isSaved: boolean) => {
     setOpen(false);
-    if (!isSaved)
-    {
+    if (!isSaved) {
       setCurrentSeminar(original);
     }
-    
+  };
+  const onAutocompleteChange = (event: any, values: any) => {
+    console.log(event);
+    console.log(values);
+    console.log("aa");
   };
   const DeleteSeminar = async () => {
-    console.log("clicked"+currentSeminar.seminarId);
+    console.log("clicked" + currentSeminar.seminarId);
     const data = currentSeminar.seminarId!;
-   // SpeakerDataProvider.DeleteSpeaker(data,auth.accessToken);
-    await axiosPrivate.delete(`${GET_SEMINARS_URL}/${currentSeminar.seminarId}`, {
-      headers: {
-        Authorization: `Bearer ${auth.accessToken}`,
-        "Content-Type": "application/json",
-      },
-    });
+    // SpeakerDataProvider.DeleteSpeaker(data,auth.accessToken);
+    await axiosPrivate.delete(
+      `${GET_SEMINARS_URL}/${currentSeminar.seminarId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
     setClose(true);
   };
   const SaveSeminar = async () => {
-    if (!currentSeminar.seminarId)
-    {
-     // SpeakerDataProvider.InsertSpeaker(currentSeminar, auth.accessToken);
-      const response = await axiosPrivate.post(`${GET_SEMINARS_URL}`, JSON.stringify(currentSeminar), {
-        headers: {
-          Authorization: `Bearer ${auth.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-    }
-    else
-    {
+    if (!currentSeminar.seminarId) {
+      // SpeakerDataProvider.InsertSpeaker(currentSeminar, auth.accessToken);
+      const response = await axiosPrivate.post(
+        `${GET_SEMINARS_URL}`,
+        JSON.stringify(currentSeminar),
+        {
+          headers: {
+            Authorization: `Bearer ${auth.accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } else {
       //SpeakerDataProvider.UpdateSpeaker(currentSeminar, auth.accessToken);
-      const response = await axiosPrivate.put(`${GET_SEMINARS_URL}`, JSON.stringify(currentSeminar), {
-        headers: {
-          Authorization: `Bearer ${auth.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axiosPrivate.put(
+        `${GET_SEMINARS_URL}`,
+        JSON.stringify(currentSeminar),
+        {
+          headers: {
+            Authorization: `Bearer ${auth.accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
     }
-  
+
     setClose(true);
   };
-  const handleClose = (event : object, reason : string) => {
-    if (reason && reason == "backdropClick") 
-        return;
-  // TODO  updateSchedule(isAdded);
-}
+  const handleClose = (event: object, reason: string) => {
+    if (reason && reason == "backdropClick") return;
+    // TODO  updateSchedule(isAdded);
+  };
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
@@ -251,135 +260,164 @@ export function EventInformation({
     // </div>
 
     <div>
-       
-      <Dialog onClose={handleClose} open={isOpened}   >
-      <CloseButton setClose={()=>setClose(false)} />
-      <DialogContent  > 
-      <Box minHeight={1000}  marginTop={5}  component="form" noValidate
-      autoComplete="off">  
-        <FormControl fullWidth >
-       
-        <Grid container spacing={1} rowSpacing={5}>
-          <Grid  item xs={6}  > 
-      <TextField
-          id="seminar-name"
-          label="Name"
-          defaultValue={seminar.name}
-          name='name'
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            onChange(event);
-          }}
-          InputProps={{
-            readOnly: !isAdmin,
-          }}
-        />
-         </Grid > 
-        <Grid  item xs={6}  > 
-              <TextField
-          id="seminar-hall"
-          label="Hall"
-          defaultValue={currentSeminar.hall}
-          name='hall'
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            onChange(event);
-          }}
-          InputProps={{
-            readOnly: !isAdmin,
-          }}
-        />
-         </Grid > 
-         <Grid  item xs={12}  >
-        <Select
-          multiple
-          defaultValue={currentSeminar.speakerNames}
-          onChange={handleChangeSelectMultiple}
-          name='speakers'
-          renderValue={(selected) => selected.join(', ')}
-          MenuProps={MenuProps}
-        >
-          {allSpeakers.map((speaker) => (
-            <MenuItem key={speaker.speakerId} value={speaker.name}>
-              <ListItemText primary={speaker.name} />
-            </MenuItem>
-          ))}
-        </Select>
-        </Grid >
-        <Grid  item xs={12}  >
-        <Select
-          defaultValue={getNameFromExhibitorId(currentSeminar.exhibitors)}
-          name='exhibitors'
-          onChange={handleChangeSelect}
-          MenuProps={MenuProps}
-          // renderValue={(selected) => selected.join(', ')}
-        >
-          {allExhibitors.map((ex) => (
-            <MenuItem key={ex.exhibitorId} value={ex.exhibitorId!}>
-              <ListItemText primary={ex.name} />
-            </MenuItem>
-          ))}
-        </Select>
-        </Grid >
- 
-        <Grid item xs={12}  > 
-               <TextField
-              fullWidth
-              multiline
-              name='description'
-              InputProps={{
-                readOnly: !isAdmin,
-              }}
-              defaultValue={currentSeminar.description}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                onChange(event);
-              }}
-              label="Description"
-              rows="6"
-            />
-         
-          {/* <DateTimePicker
-  label="Uncontrolled picker"
-  defaultValue=
-  {seminar.startDateTime}
-/> */}
-     </Grid > 
-     
-             </Grid > 
-            
-    
-        <Grid container spacing={1} rowSpacing={5} marginTop={1}>
-        <Grid item xs={6}  > 
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateTimePicker label="Start time" value={dayjs(currentSeminar.startDateTime)} onChange={handleChangeDateTime}  readOnly= {!isAdmin} />
-          </LocalizationProvider>
-</Grid > 
-<Grid item xs={6}  > 
-<TextField
-          id="seminar-duration"
-          label="Duration (minutes)"
-          defaultValue={ConferenceDateUtil.calculateDuration(currentSeminar.startDateTime,currentSeminar.endDateTime)}
-          name='duration'
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            onChange(event);
-          }}
-          InputProps={{
-            readOnly: !isAdmin,
-          }}
-        />
-</Grid > 
-</Grid > 
-</FormControl>
-        </Box>
+      <Dialog onClose={handleClose} open={isOpened}>
+        <CloseButton setClose={() => setClose(false)} />
+        <DialogContent>
+          <Box
+            minHeight={1000}
+            marginTop={5}
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+            <FormControl fullWidth>
+              <Grid container spacing={1} rowSpacing={5}>
+                <Grid item xs={6}>
+                  <TextField
+                    id="seminar-name"
+                    label="Name"
+                    defaultValue={seminar.name}
+                    name="name"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange(event);
+                    }}
+                    InputProps={{
+                      readOnly: !isAdmin,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    id="seminar-hall"
+                    label="Hall"
+                    defaultValue={currentSeminar.hall}
+                    name="hall"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange(event);
+                    }}
+                    InputProps={{
+                      readOnly: !isAdmin,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Autocomplete
+                    multiple
+                    id="speakers-filled"
+                    options={allSpeakers.map((option) => option.name)}
+                    value={currentSeminar.speakerNames}
+                    autoSelect
+                    onChange={onAutocompleteChange}
+                    renderTags={(value: readonly string[], getTagProps) =>
+                      value.map((option: string, index: number) => (
+                        <Chip
+                          variant="outlined"
+                          label={option}
+                          {...getTagProps({ index })}
+                        />
+                      ))
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="filled"
+                        label="freeSolo"
+                        placeholder="Favorites"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Autocomplete
+                    id="exhibitors"
+                    options={allExhibitors}
+                    defaultValue={
+                      getFromExhibitorId(currentSeminar.exhibitors) as Exhibitor
+                    }
+                    getOptionLabel={(option) =>
+                      typeof option === "string" ? option : option.name
+                    }
+                    autoSelect
+                    onChange={onAutocompleteChange}
+                    renderTags={(value, getTagProps) =>
+                      value.map((option, index) => (
+                        <Chip
+                          variant="outlined"
+                          label={option.name}
+                          {...getTagProps({ index })}
+                        />
+                      ))
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="filled"
+                        label="Exhibitors"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    id="seminar-hall"
+                    label="Hall"
+                    defaultValue={currentSeminar.hall}
+                    name="hall"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange(event);
+                    }}
+                    InputProps={{
+                      readOnly: !isAdmin,
+                    }}
+                  />
+                </Grid>
+              </Grid>
 
-      
+              <Grid container spacing={1} rowSpacing={5} marginTop={1}>
+                <Grid item xs={6}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      label="Start time"
+                      value={dayjs(currentSeminar.startDateTime)}
+                      onChange={handleChangeDateTime}
+                      readOnly={!isAdmin}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    id="seminar-duration"
+                    label="Duration (minutes)"
+                    defaultValue={ConferenceDateUtil.calculateDuration(
+                      currentSeminar.startDateTime,
+                      currentSeminar.endDateTime
+                    )}
+                    name="duration"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange(event);
+                    }}
+                    InputProps={{
+                      readOnly: !isAdmin,
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </FormControl>
+          </Box>
         </DialogContent>
         <DialogActions style={{ justifyContent: "space-between" }}>
-
-        {isAdmin && <Button onClick={SaveSeminar}  variant="contained">Save</Button> }
-        {isAdmin  && !isInsert && <Button onClick={DeleteSeminar}  variant="contained">Delete</Button> }
+          {isAdmin && (
+            <Button onClick={SaveSeminar} variant="contained">
+              Save
+            </Button>
+          )}
+          {isAdmin && !isInsert && (
+            <Button onClick={DeleteSeminar} variant="contained">
+              Delete
+            </Button>
+          )}
         </DialogActions>
-
       </Dialog>
-     
     </div>
   );
 }
