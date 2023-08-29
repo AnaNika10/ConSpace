@@ -21,8 +21,6 @@ import { useDecodedToken } from "../../hooks/useTokenDecoder";
 import { FAQ } from "../../models/FAQ";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
-export const FAQ_URL = "/FAQ";
-
 interface FaqProps {
   faqs: FAQ[];
 }
@@ -61,7 +59,13 @@ export default function FaqList({ faqs }: FaqProps) {
         question: editedFaq?.question!,
         answer: editedFaq?.answer!,
       };
-      await axiosPrivate.put(FAQ_URL, JSON.stringify(faq));
+
+      await axiosPrivate.put("/FAQ", JSON.stringify(faq), {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
     } catch (err) {
       console.error(err);
     }
@@ -74,7 +78,12 @@ export default function FaqList({ faqs }: FaqProps) {
 
   const handleDeleteClick = async (faq: FAQ) => {
     try {
-      await axiosPrivate.delete(`FAQ/${faq.questionId}`);
+      await axiosPrivate.delete(`FAQ/${faq.questionId}`, {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
     } catch (err) {
       console.error(err);
     }

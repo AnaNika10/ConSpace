@@ -1,5 +1,5 @@
 import { Add } from "@mui/icons-material";
-import FaqList, { FAQ_URL } from "./FaqList";
+import FaqList from "./FaqList";
 import Fab from "@mui/material/Fab";
 import useAuth from "../../hooks/useAuth";
 import { useDecodedToken } from "../../hooks/useTokenDecoder";
@@ -55,7 +55,12 @@ export default function Faqs() {
         answer: newAnswer!,
       };
 
-      const response = await axiosPrivate.post(FAQ_URL, JSON.stringify(faq));
+      const response = await axiosPrivate.post("/FAQ", JSON.stringify(faq), {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       const newFaq = response.data;
 

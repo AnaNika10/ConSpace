@@ -12,8 +12,6 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { format } from "date-fns";
 import { Fragment, useEffect, useState } from "react";
 
-const GET_HALLS = "/GetHalls";
-
 interface Seminar {
   seminarId: string;
   name: string;
@@ -36,7 +34,7 @@ export default function Floorplan() {
 
     const getHalls = async () => {
       try {
-        const response = await axiosPrivate.get(GET_HALLS, {
+        const response = await axiosPrivate.get("/GetHalls", {
           signal: controller.signal,
         });
 
