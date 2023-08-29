@@ -1,5 +1,5 @@
 import { Add } from "@mui/icons-material";
-import FaqList from "./FaqList";
+import FaqList, { FAQ_URL } from "./FaqList";
 import Fab from "@mui/material/Fab";
 import useAuth from "../../hooks/useAuth";
 import { useDecodedToken } from "../../hooks/useTokenDecoder";
@@ -14,7 +14,7 @@ import {
   TextField,
 } from "@mui/material";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import axios from "../../api/axios";
+import { SpeakerDataProvider } from "../../dataProviders/SpeakerDataProvider";
 
 export default function Faqs() {
   const { auth } = useAuth();
@@ -32,11 +32,11 @@ export default function Faqs() {
   useEffect(() => {
     const getAllNotes = async () => {
       try {
-        const response = await axios.get("/FAQ");
+        const response = await SpeakerDataProvider.fetchFAQs();
 
         setLoading(false);
         setError(null);
-        setData(response.data);
+        setData(response?.data);
       } catch (err: any) {
         setError(err.message);
         setData([]);
@@ -55,12 +55,7 @@ export default function Faqs() {
         answer: newAnswer!,
       };
 
-      const response = await axiosPrivate.post("/FAQ", JSON.stringify(faq), {
-        headers: {
-          Authorization: `Bearer ${auth.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axiosPrivate.post(FAQ_URL, JSON.stringify(faq));
 
       const newFaq = response.data;
 
