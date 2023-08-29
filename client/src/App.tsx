@@ -16,6 +16,7 @@ import Notes from "./components/NotesPage/Notes";
 import PersistLogin from "./components/Authorization/PersistLogin";
 import Faqs from "./components/FAQs/Faqs";
 import Notifications from "./components/NotificationsPage/Notifications";
+import SpeakerList from "./components/Speaker/SpeakerList";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               {/* public routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/seminar-schedule" element={<SeminarList />} />
+
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
@@ -47,6 +49,11 @@ function App() {
                   />
                   <Route path="/notes" element={<Notes />} />
                   <Route path="/notifications" element={<Notifications />} />
+                </Route>
+                <Route
+                  element={<RequireAuth allowedRoles={["User", "Speaker", "Administrator"]} />}  >
+                             
+                  <Route path="/speakers" element={<SpeakerList />} />
                 </Route>
               </Route>
               {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>

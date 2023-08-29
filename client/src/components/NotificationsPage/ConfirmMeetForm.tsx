@@ -26,6 +26,7 @@ export function ConfirmMeetForm({
   const decodedToken: { Name: string } = jwt_decode(auth.accessToken)!;
   const [openRequest, setOpenRequest] = useState(false);
   const username = decodedToken.Name;
+  const mejl = "promeni@mail.com";
   const handleConfirm = () => {
     if (status !== InviteStatus.MEET_SCHEDULED && !isInitiator) {
       const invite: Invite = {
@@ -81,6 +82,7 @@ export function ConfirmMeetForm({
             setOpen={setOpenRequest}
             status={status}
             inviteId={inviteId}
+            inviteeEmail={mejl}
             username={username}
             token={auth.accessToken}
             setMessage={setMessage}

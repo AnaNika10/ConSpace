@@ -515,7 +515,26 @@
         "AllowedScopes": []
       },
       "UpstreamPathTemplate": "/Seminar/{seminarId}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ]
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Seminar/{seminarId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Administrator"
+      },
+      "UpstreamPathTemplate": "/Seminar/{seminarId}",
+      "UpstreamHttpMethod": [ "Delete" ]
     },
     {
       "DownstreamPathTemplate": "/api/v1/Seminar/Filter",
@@ -582,8 +601,28 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
+      "RouteClaimsRequirement": {
+        "Role": "Administrator"
+      },
       "UpstreamPathTemplate": "/Exhibitor/{exhibitorId}",
-      "UpstreamHttpMethod": [ "Delete", "Get" ]
+      "UpstreamHttpMethod": [ "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Exhibitor/{exhibitorId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+
+      "UpstreamPathTemplate": "/Exhibitor/{exhibitorId}",
+      "UpstreamHttpMethod": [ "Get" ]
     },
 
     {
@@ -699,7 +738,26 @@
         "AllowedScopes": []
       },
       "UpstreamPathTemplate": "/Speaker/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ]
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Speaker/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Administrator"
+      },
+      "UpstreamPathTemplate": "/Speaker/{id}",
+      "UpstreamHttpMethod": [ "Delete" ]
     },
     {
       "DownstreamPathTemplate": "/{catchAll}",
