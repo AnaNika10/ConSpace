@@ -38,6 +38,21 @@ namespace Conference.Api.Controllers
             }
             return Ok(seminars);
         }
+
+        [HttpGet("Halls")]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<string>>> GetDistinctHallNames()
+        {
+            var halls = await _repository.GetDistinctHallNames();
+            if (halls == null)
+            {
+                return NotFound();
+            }
+            return Ok(halls);
+        }
+
         [HttpGet("{seminarId}", Name = nameof(GetSeminarsById))]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
@@ -73,8 +88,9 @@ namespace Conference.Api.Controllers
         {
             var Id = await _repository.CreateSeminar(request);
             var seminar = await _repository.GetSeminar(Id);
-
-            var changeSpeakersRequest = new ChangeSeminarSpeakersDTO { SeminarId = seminar.SeminarId, Speakers = seminar.Speakers };
+            
+            var changeSpeakersRequest = new ChangeSeminarSpeakersDTO { SeminarId = seminar.SeminarId, Speakers = request.Speakers};
+            
             await _repository.ChangeSeminarSpeakers(changeSpeakersRequest);
             return CreatedAtRoute("GetSeminarsById", new { seminar.SeminarId }, seminar);
 
