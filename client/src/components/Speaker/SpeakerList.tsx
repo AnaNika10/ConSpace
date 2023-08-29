@@ -144,7 +144,7 @@ function SpeakersList({
             <Add onClick={handleOpen} />
           </Fab>
         )}
-        {isAdmin && !isLoading && !emptySpeaker && (
+        {isAdmin && (
           <SpeakerForm
             isOpened={openForm}
             displayEventInfo={() => setOpenForm(false)}
