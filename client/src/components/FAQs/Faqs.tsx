@@ -14,7 +14,7 @@ import {
   TextField,
 } from "@mui/material";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import axios from "../../api/axios";
+import { SpeakerDataProvider } from "../../dataProviders/SpeakerDataProvider";
 
 export default function Faqs() {
   const { auth } = useAuth();
@@ -32,11 +32,11 @@ export default function Faqs() {
   useEffect(() => {
     const getAllNotes = async () => {
       try {
-        const response = await axios.get("/FAQ");
+        const response = await SpeakerDataProvider.fetchFAQs();
 
         setLoading(false);
         setError(null);
-        setData(response.data);
+        setData(response?.data);
       } catch (err: any) {
         setError(err.message);
         setData([]);

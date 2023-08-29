@@ -24,7 +24,6 @@ export function TimeAndPlaceForm({
             <TextField
               error={error}
               onChange={onChange}
-              helperText="Field must be in format YYYY-MM-DD"
               id="place"
               name="place"
               variant="filled"

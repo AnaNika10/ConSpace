@@ -8,19 +8,11 @@ const withSnackbar = (WrappedComponent: any) => {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
     const { auth } = useAuth();
-    if (
+
+    const isNotAuthorized =
       auth.accessToken === null ||
       auth.accessToken === undefined ||
-      auth.accessToken === ""
-    ) {
-      return (
-        <>
-          <WrappedComponent {...props} />
-        </>
-      );
-    }
-
-    const { events } = InvitationConnector(auth.accessToken);
+      auth.accessToken === "";
 
     const handleClose = (event: any, reason: string) => {
       if (reason === "clickaway") {
@@ -29,26 +21,43 @@ const withSnackbar = (WrappedComponent: any) => {
       setOpen(false);
     };
     const updateMessage = (msg: string) => setMessage(msg);
+
     useEffect(() => {
-      events((invite, message) => {
-        console.log("received");
-        setMessage(message);
-        setOpen(true);
-      });
+      if (!isNotAuthorized) {
+        const { events } = InvitationConnector(auth.accessToken);
+        events((invite, message) => {
+          console.log("received");
+          setMessage(message);
+          setOpen(true);
+        });
+      }
     });
+
     return (
       <>
-        <WrappedComponent
-          {...props}
-          message={message}
-          setMessage={updateMessage}
-        />
-        <Snackbar
-          open={open}
-          autoHideDuration={1500}
-          onClose={handleClose}
-          message={message}
-        />
+        {isNotAuthorized ? (
+          <>
+            <WrappedComponent
+              {...props}
+              message={message}
+              setMessage={updateMessage}
+            />
+          </>
+        ) : (
+          <>
+            <WrappedComponent
+              {...props}
+              message={message}
+              setMessage={updateMessage}
+            />
+            <Snackbar
+              open={open}
+              autoHideDuration={1500}
+              onClose={handleClose}
+              message={message}
+            />
+          </>
+        )}
       </>
     );
   };

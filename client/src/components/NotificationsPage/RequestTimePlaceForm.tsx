@@ -4,6 +4,8 @@ import { inviteUser } from "../../hubs/InviteUser";
 import { InviteStatus, Invite } from "../../models/Invite";
 import { DateFormatUtil } from "../Common/DateFormatUtil";
 import { TimeAndPlaceForm } from "./TimeAndPlaceForm";
+import jwt_decode from "jwt-decode";
+import useAuth from "../../hooks/useAuth";
 
 export function RequestTimePlaceForm({
   open,
@@ -13,8 +15,8 @@ export function RequestTimePlaceForm({
   username,
   token,
   inviteeEmail,
-  setMessage
-
+  setMessage,
+  inviteeName,
 }: {
   open: boolean;
   setOpen: (a: boolean) => void;
@@ -24,6 +26,7 @@ export function RequestTimePlaceForm({
   token: string;
   inviteeEmail: string;
   setMessage: (msg: string) => void;
+  inviteeName: string;
 }) {
   const [error, setError] = useState(false);
   const isFilled = (e: any) => {
@@ -31,6 +34,7 @@ export function RequestTimePlaceForm({
       setError(false);
     }
   };
+  const { auth } = useAuth();
   const handleNewRequest = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -46,19 +50,27 @@ export function RequestTimePlaceForm({
       setError(true);
       return;
     }
+
+    try {
+      time = DateFormatUtil.getUpdatedTime(time!).toISOString();
+    } catch (e) {
+      setError(true);
+      return;
+    }
+
     if (
       status !== InviteStatus.DECLINED &&
       status !== InviteStatus.MEET_SCHEDULED
     ) {
       const invite: Invite = {
         id: inviteId,
-        userId: "",
+        userEmail: jwt_decode(auth.accessToken)?.Email,
         userName: username,
-        inviteeId: "dd84ec3f-f976-4678-8a7f-5c2fe5084595",
-        inviteeName: "snape_negotiation",
+        inviteeEmail: inviteeEmail,
+        inviteeName: inviteeName,
         status: InviteStatus.PLACE_AND_TIME_NEGOTIATION,
         timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
-        time: DateFormatUtil.getUpdatedTime(time!).toISOString(),
+        time: time,
         place: place!,
       };
       inviteUser(token, { setMessage }, invite)();

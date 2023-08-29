@@ -59,6 +59,7 @@ export default function FaqList({ faqs }: FaqProps) {
         question: editedFaq?.question!,
         answer: editedFaq?.answer!,
       };
+
       await axiosPrivate.put("/FAQ", JSON.stringify(faq), {
         headers: {
           Authorization: `Bearer ${auth.accessToken}`,
