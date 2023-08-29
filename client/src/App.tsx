@@ -39,7 +39,6 @@ function App() {
               <Route path="/faqs" element={<Faqs />} />
 
               {/* protected routes */}
-              {/* TODO: add your protected routes here, examples are commented out */}
               <Route element={<PersistLogin />}>
                 <Route
                   element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
@@ -48,33 +47,24 @@ function App() {
                     path="/calendar-schedule"
                     element={<SeminarCalendar />}
                   />
-                </Route>
 
-                <Route
-                  element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
-                >
                   <Route path="/notes" element={<Notes />} />
+
                   <Route path="/notifications" element={<Notifications />} />
+
+                  <Route path="/floorplan" element={<Floorplan />} />
                 </Route>
 
                 <Route
-                  element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
+                  element={
+                    <RequireAuth
+                      allowedRoles={["User", "Speaker", "Administrator"]}
+                    />
+                  }
                 >
-                  <Route path="/floorplan" element={<Floorplan />} />
-                <Route
-                  element={<RequireAuth allowedRoles={["User", "Speaker", "Administrator"]} />}  >
-                             
                   <Route path="/speakers" element={<SpeakerList />} />
                 </Route>
               </Route>
-              {/* <Route element={<RequireAuth allowedRoles={["Administrator"]} />}>
-                <Route path="/seminar-schedule" element={<SeminarList />} />
-              </Route> */}
-              {/* <Route
-                element={<RequireAuth allowedRoles={["User", "Speaker"]} />}
-              >
-                <Route path="/seminar-schedule" element={<SeminarList />} />
-              </Route> */}
 
               <Route path="*" element={<Missing />} />
             </Routes>

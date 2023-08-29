@@ -90,7 +90,6 @@ namespace Conference.Api.Controllers
             var seminar = await _repository.GetSeminar(Id);
             
             var changeSpeakersRequest = new ChangeSeminarSpeakersDTO { SeminarId = seminar.SeminarId, Speakers = request.Speakers};
-            var changeSpeakersRequest = new ChangeSeminarSpeakersDTO { SeminarId = seminar.SeminarId, Speakers = seminar.Speakers };
             
             await _repository.ChangeSeminarSpeakers(changeSpeakersRequest);
             return CreatedAtRoute("GetSeminarsById", new { seminar.SeminarId }, seminar);
