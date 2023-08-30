@@ -13,7 +13,7 @@ namespace Conference.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Authorize]
+
     public class SeminarController : ControllerBase
     {
         private readonly ISeminarRepository _repository;
@@ -29,7 +29,7 @@ namespace Conference.Api.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<SeminarDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [Authorize]
+
         public async Task<ActionResult<IEnumerable<SeminarDTO>>> GetAllSeminars()
         {
             var seminars = await _repository.GetAllSeminars();
@@ -39,10 +39,25 @@ namespace Conference.Api.Controllers
             }
             return Ok(seminars);
         }
+
+        [HttpGet("Halls")]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<string>>> GetDistinctHallNames()
+        {
+            var halls = await _repository.GetDistinctHallNames();
+            if (halls == null)
+            {
+                return NotFound();
+            }
+            return Ok(halls);
+        }
+
         [HttpGet("{seminarId}", Name = nameof(GetSeminarsById))]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [Authorize]
+
         public async Task<ActionResult<SeminarDTO>> GetSeminarsById(Guid seminarId)
         {
             var seminar = await _repository.GetSeminar(seminarId);
@@ -56,7 +71,7 @@ namespace Conference.Api.Controllers
         [HttpGet("Filter")]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [Authorize]
+
         public async Task<ActionResult<SeminarDTO>> GetSeminarsWithFilters([FromQuery] FilterSeminarDTO seminar)
         {
             var seminars = await _repository.GetSeminarsWithFilter(seminar);
@@ -122,11 +137,11 @@ namespace Conference.Api.Controllers
                 var changeSpeakersRequest = new ChangeSeminarSpeakersDTO { SeminarId = request.SeminarId, Speakers = toBeInserted, RemovedSpeakers = toBeDeleted };
                 await _repository.ChangeSeminarSpeakers(changeSpeakersRequest);
             }
-            
+
             await _repository.UpdateSeminar(request);
             var seminar = await _repository.GetSeminar(request.SeminarId);
 
-            
+
             if (seminar == null)
             {
                 return BadRequest();

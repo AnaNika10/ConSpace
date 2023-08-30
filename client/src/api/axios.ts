@@ -1,9 +1,7 @@
 import axios from 'axios';
-import {BASE_URL} from '../constants/api';
+import config from "../config/local.json";
 
-export default axios.create({
-    baseURL: BASE_URL
-});
+const BASE_URL = config.API_GATEWAY;
 
 export const axiosPrivate = axios.create({
     baseURL: BASE_URL,

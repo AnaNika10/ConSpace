@@ -41,6 +41,7 @@ namespace Conference.Api.Repositories
 
             return id;
         }
+
         public async Task<SeminarDTO> GetSeminar(Guid id)
         {
             using var connection = _context.GetConnection();
@@ -84,27 +85,36 @@ namespace Conference.Api.Repositories
             using var connection = _context.GetConnection();
 
             var ss = await connection.QueryAsync<Entities.Seminar, Entities.Speaker, Entities.Seminar>(
-        "SELECT \"Seminar\".* ,\"Speakers\".\"SpeakerId\", \"Speakers\".\"Name\" " +
-        "    FROM \"Seminar\"  " +
-       "    LEFT JOIN \"Seminar_Speakers\" on \"Seminar_Speakers\".\"SeminarId\" = \"Seminar\".\"SeminarId\" " +
-       "   LEFT  JOIN \"Speakers\"  on  \"Seminar_Speakers\".\"SpeakerId\" = \"Speakers\".\"SpeakerId\" ",
-        (seminar, speaker) =>
+            "SELECT \"Seminar\".* ,\"Speakers\".\"SpeakerId\", \"Speakers\".\"Name\" " +
+            "    FROM \"Seminar\"  " +
+           "    LEFT JOIN \"Seminar_Speakers\" on \"Seminar_Speakers\".\"SeminarId\" = \"Seminar\".\"SeminarId\" " +
+           "   LEFT  JOIN \"Speakers\"  on  \"Seminar_Speakers\".\"SpeakerId\" = \"Speakers\".\"SpeakerId\" ",
+            (seminar, speaker) =>
+            {
+                seminar.Speakers.Add(speaker);
+                return seminar;
+            }, splitOn: "SpeakerId");
+
+            var seminars = ss.GroupBy(p => p.SeminarId).Select(g =>
+            {
+                var seminar = g.First();
+                seminar.Speakers = g.Select(p => p.Speakers.Single()).ToList();
+                return seminar;
+            });
+
+
+             var seminarOrdered = seminars.OrderBy(x => x.SeminarId);
+             return _mapper.Map<IEnumerable<SeminarDTO>>(seminarOrdered);
+        }
+
+        public async Task<IEnumerable<string>> GetDistinctHallNames()
         {
-            seminar.Speakers.Add(speaker);
-            return seminar;
-        }, splitOn: "SpeakerId");
+            using var connection = _context.GetConnection();
 
-        var seminars = ss.GroupBy(p => p.SeminarId).Select(g =>
-        {
-            var seminar = g.First();
-            seminar.Speakers = g.Select(p => p.Speakers.Single()).ToList();
-            return seminar;
-        });
+            var hallNames = await connection.QueryAsync<string>(
+                "SELECT DISTINCT \"Hall\" FROM \"Seminar\"");
 
-        return _mapper.Map<IEnumerable<SeminarDTO>>(seminars);
-
-
-
+            return hallNames;
         }
 
         public async Task<IEnumerable<SeminarDTO>> GetSeminarsWithFilter(FilterSeminarDTO filter)

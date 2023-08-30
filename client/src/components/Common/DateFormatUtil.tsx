@@ -17,4 +17,14 @@ export abstract class DateFormatUtil {
   public static getCurrentDate() {
     return dayjs().format("YYYY-MM-DD");
   }
+
+  public static getCurrentDateTimeOffset() {
+    return dayjs();
+  }
+
+  public static getUpdatedTime(time: string) {
+    let hh = Number(time.split(':')[0])
+    let mm = Number(time.split(':')[1])
+    return dayjs(this.getCurrentDate()).set('hour', hh).set('minute', mm).set('second', 0)
+  }
 }

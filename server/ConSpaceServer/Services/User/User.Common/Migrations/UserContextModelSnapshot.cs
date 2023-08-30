@@ -30,6 +30,11 @@ namespace User.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("email");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
@@ -52,18 +57,28 @@ namespace User.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("InviteeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("invitee_id");
+                    b.Property<string>("InviteeEmail")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("invitee_email");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
+                    b.Property<string>("UserEmail")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("user_email");
+
+                    b.Property<string>("place")
+                        .HasColumnType("text")
+                        .HasColumnName("place");
 
                     b.Property<string>("status")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("status");
+
+                    b.Property<DateTimeOffset?>("time")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("time");
 
                     b.Property<DateTimeOffset>("timestamp")
                         .ValueGeneratedOnAdd()

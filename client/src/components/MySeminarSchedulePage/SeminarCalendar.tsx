@@ -28,13 +28,12 @@ import GroupByScheduleSection from "./GroupScheduleBySection";
 import { ResourceUtil } from "./ResourcesUtil";
 import { AppointmentContent } from "./AppointmentContent";
 import { DateFormatUtil } from "../Common/DateFormatUtil";
-import {
-  DELETE_SEMINAR_FROM_SCHEDULE_URL,
-  GET_SCHEDULE_URL,
-} from "../../constants/api";
+import withSnackbar from "../Common/SnackBarWrapper";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import axios from "../../api/axios";
+import { UserDataProvider } from "../../dataProviders/UserDataProvider";
+
+const GET_SCHEDULE_URL = "/GetSchedule";
 
 async function deleteAppointment(
   appointments: Appointment[],
@@ -42,12 +41,7 @@ async function deleteAppointment(
   token: string
 ) {
   if (deleted !== undefined) {
-    await axios.delete(`${DELETE_SEMINAR_FROM_SCHEDULE_URL}/${deleted}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    await UserDataProvider.deleteSeminarFromSchedule(token, deleted);
 
     appointments = appointments.filter(
       (appointment: Appointment) => appointment.id !== deleted
@@ -56,7 +50,7 @@ async function deleteAppointment(
   return appointments;
 }
 
-export default function SeminarCalendar() {
+function SeminarCalendar() {
   const [data, setData] = useState<Appointment[]>([]);
   const resources = useMemo(() => ResourceUtil.mapResources(data), [data]);
   const [isLoading, setLoading] = useState(true);
@@ -181,3 +175,5 @@ export default function SeminarCalendar() {
     </Paper>
   );
 }
+
+export default withSnackbar(SeminarCalendar);

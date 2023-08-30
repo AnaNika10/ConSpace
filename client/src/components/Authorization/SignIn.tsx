@@ -18,11 +18,10 @@ import {
   VisibilityOff,
 } from "@mui/icons-material";
 import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
-
-import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { useEffect, useState } from "react";
-import { LOGIN_URL } from "../../constants/api";
+import InvitationConnector from "../../hubs/InvitationConnector";
+import { IdentityDataProvider } from "../../dataProviders/IdentityDataProvider";
 
 function Copyright(props: any) {
   return (
@@ -65,16 +64,10 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
 
     try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({
-          email: data.get("email"),
-          password: data.get("password"),
-        }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await IdentityDataProvider.loginUser({
+        email: data.get("email"),
+        password: data.get("password"),
+      });
 
       setAuth({
         accessToken: response?.data.accessToken,
@@ -86,6 +79,11 @@ export default function SignIn() {
       }
 
       navigate(from, { replace: true });
+      console.log("signing in");
+      const connector = InvitationConnector(
+        response?.data.accessToken
+      ).reconnect(response?.data.accessToken);
+      console.log(connector);
     } catch (err) {
       setError(
         "The email or password you entered is incorrect. Please try again."

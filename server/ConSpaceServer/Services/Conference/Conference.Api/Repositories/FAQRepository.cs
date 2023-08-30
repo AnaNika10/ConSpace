@@ -23,7 +23,9 @@ namespace Conference.Api.Repositories
               "SELECT * FROM \"FAQ\""
 
               );
-            return _mapper.Map<IEnumerable<FAQDTO>>(faqs);
+
+            var faqsOrdered = faqs.OrderBy(x => x.QuestionId);
+            return _mapper.Map<IEnumerable<FAQDTO>>(faqsOrdered);
         }
         public async Task<FAQDTO> GetFAQ(int id)
         {

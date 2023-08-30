@@ -8,12 +8,16 @@ import { GET_SEMINARS_URL } from "../../constants/api";
 import useAuth from "../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import withSnackbar from "../Common/SnackBarWrapper";
+import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
+import useAuth from "../../hooks/useAuth";
 
-export default function SeminarList() {
+function SeminarList() {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [, setError] = useState(null);
   const [dayOfSeminar, setDay] = useState(1);
+  const { auth } = useAuth();
   const setDayOfSeminar = (day: number) => {
     setDay(day);
   };
@@ -99,3 +103,5 @@ export default function SeminarList() {
     </Grid>
   );
 }
+
+export default withSnackbar(SeminarList);

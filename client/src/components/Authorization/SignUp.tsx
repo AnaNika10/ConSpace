@@ -17,16 +17,13 @@ import {
   VisibilityOff,
 } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
-
 import { useForm, SubmitHandler } from "react-hook-form";
 import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
-import { LOGIN_URL, REGISTER_USER_URL } from "../../constants/api";
+import { IdentityDataProvider } from "../../dataProviders/IdentityDataProvider";
+import InvitationConnector from "../../hubs/InvitationConnector";
 
 const registerSchema = object({
   firstName: string()
@@ -105,18 +102,14 @@ export default function SignUp() {
         username: values.email.replace(/[^a-zA-Z0-9]/g, ""),
       };
 
-      await axios.post(REGISTER_USER_URL, JSON.stringify(registrationData), {
-        headers: { "Content-Type": "application/json" },
-      });
+      await IdentityDataProvider.registerUser(registrationData);
 
       const loginData = {
         email: values.email,
         password: values.password,
       };
 
-      const response = await axios.post(LOGIN_URL, JSON.stringify(loginData), {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await IdentityDataProvider.loginUser(loginData);
 
       setAuth({
         accessToken: response?.data.accessToken,
@@ -124,6 +117,9 @@ export default function SignUp() {
       });
 
       navigate(from, { replace: true });
+      InvitationConnector(response?.data.accessToken).reconnect(
+        response?.data.accessToken
+      );
     } catch (error) {
       setError("Something went wrong. Please try again.");
     } finally {

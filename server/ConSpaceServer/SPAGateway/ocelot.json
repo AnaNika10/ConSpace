@@ -534,6 +534,25 @@
         "Role": "Administrator"
       },
       "UpstreamPathTemplate": "/Seminar/{seminarId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Seminar/{seminarId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Administrator"
+      },
+      "UpstreamPathTemplate": "/Seminar/{seminarId}",
       "UpstreamHttpMethod": [ "Delete" ]
     },
     {
@@ -552,6 +571,22 @@
       "UpstreamPathTemplate": "/FilterConferences",
       "UpstreamHttpMethod": [ "Get" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/v1/Seminar/Halls",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "conference",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "UpstreamPathTemplate": "/GetHalls",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
 
     {
       "DownstreamPathTemplate": "/api/v1/Exhibitor",
@@ -653,10 +688,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "UpstreamPathTemplate": "/FAQ",
       "UpstreamHttpMethod": [ "Get" ]
 
@@ -670,10 +701,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "UpstreamPathTemplate": "/FAQ/{id}",
       "UpstreamHttpMethod": [ "Get" ]
     },
@@ -766,6 +793,34 @@
       },
       "UpstreamPathTemplate": "/Speaker/{id}",
       "UpstreamHttpMethod": [ "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/{catchAll}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 50000
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/{catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Invites/GetInvites",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "UpstreamPathTemplate": "/GetAllInvites",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {
