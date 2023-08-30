@@ -5,18 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <OutputType>Library</OutputType>
     </PropertyGroup>
-
-    <ItemGroup>
-      <Content Include="..\..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <Folder Include="Contracts\Infrastructure\" />
-    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\User.Domain\User.Domain.csproj" />

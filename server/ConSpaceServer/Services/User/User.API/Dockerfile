@@ -9,7 +9,9 @@ WORKDIR /src
 COPY ["Services/User/User.API/User.API.csproj", "Services/User/User.API/"]
 COPY ["Common/EventBus/EventBus.Messages/EventBus.Messages.csproj", "Common/EventBus/EventBus.Messages/"]
 COPY ["Common/Security/Security.csproj", "Common/Security/"]
-COPY ["Services/User/User.Common/User.Common.csproj", "Services/User/User.Common/"]
+COPY ["Services/User/User.Application/User.Application.csproj", "Services/User/User.Application/"]
+COPY ["Services/User/User.Domain/User.Domain.csproj", "Services/User/User.Domain/"]
+COPY ["Services/User/User.Infrastructure/User.Infrastructure.csproj", "Services/User/User.Infrastructure/"]
 RUN dotnet restore "Services/User/User.API/User.API.csproj"
 COPY . .
 WORKDIR "/src/Services/User/User.API"
