@@ -49,7 +49,7 @@ export abstract class ConferenceDateUtil {
 
     let diffMins = Math.round((diffMs / 1000) / 60); 
     //console.log(diffMins);
-    return diffMins;
+    return !isNaN(diffMins) ? diffMins : 0;
 
   } 
 

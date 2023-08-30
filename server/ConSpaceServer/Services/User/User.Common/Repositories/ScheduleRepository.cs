@@ -53,8 +53,12 @@ public class ScheduleRepository : IScheduleRepository
     public async Task<bool> update(SeminarDto seminar)
     {
         await _context.Seminars.Where(seminar => seminar.Id == seminar.Id).ExecuteUpdateAsync(setters => setters
-                                                                                              .SetProperty(b=> b.Location, seminar.location)
-                                                                                              .SetProperty(b=>b.StartDateTime,seminar.startDate));
+                                                                                              .SetProperty(b => b.Location, seminar.location)
+                                                                                              .SetProperty(b => b.StartDateTime, seminar.startDate)
+                                                                                              .SetProperty(b => b.EndDateTime, seminar.endDate)
+                                                                                              .SetProperty(b => b.Speakers, seminar.speakers)
+                                                                                              .SetProperty(b => b.SpeakerIds, seminar.speakerIds)
+                                                                                              .SetProperty(b => b.Title, seminar.title));
         return await _context.SaveChangesAsync() > 0;
     }
 }

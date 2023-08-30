@@ -15,6 +15,7 @@ export const EDIT_NOTE_URL = '/EditNote';
 
 export const GET_SCHEDULE_URL = '/GetSchedule';
 export const DELETE_SEMINAR_FROM_SCHEDULE_URL = '/DeleteSeminarFromSchedule';
+export const ADD_SEMINAR_TO_SCHEDULE_URL = '/AddSeminarToSchedule';
 
 export const GET_SEMINARS_URL = '/Seminar';
 export const GET_SPEAKERS_URL = '/Speaker';
