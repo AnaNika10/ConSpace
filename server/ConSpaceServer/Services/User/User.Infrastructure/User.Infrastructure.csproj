@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Data.SqlClient">
+        <HintPath>..\..\..\..\..\..\..\.nuget\packages\microsoft.data.sqlclient\5.1.1\ref\net6.0\Microsoft.Data.SqlClient.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.EntityFrameworkCore">
+        <HintPath>..\..\..\..\..\..\..\.nuget\packages\microsoft.entityframeworkcore\6.0.16\lib\net6.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.EntityFrameworkCore.Relational">
+        <HintPath>..\..\..\..\..\..\..\.nuget\packages\microsoft.entityframeworkcore.relational\6.0.16\lib\net6.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+      </Reference>
+      <Reference Include="Npgsql.EntityFrameworkCore.PostgreSQL">
+        <HintPath>..\..\..\..\..\..\..\.nuget\packages\npgsql.entityframeworkcore.postgresql\7.0.4\lib\net6.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll</HintPath>
+      </Reference>
+      <Reference Include="Polly">
+        <HintPath>..\..\..\..\..\..\..\.nuget\packages\polly\7.2.3\lib\netstandard2.0\Polly.dll</HintPath>
+      </Reference>
+        <PackageReference Include="Npgsql" Version="7.0.4" />
+    </ItemGroup>
+
+
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\User.Application\User.Application.csproj" />
+      <ProjectReference Include="..\User.Domain\User.Domain.csproj" />
+    </ItemGroup>
+
+
+
+
+
+
+
+
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="12.0.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.5" />
+    </ItemGroup>
+
+
+
+
+</Project>

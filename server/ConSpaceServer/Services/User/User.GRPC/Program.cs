@@ -1,7 +1,7 @@
-using User.Common.DTOs;
-using User.Common.Extensions;
+using User.API.DTOs;
 using User.GRPC.Protos;
 using User.GRPC.Services;
+using User.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
