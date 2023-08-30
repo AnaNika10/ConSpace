@@ -48,6 +48,7 @@ export function SpeakerForm({
 }) {
   const { auth } = useAuth();
   const [openRequest, setOpenRequest] = useState(false);
+  const [error, setError] = useState({name:false, email:false, position:false,company:false, bioinfo:false});
   const original: Speaker = JSON.parse(
     JSON.stringify(speaker)
   ) as typeof speaker;
@@ -57,6 +58,7 @@ export function SpeakerForm({
     : undefined;
   const role = decoded?.Role || "";
   const isAdmin = role === "Administrator";
+  const isUser = role === "User";
   const inviteId = null;
   const status = InviteStatus.PENDING_ANSWER;
   const decodedToken: { Name: string } = jwtDecode(auth.accessToken)!;
@@ -72,24 +74,56 @@ export function SpeakerForm({
       setCurrentSpeaker(original);
     }
   };
-  const DeleteSpeaker = () => {
+  const DeleteSpeaker = async () => {
     const data = currentSpeaker.speakerId!;
-    SpeakerDataProvider.DeleteSpeaker(data, auth.accessToken);
+    SpeakerDataProvider.deleteSpeaker(data, auth.accessToken);
     setClose(true);
   };
-  const UpdateSpeaker = () => {
-    if (!currentSpeaker.speakerId) {
-      SpeakerDataProvider.InsertSpeaker(currentSpeaker, auth.accessToken);
-    } else {
-      SpeakerDataProvider.UpdateSpeaker(currentSpeaker, auth.accessToken);
+  const UpdateSpeaker = async () => {
+    var result = Object.values(error);
+    if (result.includes(true))
+    {
+      return;
     }
-
-    setClose(true);
+    if (!currentSpeaker.speakerId) {
+      SpeakerDataProvider.insertSpeaker(currentSpeaker, auth.accessToken);
+      setClose(false);
+    } else {
+      SpeakerDataProvider.updateSpeaker(currentSpeaker, auth.accessToken);
+      setClose(true);
+    }
   };
   const handleNewRequest = () => {
     setOpenRequest(true);
   };
   const onChange = (e: any) => {
+    if ( e.target.name ==='name' && !e.target.value.includes(" ")) {
+      setError({
+        ...error,
+        name: true,
+      });
+      return;
+    }
+    if (e.target.name ==='email' && !e.target.value.includes("@")) {
+      setError({
+        ...error,
+        email: true,
+      });
+      return;
+    }
+    if (e.target.value === "") {
+      setError({
+        ...error,
+        [e.target.name] : true
+      });
+      return;
+    }
+    if (e.target.value !== "") {
+      setError({
+        ...error,
+        [e.target.name] : false
+      });
+    }
     const value = e.target.value;
     setCurrentSpeaker({
       ...currentSpeaker,
@@ -102,7 +136,7 @@ export function SpeakerForm({
       <Dialog onClose={handleClose} open={isOpened}>
         <CloseButton setClose={() => setClose(false)} />
         <DialogContent>
-          <FormControl>
+          <FormControl >
             <Box
               minHeight={400}
               marginTop={5}
@@ -114,8 +148,10 @@ export function SpeakerForm({
                 <Grid item xs={6}>
                   <TextField
                     id="speaker-name"
-                    label="Name"
+                    label="Full name"
+                    error={error.name}
                     defaultValue={currentSpeaker.name}
+                    helperText="Enter the full name of the speaker"
                     name="name"
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                       onChange(event);
@@ -129,6 +165,8 @@ export function SpeakerForm({
                   <TextField
                     id="speaker-email"
                     label="Email"
+                    error={error.email}
+                    helperText="Enter a valid email address"
                     defaultValue={currentSpeaker.email}
                     name="email"
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,6 +181,7 @@ export function SpeakerForm({
                   <TextField
                     id="speaker-position"
                     label="Position"
+                    error={error.position}
                     defaultValue={currentSpeaker.position}
                     name="position"
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,6 +197,7 @@ export function SpeakerForm({
                     id="speaker-company"
                     label="Company"
                     name="company"
+                    error={error.company}
                     defaultValue={currentSpeaker.company}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                       onChange(event);
@@ -172,6 +212,7 @@ export function SpeakerForm({
                     fullWidth
                     multiline
                     name="bioInfo"
+                    error={error.bioinfo}
                     InputProps={{
                       readOnly: !isAdmin,
                     }}
@@ -198,8 +239,7 @@ export function SpeakerForm({
               Delete
             </Button>
           )}
-          {/* TODO i da nije speaker */}
-          {!isAdmin && (
+          {isUser && (
             <>
               {" "}
               <Button onClick={handleNewRequest} variant="contained">
@@ -223,3 +263,5 @@ export function SpeakerForm({
     </div>
   );
 }
+
+

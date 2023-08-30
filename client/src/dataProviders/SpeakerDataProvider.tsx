@@ -12,14 +12,14 @@ export class SpeakerDataProvider {
       RequestMethod.GET
     );
   }
-  public static async DeleteSpeaker(id: number, token: string) {
+  public static async deleteSpeaker(id: number, token: string) {
     return RequestWrapper.fetchPrivateData(
       `${this.gateway}/Speaker/${id}`,
       token,
       RequestMethod.DELETE
     );
   }
-  public static async UpdateSpeaker(s: Speaker, token: string) {
+  public static async updateSpeaker(s: Speaker, token: string) {
     return RequestWrapper.fetchPrivateData(
       `${this.gateway}/Speaker`,
       token,
@@ -27,7 +27,7 @@ export class SpeakerDataProvider {
       s
     );
   }
-  public static async InsertSpeaker(s: Speaker, token: string) {
+  public static async insertSpeaker(s: Speaker, token: string) {
     return RequestWrapper.fetchPrivateData(
       `${this.gateway}/Speaker`,
       token,
