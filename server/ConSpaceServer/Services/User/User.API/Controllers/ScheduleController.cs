@@ -33,7 +33,8 @@ public class ScheduleController : ControllerBase
     public async Task<ActionResult<bool>> AddSeminarToSchedule(SeminarDto seminar)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
-        return await _scheduleRepository.create(userId, seminar);
+        var z = await _scheduleRepository.create(userId, seminar);
+        return z;
     }
 
     [Route("[action]/{seminarId}")]

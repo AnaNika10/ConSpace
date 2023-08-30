@@ -32,20 +32,20 @@ public class ScheduleRepository : IScheduleRepository
             seminar.startDate, 
             seminar.endDate, 
             seminar.location));
-        _logger.LogInformation($"Creating seminar for user with userId:{userId}");
+        //_logger.LogInformation($"Creating seminar for user with userId:{userId}");
         return await _context.SaveChangesAsync() > 0;
     }
 
     public async Task<bool> delete(Guid userId, Guid seminarId)
     {
         await _context.Seminars.Where(seminar => seminar.Id == seminarId).ExecuteDeleteAsync();
-        _logger.LogInformation($"Deleting seminar for user with userId:{userId}");
+        //_logger.LogInformation($"Deleting seminar for user with userId:{userId}");
         return await _context.SaveChangesAsync() > 0;
     }
 
     public async Task<IEnumerable<Seminar>> getSchedule(Guid userId)
     {
-        _logger.LogInformation($"Fetching user's schedule for user with id: {userId}");
+        //_logger.LogInformation($"Fetching user's schedule for user with id: {userId}");
         List<Seminar> result = await _context.Seminars.Where(seminar => seminar.UserId == userId).ToListAsync();
         return result;
     }

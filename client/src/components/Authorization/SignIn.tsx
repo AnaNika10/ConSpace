@@ -80,7 +80,7 @@ export default function SignIn() {
         accessToken: response?.data.accessToken,
         refreshToken: response?.data.refreshToken,
       });
-
+     console.log('access',response?.data.accessToken);
       if (persist) {
         localStorage.setItem("accessToken", response?.data.accessToken);
       }

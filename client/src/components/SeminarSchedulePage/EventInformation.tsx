@@ -43,12 +43,13 @@ const CloseButton = ({ setClose }: { setClose: () => void }) => {
     <>
       <AppBar sx={{ position: "relative" }}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={setClose}>
-            <CloseIcon />
-          </IconButton>
+         
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Lecture information
           </Typography>
+          <IconButton edge="end" color="inherit" onClick={setClose}>
+            <CloseIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
     </>
@@ -217,6 +218,7 @@ export function EventInformation({
           },
         }
       );
+      setClose(false);
     } else {
       const response = await axiosPrivate.put(
         `${GET_SEMINARS_URL}`,
@@ -228,8 +230,9 @@ export function EventInformation({
           },
         }
       );
+      setClose(true);
     }
-    setClose(true);
+
   };
   const handleClose = (event: object, reason: string) => {
     if (reason && reason == "backdropClick") return;
