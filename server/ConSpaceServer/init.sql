@@ -123,7 +123,7 @@ VALUES ('Introduction to AI', 'Arena 3', '2023-08-30T12:00:41','2023-08-30T16:00
 
 INSERT INTO public."FAQ"(
 	"Question", "Answer")
-	VALUES ('Can I take notes?', 'Yes, in the notes section you write and later edit your notes.');
+	VALUES ('Can I take notes?', 'Yes, in the notes section you can write and then edit your notes.');
 INSERT INTO public."FAQ"(
 	"Question", "Answer")
 	VALUES ('How do I contact my favourite speaker?', 'Simple, just invite him and suggest a meeting time and place');

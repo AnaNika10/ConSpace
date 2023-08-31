@@ -7,10 +7,10 @@ export const themeOptions: ThemeOptions = createTheme({
         main: '#9c27b0',
         },
         secondary: {
-        main: '#f44336',
-        },
-        error: {
         main: '#1976d2',
+        },
+        error: { 
+        main: '#f44336',
         },
         info: {
         main: '#c0ca33',
