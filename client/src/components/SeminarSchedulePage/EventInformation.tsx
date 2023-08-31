@@ -27,23 +27,18 @@ import dayjs, { Dayjs } from "dayjs";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import {
-  GET_SEMINARS_URL,
-  GET_SPEAKERS_URL,
-  GET_EXHIBITORS_URL,
-  DELETE_SEMINAR_FROM_SCHEDULE_URL,
-  ADD_SEMINAR_TO_SCHEDULE_URL,
-} from "../../constants/api";
+
 import { Exhibitor } from "../../models/Exhibitor";
 import { Speaker } from "../../models/Speaker";
-import axios from "../../api/axios";
+
+import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
+import { Appointment } from "../../models/Appointment";
 
 const CloseButton = ({ setClose }: { setClose: () => void }) => {
   return (
     <>
       <AppBar sx={{ position: "relative" }}>
         <Toolbar>
-         
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Lecture information
           </Typography>
@@ -91,6 +86,21 @@ export function EventInformation({
     console.log(e);
     const value = e.target.value;
     if (e.target.name === "duration") {
+      // if (value === '' || value < 0)
+      // {
+      //   setErrorValidation({
+      //     ...errorValidation,
+      //     duration: true
+      //   });
+      //   return;
+      // }
+      // else
+      // {
+      //   setErrorValidation({
+      //     ...errorValidation,
+      //     duration: false
+      //   });
+      // }
       const newEnd = ConferenceDateUtil.calculateEndDateTime(
         currentSeminar.startDateTime,
         e.target.value
@@ -101,6 +111,21 @@ export function EventInformation({
       });
       return;
     }
+    // if (value === '')
+    // {
+    //   setErrorValidation({
+    //     ...errorValidation,
+    //     [e.target.name]: true
+    //   });
+    //   return;
+    // }
+    // else
+    // {
+    //   setErrorValidation({
+    //     ...errorValidation,
+    //     [e.target.name]: false
+    //   });
+    // }
     setCurrentSeminar({
       ...currentSeminar,
       [e.target.name]: value,
@@ -108,18 +133,32 @@ export function EventInformation({
   };
 
   const handleChangeDateTime = (value: Dayjs | null) => {
+    // if (value === null)
+    // {
+    //   setErrorValidation({
+    //     ...errorValidation,
+    //     startDateTime: true
+    //   });
+    //   return;
+    // }
+    // else
+    // {
+    //   setErrorValidation({
+    //     ...errorValidation,
+    //     startDateTime: false
+    //   });
+    // }
     const x = dayjs(value).format("YYYY-MM-DDTHH:mm:ss");
-    let currentTime = ConferenceDateUtil.calculateDuration(currentSeminar.startDateTime,currentSeminar.endDateTime);
-    const newEnd = ConferenceDateUtil.calculateEndDateTime(
-      x,
-      currentTime
+    let currentTime = ConferenceDateUtil.calculateDuration(
+      currentSeminar.startDateTime,
+      currentSeminar.endDateTime
     );
+    const newEnd = ConferenceDateUtil.calculateEndDateTime(x, currentTime);
     setCurrentSeminar({
       ...currentSeminar,
       startDateTime: x,
-      endDateTime : newEnd
+      endDateTime: newEnd,
     });
-
   };
 
   const getFromExhibitorId = (id: number) => {
@@ -148,17 +187,12 @@ export function EventInformation({
   };
   async function deleteAppointment(deleted: string) {
     if (deleted !== undefined) {
-      await axios.delete(`${DELETE_SEMINAR_FROM_SCHEDULE_URL}/${deleted}`, {
-        headers: {
-          Authorization: `Bearer ${auth.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      SeminarDataProvider.deleteAppointment(deleted, auth.accessToken);
     }
   }
   async function insertAppointment(seminar: Seminar) {
-    let appointment = {
-      id: seminar.seminarId,
+    let appointment: Appointment = {
+      id: seminar.seminarId!,
       speakers: seminar.speakerNames,
       speakerIds: seminar.speakers,
       title: seminar.name,
@@ -166,24 +200,20 @@ export function EventInformation({
       endDate: seminar.endDateTime,
       location: seminar.hall,
     };
-    await axios.post(ADD_SEMINAR_TO_SCHEDULE_URL, JSON.stringify(appointment), {
-      headers: {
-        Authorization: `Bearer ${auth.accessToken}`,
-        "Content-Type": "application/json",
-      },
-    });
+    SeminarDataProvider.insertAppointment(appointment, auth.accessToken);
   }
   const onAutocompleteChange = (event: any, values: any) => {
-    if ("exhibitorId" in values) {
+    if (values === null) {
       setCurrentSeminar({
         ...currentSeminar,
-        exhibitors: values.exhibitorId!,
+        exhibitors: 0,
       });
-    } else if (
-      Array.isArray(values) &&
-      values.length > 0 &&
-      "speakerId" in values[0]
-    ) {
+    } else if ("exhibitorId" in values) {
+      setCurrentSeminar({
+        ...currentSeminar,
+        exhibitors: values.exhibitorId,
+      });
+    } else if (Array.isArray(values)) {
       let x = values.map((x) => x.speakerId!);
       setCurrentSeminar({
         ...currentSeminar,
@@ -194,45 +224,29 @@ export function EventInformation({
   const DeleteSeminar = async () => {
     console.log("clicked" + currentSeminar.seminarId);
 
-    // SpeakerDataProvider.DeleteSpeaker(data,auth.accessToken);
-    await axiosPrivate.delete(
-      `${GET_SEMINARS_URL}/${currentSeminar.seminarId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${auth.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
+    SeminarDataProvider.deleteSeminar(
+      currentSeminar.seminarId!,
+      auth.accessToken
     );
     setClose(true);
   };
   const SaveSeminar = async () => {
-    if (!currentSeminar.seminarId) {
-      const response = await axiosPrivate.post(
-        `${GET_SEMINARS_URL}`,
-        JSON.stringify(currentSeminar),
-        {
-          headers: {
-            Authorization: `Bearer ${auth.accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      setClose(false);
-    } else {
-      const response = await axiosPrivate.put(
-        `${GET_SEMINARS_URL}`,
-        JSON.stringify(currentSeminar),
-        {
-          headers: {
-            Authorization: `Bearer ${auth.accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      setClose(true);
+    if (
+      currentSeminar.speakers.length > 0 &&
+      currentSeminar.exhibitors != 0 &&
+      currentSeminar.name &&
+      currentSeminar.hall &&
+      currentSeminar.startDateTime &&
+      currentSeminar.endDateTime
+    ) {
+      if (!currentSeminar.seminarId) {
+        SeminarDataProvider.insertSeminar(currentSeminar, auth.accessToken);
+        setClose(false);
+      } else {
+        SeminarDataProvider.updateSeminar(currentSeminar, auth.accessToken);
+        setClose(true);
+      }
     }
-
   };
   const handleClose = (event: object, reason: string) => {
     if (reason && reason == "backdropClick") return;
@@ -242,54 +256,39 @@ export function EventInformation({
   const location = useLocation();
 
   useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
+    const getAllExhibitors = async () => {
+      try {
+        const response = await SeminarDataProvider.fetchAllExhibitors();
+
+        setLoading(false);
+        setError(null);
+        setAllExhibitors(response?.data);
+      } catch (err: any) {
+        setError(err.message);
+        setAllExhibitors([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     const getAllSpeakers = async () => {
       try {
-        const response = await axiosPrivate.get(GET_SPEAKERS_URL, {
-          signal: controller.signal,
-        });
+        const response = await SeminarDataProvider.fetchAllSpeakers();
 
-        isMounted && setLoading(false);
-        isMounted && setError(null);
-        isMounted && setAllSpeakers(response.data);
+        setLoading(false);
+        setError(null);
+        setAllSpeakers(response?.data);
       } catch (err: any) {
-        isMounted && setError(err.message);
-        isMounted && setAllSpeakers([]);
-        navigate("/sign-in", { state: { from: location }, replace: true });
+        setError(err.message);
+        setAllSpeakers([]);
       } finally {
-        isMounted && setLoading(false);
+        setLoading(false);
       }
     };
-    const getAllExhibitors = async () => {
-      try {
-        const response = await axiosPrivate.get(GET_EXHIBITORS_URL, {
-          signal: controller.signal,
-        });
 
-        isMounted && setLoading(false);
-        isMounted && setError(null);
-        isMounted && setAllExhibitors(response.data);
-      } catch (err: any) {
-        isMounted && setError(err.message);
-        isMounted && setAllExhibitors([]);
-        navigate("/sign-in", { state: { from: location }, replace: true });
-      } finally {
-        isMounted && setLoading(false);
-      }
-    };
-    getAllSpeakers();
     getAllExhibitors();
-
-    return () => {
-      isMounted = false;
-
-      if (!location.pathname.startsWith("/seminar-schedule")) {
-        controller.abort();
-      }
-    };
-  }, [location.pathname, auth]);
+    getAllSpeakers();
+  }, [location.pathname, allSpeakers, allExhibitors]);
 
   return (
     <div>
@@ -310,6 +309,7 @@ export function EventInformation({
                     id="seminar-name"
                     label="Name"
                     fullWidth
+                    required
                     defaultValue={seminar.name}
                     name="name"
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -325,6 +325,7 @@ export function EventInformation({
                     id="seminar-hall"
                     fullWidth
                     label="Hall"
+                    required
                     defaultValue={currentSeminar.hall}
                     name="hall"
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -366,6 +367,7 @@ export function EventInformation({
                         {...params}
                         variant="outlined"
                         label="Speakers"
+                        required
                       />
                     )}
                   />
@@ -400,6 +402,7 @@ export function EventInformation({
                         {...params}
                         variant="outlined"
                         label="Exhibitors"
+                        required
                       />
                     )}
                   />
@@ -407,26 +410,31 @@ export function EventInformation({
               </Grid>
 
               <Grid container spacing={1} rowSpacing={5} marginTop={1}>
-                <Grid item xs={6}>
+                <Grid item xs={8}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateTimePicker
-                      label="Start time"
-                      value={dayjs(currentSeminar.startDateTime)}
-                      onAccept={handleChangeDateTime}
-                      readOnly={!isAdmin}
                       ampm={false}
+                      label="Date and time of the seminar"
+                      hideTabs={false}
+                      
+                      ampmInClock={false}
+                      value={currentSeminar.startDateTime !== "" ? dayjs(currentSeminar.startDateTime) : null}
+                      onChange={handleChangeDateTime}
+                      renderInput={(props) => (
+                        <TextField {...props} fullWidth required />
+                      )}
                     />
                   </LocalizationProvider>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField
                     id="seminar-duration"
                     label="Duration (minutes)"
+                    required
                     defaultValue={ConferenceDateUtil.calculateDuration(
                       currentSeminar.startDateTime,
                       currentSeminar.endDateTime
                     )}
-                    // defaultValue={duration}
                     name="duration"
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                       onChange(event);
@@ -468,7 +476,7 @@ export function EventInformation({
             </Button>
           )}
 
-          {!isAdmin && !isSpeaker && auth.accessToken &&  (
+          {!isAdmin && !isSpeaker && auth.accessToken && (
             <Button onClick={updateUserSchedule} variant="contained">
               {isAdded ? "Remove from schedule" : "Add to schedule"}
             </Button>

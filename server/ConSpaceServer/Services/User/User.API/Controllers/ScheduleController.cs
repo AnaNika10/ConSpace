@@ -13,7 +13,7 @@ namespace User.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Policy = RolePolicy.USER)]
+[Authorize(Policy = RolePolicy.SpeakerOrUser)]
 public class ScheduleController : ControllerBase
 {
     private readonly ILogger<ScheduleController> _logger;

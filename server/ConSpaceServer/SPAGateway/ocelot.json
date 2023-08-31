@@ -534,25 +534,6 @@
         "Role": "Administrator"
       },
       "UpstreamPathTemplate": "/Seminar/{seminarId}",
-      "UpstreamHttpMethod": [ "Get" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/Seminar/{seminarId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "conference",
-          "Port": 80
-        }
-      ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "Administrator"
-      },
-      "UpstreamPathTemplate": "/Seminar/{seminarId}",
       "UpstreamHttpMethod": [ "Delete" ]
     },
     {
@@ -616,10 +597,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "UpstreamPathTemplate": "/Exhibitor",
       "UpstreamHttpMethod": [ "Get" ]
     },
@@ -733,10 +710,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "UpstreamPathTemplate": "/Speaker",
       "UpstreamHttpMethod": [ "Get" ]
     },

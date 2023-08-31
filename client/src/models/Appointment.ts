@@ -1,11 +1,10 @@
 
 export interface Appointment {
     id : string,
-    conferenceRoomId : number, 
     location : string,
     title : string
-    speakers : [string],
-    speakerIds: [string],
+    speakers : string[],
+    speakerIds: number[],
     startDate : string
     endDate : string,
 }

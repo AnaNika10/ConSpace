@@ -4,13 +4,12 @@ import { Seminar } from "../../models/Seminar";
 import { ConferenceDateUtil } from "./ConferenceDateUtil";
 import { SeminarTabs } from "./SeminarTabs";
 import { SeminarListItem } from "./SeminarListItem";
-import { GET_SEMINARS_URL } from "../../constants/api";
 import useAuth from "../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import withSnackbar from "../Common/SnackBarWrapper";
 import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
-import useAuth from "../../hooks/useAuth";
+
 
 function SeminarList() {
   const [data, setData] = useState([]);
@@ -40,7 +39,6 @@ function SeminarList() {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
-  const { auth } = useAuth();
 
   useEffect(() => {
     let isMounted = true;
@@ -48,7 +46,7 @@ function SeminarList() {
 
     const getAllSeminars = async () => {
       try {
-        const response = await axiosPrivate.get(GET_SEMINARS_URL, {
+        const response = await axiosPrivate.get('/Seminar', {
           signal: controller.signal,
         });
 

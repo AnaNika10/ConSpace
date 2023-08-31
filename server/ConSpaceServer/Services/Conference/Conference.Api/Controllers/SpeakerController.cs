@@ -8,7 +8,7 @@ namespace Conference.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Authorize]
+
     public class SpeakerController : ControllerBase
     {
         private readonly ISpeakersRepository _repository;
