@@ -59,8 +59,7 @@ export function InviteItem({
         }
         handleClose={() => setOpen(false)}
         setMessage={setMessage}
-        inviteId={invite.id!}
-        status={invite.status}
+        invite={invite}
         isInitiator={username === invite.userName}
       ></ConfirmMeetForm>
     </>
