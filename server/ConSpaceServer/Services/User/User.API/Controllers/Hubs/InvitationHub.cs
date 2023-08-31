@@ -37,11 +37,11 @@ public class InvitationHub : Hub
             }
         };
         var inviteDto = JsonSerializer.Deserialize<InviteDto>(invite, options);
-        await _invitesRepository.UpsertInvite(_mapper.Map<Invite>(inviteDto), inviteDto.Id != null);
+        await _invitesRepository.UpsertInvite(_mapper.Map<Invite>(inviteDto), inviteDto.id != null);
         string connectionId;
-        string recipient = inviteDto.UserEmail == ClaimExtractor.ExtractEmail(Context.User.Claims)
-            ? inviteDto.InviteeEmail
-            : inviteDto.UserEmail;
+        string recipient = inviteDto.userEmail == ClaimExtractor.ExtractEmail(Context.User.Claims)
+            ? inviteDto.inviteeEmail
+            : inviteDto.userEmail;
         Connections.TryGetValue(recipient, out connectionId);
         await Clients.Client(connectionId).SendAsync("InviteReceived", invite, message);
     }

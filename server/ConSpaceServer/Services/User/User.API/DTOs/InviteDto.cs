@@ -17,35 +17,35 @@ public class InviteDto
         String? place
     )
     {
-        Id = id;
-        UserEmail = userEmail;
-        UserName = userName;
-        InviteeEmail = inviteeEmail;
-        InviteeName = inviteeName;
-        Timestamp = timestamp;
-        Status = status;
-        Time = time;
-        Place = place;
+        this.id = id;
+        this.userEmail = userEmail;
+        this.userName = userName;
+        this.inviteeEmail = inviteeEmail;
+        this.inviteeName = inviteeName;
+        this.timestamp = timestamp;
+        this.status = status;
+        this.time = time;
+        this.place = place;
     }
     
     [JsonInclude]
-    public Guid? Id {get;set;}
+    public Guid? id {get;set;}
     [JsonInclude]
-    public string UserEmail {get;set;}
+    public string userEmail {get;set;}
     [JsonInclude]
-    public string UserName {get;set;}
+    public string userName {get;set;}
     [JsonInclude]
-    public string InviteeEmail {get;set;}
+    public string inviteeEmail {get;set;}
     [JsonInclude]
-    public string InviteeName {get;set;}
+    public string inviteeName {get;set;}
     [JsonInclude]
-    public InviteStatusDto Status {get;set;}
+    public InviteStatusDto status {get;set;}
     [JsonInclude]
-    public DateTimeOffset? Timestamp {get;set;}
+    public DateTimeOffset? timestamp {get;set;}
     [JsonInclude]
-    public DateTimeOffset? Time {get;set;}
+    public DateTimeOffset? time {get;set;}
     [JsonInclude]
-    public String? Place {get;set;}
+    public String? place {get;set;}
     
 }
 

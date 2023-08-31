@@ -28,7 +28,18 @@ public static class RegisterMappers
                 .ReverseMap();
         });
         services.AddAutoMapper(configuration => { configuration.CreateMap<AttendeeDto, Attendee>().ReverseMap(); });
-        services.AddAutoMapper(configuration => { configuration.CreateMap<InviteDto, Invite>().ReverseMap(); });
+        services.AddAutoMapper(configuration =>
+        {
+            configuration.CreateMap<InviteDto, Invite>()
+                .ForMember(dest => dest.Id, act => act.MapFrom(src => src.id))
+                .ForMember(dest => dest.UserEmail, act => act.MapFrom(src => src.userEmail))
+                .ForMember(dest => dest.InviteeEmail, act => act.MapFrom(src => src.inviteeEmail))
+                .ForMember(dest => dest.Timestamp, act => act.MapFrom(src => src.timestamp))
+                .ForMember(dest => dest.Place, act => act.MapFrom(src => src.place))
+                .ForMember(dest => dest.Time, act => act.MapFrom(src => src.time))
+                .ForMember(dest => dest.Status, act => act.MapFrom(src => src.status))
+                .ReverseMap();
+        });
         services.AddAutoMapper(configuration => { configuration.CreateMap<ReminderDto, Reminder>().ReverseMap(); });
         services.AddAutoMapper(configuration => { configuration.CreateMap<SeminarDto, Seminar>().ReverseMap(); });
         services.AddAutoMapper(configuration =>
