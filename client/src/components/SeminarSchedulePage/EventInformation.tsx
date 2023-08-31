@@ -25,14 +25,15 @@ import useAuth from "../../hooks/useAuth";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { useNavigate, useLocation } from "react-router-dom";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useLocation } from "react-router-dom";
+
 
 import { Exhibitor } from "../../models/Exhibitor";
 import { Speaker } from "../../models/Speaker";
 
 import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
 import { Appointment } from "../../models/Appointment";
+import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 
 const CloseButton = ({ setClose }: { setClose: () => void }) => {
   return (
@@ -57,7 +58,7 @@ export function EventInformation({
   setOpen,
   isAdded,
   addSchedule,
-  isAdmin,
+  isAdmin
 }: {
   seminar: Seminar;
   isOpened: boolean;
@@ -86,7 +87,6 @@ export function EventInformation({
   const isInsert =
     seminar.seminarId === null || seminar.seminarId === undefined;
   const onChange = (e: any) => {
-    console.log(e);
     const value = e.target.value;
     if (e.target.name === "duration") {
       const newEnd = ConferenceDateUtil.calculateEndDateTime(
@@ -99,7 +99,7 @@ export function EventInformation({
       });
       return;
     }
-
+   
     setCurrentSeminar({
       ...currentSeminar,
       [e.target.name]: value,
@@ -149,7 +149,7 @@ export function EventInformation({
   };
   async function deleteAppointment(deleted: string) {
     if (deleted !== undefined) {
-      await SeminarDataProvider.deleteAppointment(deleted, auth.accessToken);
+      await UserDataProvider.deleteSeminarFromSchedule(deleted, auth.accessToken);
     }
   }
   async function insertAppointment(seminar: Seminar) {
@@ -162,7 +162,7 @@ export function EventInformation({
       endDate: seminar.endDateTime,
       location: seminar.hall,
     };
-    await SeminarDataProvider.insertAppointment(appointment, auth.accessToken);
+   await UserDataProvider.insertSeminarToSchedule(appointment, auth.accessToken);
   }
   const onAutocompleteChange = (event: any, values: any) => {
     if (values === null) {
@@ -184,7 +184,6 @@ export function EventInformation({
     }
   };
   const DeleteSeminar = async () => {
-    console.log("clicked" + currentSeminar.seminarId);
 
     SeminarDataProvider.deleteSeminar(
       currentSeminar.seminarId!,
@@ -252,211 +251,197 @@ export function EventInformation({
 
   return (
     <div>
-      {!isLoadingExhibitors && !isLoadingSpeakers && (
-        <Dialog onClose={handleClose} open={isOpened}>
-          <CloseButton setClose={() => setClose(false)} />
-          <DialogContent>
-            <Box
-              minHeight={1000}
-              marginTop={5}
-              component="form"
-              noValidate
-              autoComplete="off"
-            >
-              <FormControl>
-                <Grid container rowSpacing={5}>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="seminar-name"
-                      label="Name"
-                      fullWidth
-                      required
-                      defaultValue={seminar.name}
-                      name="name"
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>
-                      ) => {
-                        onChange(event);
-                      }}
-                      InputProps={{
-                        readOnly: !isAdmin,
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="seminar-hall"
-                      fullWidth
-                      label="Hall"
-                      required
-                      defaultValue={currentSeminar.hall}
-                      name="hall"
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>
-                      ) => {
-                        onChange(event);
-                      }}
-                      InputProps={{
-                        readOnly: !isAdmin,
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Autocomplete
-                      multiple
-                      id="speakers"
-                      readOnly={!isAdmin}
-                      options={allSpeakers}
-                      defaultValue={
-                        getFromSpekaersId(currentSeminar.speakers) as Speaker[]
-                      }
-                      getOptionLabel={(option) =>
-                        typeof option === "string" ? option : option.name
-                      }
-                      autoSelect
-                      isOptionEqualToValue={(option, value) =>
-                        option.speakerId === value.speakerId
-                      }
-                      onChange={onAutocompleteChange}
-                      renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip
-                            variant="outlined"
-                            label={option.name}
-                            {...getTagProps({ index })}
-                          />
-                        ))
-                      }
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="outlined"
-                          label="Speakers"
-                          required
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Autocomplete
-                      id="exhibitors"
-                      options={allExhibitors}
-                      defaultValue={
-                        getFromExhibitorId(
-                          currentSeminar.exhibitors
-                        ) as Exhibitor
-                      }
-                      getOptionLabel={(option) =>
-                        typeof option === "string" ? option : option.name
-                      }
-                      autoSelect
-                      isOptionEqualToValue={(option, value) =>
-                        option.exhibitorId === value.exhibitorId
-                      }
-                      readOnly={!isAdmin}
-                      onChange={onAutocompleteChange}
-                      renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip
-                            variant="outlined"
-                            label={option.name}
-                            {...getTagProps({ index })}
-                          />
-                        ))
-                      }
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="outlined"
-                          label="Exhibitors"
-                        />
-                      )}
-                    />
-                  </Grid>
+      { !isLoadingExhibitors && !isLoadingSpeakers &&
+      <Dialog onClose={handleClose} open={isOpened}>
+        <CloseButton setClose={() => setClose(false)} />
+        <DialogContent>
+          <Box
+            minHeight={1000}
+            marginTop={5}
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+            <FormControl>
+              <Grid container rowSpacing={5}>
+                <Grid item xs={12}>
+                  <TextField
+                    id="seminar-name"
+                    label="Name"
+                    fullWidth
+                    required
+                    defaultValue={seminar.name}
+                    name="name"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange(event);
+                    }}
+                    InputProps={{
+                      readOnly: !isAdmin,
+                    }}
+                  />
                 </Grid>
-
-                <Grid container spacing={1} rowSpacing={5} marginTop={1}>
-                  <Grid item xs={8}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DateTimePicker
-                        ampm={false}
-                        label="Date and time of the seminar"
-                        hideTabs={false}
-                        ampmInClock={false}
-                        value={
-                          currentSeminar.startDateTime !== ""
-                            ? dayjs(currentSeminar.startDateTime)
-                            : null
-                        }
-                        onChange={handleChangeDateTime}
-                        renderInput={(props) => (
-                          <TextField {...props} fullWidth required />
-                        )}
+                <Grid item xs={12}>
+                  <TextField
+                    id="seminar-hall"
+                    fullWidth
+                    label="Hall"
+                    required
+                    defaultValue={currentSeminar.hall}
+                    name="hall"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange(event);
+                    }}
+                    InputProps={{
+                      readOnly: !isAdmin,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Autocomplete
+                    multiple
+                    id="speakers"
+                    readOnly={!isAdmin}
+                    options={allSpeakers}
+                    defaultValue={
+                      getFromSpekaersId(currentSeminar.speakers) as Speaker[]
+                    }
+                    getOptionLabel={(option) =>
+                      typeof option === "string" ? option : option.name
+                    }
+                    autoSelect
+                    isOptionEqualToValue={(option, value) =>
+                      option.speakerId === value.speakerId
+                    }
+                    onChange={onAutocompleteChange}
+                    renderTags={(value, getTagProps) =>
+                      value.map((option, index) => (
+                        <Chip
+                          variant="outlined"
+                          label={option.name}
+                          {...getTagProps({ index })}
+                        />
+                      ))
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Speakers"
+                        required
                       />
-                    </LocalizationProvider>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      id="seminar-duration"
-                      label="Duration (minutes)"
-                      required
-                      defaultValue={ConferenceDateUtil.calculateDuration(
-                        currentSeminar.startDateTime,
-                        currentSeminar.endDateTime
-                      )}
-                      name="duration"
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>
-                      ) => {
-                        onChange(event);
-                      }}
-                      InputProps={{
-                        readOnly: !isAdmin,
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      multiline
-                      name="description"
-                      InputProps={{
-                        readOnly: !isAdmin,
-                      }}
-                      defaultValue={currentSeminar.description}
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>
-                      ) => {
-                        onChange(event);
-                      }}
-                      label="Seminar description"
-                      rows="6"
-                    />
-                  </Grid>
+                    )}
+                  />
                 </Grid>
-              </FormControl>
-            </Box>
-          </DialogContent>
-          <DialogActions style={{ justifyContent: "space-between" }}>
-            {isAdmin && (
-              <Button onClick={SaveSeminar} variant="contained">
-                Save
-              </Button>
-            )}
-            {isAdmin && !isInsert && (
-              <Button onClick={DeleteSeminar} variant="contained">
-                Delete
-              </Button>
-            )}
+                <Grid item xs={12}>
+                  <Autocomplete
+                    id="exhibitors"
+                    options={allExhibitors}
+                    defaultValue={
+                      getFromExhibitorId(currentSeminar.exhibitors) as Exhibitor
+                    }
+                    getOptionLabel={(option) =>
+                      typeof option === "string" ? option : option.name
+                    }
+                    autoSelect
+                    isOptionEqualToValue={(option, value) =>
+                      option.exhibitorId === value.exhibitorId
+                    }
+                    readOnly={!isAdmin}
+                    onChange={onAutocompleteChange}
+                    renderTags={(value, getTagProps) =>
+                      value.map((option, index) => (
+                        <Chip
+                          variant="outlined"
+                          label={option.name}
+                          {...getTagProps({ index })}
+                        />
+                      ))
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Exhibitors"
+                      />
+                    )}
+                  />
+                </Grid>
+              </Grid>
 
-            {!isAdmin && !isSpeaker && auth.accessToken && (
-              <Button onClick={updateUserSchedule} variant="contained">
-                {isAdded ? "Remove from schedule" : "Add to schedule"}
-              </Button>
-            )}
-          </DialogActions>
-        </Dialog>
-      )}
+              <Grid container spacing={1} rowSpacing={5} marginTop={1}>
+                <Grid item xs={8}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      ampm={false}
+                      label="Date and time of the seminar"
+                      hideTabs={false}
+                      
+                      ampmInClock={false}
+                      value={currentSeminar.startDateTime !== "" ? dayjs(currentSeminar.startDateTime) : null}
+                      onChange={handleChangeDateTime}
+                      renderInput={(props) => (
+                        <TextField {...props} fullWidth required />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    id="seminar-duration"
+                    label="Duration (minutes)"
+                    required
+                    defaultValue={ConferenceDateUtil.calculateDuration(
+                      currentSeminar.startDateTime,
+                      currentSeminar.endDateTime
+                    )}
+                    name="duration"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange(event);
+                    }}
+                    InputProps={{
+                      readOnly: !isAdmin,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    multiline
+                    name="description"
+                    InputProps={{
+                      readOnly: !isAdmin,
+                    }}
+                    defaultValue={currentSeminar.description}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange(event);
+                    }}
+                    label="Seminar description"
+                    rows="6"
+                  />
+                </Grid>
+              </Grid>
+            </FormControl>
+          </Box>
+        </DialogContent>
+        <DialogActions style={{ justifyContent: "space-between" }}>
+          {isAdmin && (
+            <Button onClick={SaveSeminar} variant="contained">
+              Save
+            </Button>
+          )}
+          {isAdmin && !isInsert && (
+            <Button onClick={DeleteSeminar} variant="contained">
+              Delete
+            </Button>
+          )}
+
+          {!isAdmin && !isSpeaker && auth.accessToken && (
+            <Button onClick={updateUserSchedule} variant="contained">
+              {isAdded ? "Remove from schedule" : "Add to schedule"}
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog> }
     </div>
   );
 }

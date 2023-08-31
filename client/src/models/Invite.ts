@@ -6,13 +6,13 @@ export enum InviteStatus {
 }
 
 export interface Invite {
-    Id: string | null,
-    UserEmail: string,
-    UserName: string,
-    InviteeEmail: string,
-    InviteeName: string,
-    Timestamp: string
-    Status: InviteStatus
-    Time: string,
-    Place: string
+    id: string | null,
+    userEmail: string,
+    userName: string,
+    inviteeEmail: string,
+    inviteeName: string,
+    timestamp: string
+    status: InviteStatus
+    time: string,
+    place: string
 }

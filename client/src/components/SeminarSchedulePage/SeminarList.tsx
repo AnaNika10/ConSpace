@@ -6,7 +6,6 @@ import { SeminarTabs } from "./SeminarTabs";
 import { SeminarListItem } from "./SeminarListItem";
 import useAuth from "../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import withSnackbar from "../Common/SnackBarWrapper";
 import jwtDecode from "jwt-decode";
 import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
@@ -30,26 +29,9 @@ function SeminarList() {
   const setDayOfSeminar = (day: number) => {
     setDay(day);
   };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(GET_CONFERENCES_URL);
-  //       setLoading(false);
-  //       setError(null);
-  //       setData(response.data);
-  //     } catch (err: any) {
-  //       setError(err.message);
-  //       setData([]);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
   const navigate = useNavigate();
   const location = useLocation();
-
+ 
   useEffect(() => {
     const getAllSeminars = async () => {
       try {
@@ -135,3 +117,5 @@ function SeminarList() {
 }
 
 export default withSnackbar(SeminarList);
+
+

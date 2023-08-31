@@ -22,7 +22,6 @@ class Connector {
 
     this.events = (onMessageReceived) => {
       this.connection.on("InviteReceived", (invite, message) => {
-        console.log(message);
         onMessageReceived(invite, message);
       });
     };
