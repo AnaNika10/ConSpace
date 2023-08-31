@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "6.0.x"
 
@@ -51,7 +51,7 @@ jobs:
           node-version: 16
           
       - name: Install Node.js dependencies
-        run: cd ./client && ls && npm ci
+        run: npm ci
 
       - name: Run linters on client app
         uses: wearerequired/lint-action@v1
