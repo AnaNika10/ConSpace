@@ -52,27 +52,5 @@ export class SeminarDataProvider {
       s
     );
   }
-
-
-
-  public static async deleteAppointment(id: string, token: string) {
-    return RequestWrapper.fetchPrivateData(
-      `${this.gateway}/DeleteSeminarFromSchedule/${id}`,
-      token,
-      RequestMethod.DELETE
-    );
-  }
-
-  public static async insertAppointment(a:Appointment, token: string) {
-    return RequestWrapper.fetchPrivateData(
-      `${this.gateway}/AddSeminarToSchedule`,
-      token,
-      RequestMethod.POST,
-      a
-    );
-  }
-
-
-  
   
 }

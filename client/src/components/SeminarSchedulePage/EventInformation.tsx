@@ -33,6 +33,7 @@ import { Speaker } from "../../models/Speaker";
 
 import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
 import { Appointment } from "../../models/Appointment";
+import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 
 const CloseButton = ({ setClose }: { setClose: () => void }) => {
   return (
@@ -149,7 +150,7 @@ export function EventInformation({
   };
   async function deleteAppointment(deleted: string) {
     if (deleted !== undefined) {
-      await SeminarDataProvider.deleteAppointment(deleted, auth.accessToken);
+      await UserDataProvider.deleteSeminarFromSchedule(deleted, auth.accessToken);
     }
   }
   async function insertAppointment(seminar: Seminar) {
@@ -162,7 +163,7 @@ export function EventInformation({
       endDate: seminar.endDateTime,
       location: seminar.hall,
     };
-   await SeminarDataProvider.insertAppointment(appointment, auth.accessToken);
+   await UserDataProvider.insertSeminarToSchedule(appointment, auth.accessToken);
   }
   const onAutocompleteChange = (event: any, values: any) => {
     if (values === null) {

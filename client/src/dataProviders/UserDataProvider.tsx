@@ -1,4 +1,5 @@
 import config from "../config/local.json";
+import { Appointment } from "../models/Appointment";
 import { Note } from "../models/Note";
 import { RequestMethod, RequestWrapper } from "./RequestWrapper";
 
@@ -28,6 +29,15 @@ export class UserDataProvider {
       `${this.gateway}${this.DELETE_SEMINAR_FROM_SCHEDULE_URL}/${seminarId}`,
       token,
       RequestMethod.DELETE
+    );
+  }
+
+  public static async insertSeminarToSchedule(a:Appointment, token: string) {
+    return RequestWrapper.fetchPrivateData(
+      `${this.gateway}/AddSeminarToSchedule`,
+      token,
+      RequestMethod.POST,
+      a
     );
   }
 
