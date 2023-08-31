@@ -41,11 +41,11 @@ Supported roles are `Administrator`, `Speaker` and `User`.
 
 User service manages the actions such as creating your own seminar schedule, adding notes and creating/receiving invites for meet-ups.
 
-User is created in this service via its gRPC communication with Identity service.
+User is created in this service via its gRPC communication with Identity service.  
 User and Conference service communicate via RabbitMQ.
 
 ### Conference
-Conference service manages the conference details such as seminars, speakers, exhibitors and FAQs.
+Conference service manages the conference details such as seminars, speakers, exhibitors, floorplan and FAQs.
 
 ## Authors
 - [Milica Radojicic, 1043/2021](https://github.com/milicar7)
