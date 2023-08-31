@@ -157,8 +157,11 @@ namespace Conference.Api.Controllers
         public async Task<ActionResult<bool>> DeleteSeminar(Guid seminarId)
         {
             var success = await _repository.DeleteSeminar(seminarId);
-            if (success)
-            {
+            if (success) 
+            { 
+                var eventMessage = new SeminarChangeEvent { SeminarId=seminarId,Name = null };
+
+                await _publishEndpoint.Publish(eventMessage);
                 return Ok();
             }
             else

@@ -22,7 +22,7 @@ export class SeminarDataProvider {
     );
   }
   public static async fetchAllSpeakers() {
-    return RequestWrapper.fetchPublicData(
+    return await RequestWrapper.fetchPublicData(
       `${this.gateway}/Speaker`,
       RequestMethod.GET
     );
@@ -57,7 +57,7 @@ export class SeminarDataProvider {
 
   public static async deleteAppointment(id: string, token: string) {
     return RequestWrapper.fetchPrivateData(
-      `${this.gateway}/DeleteSeminarFromSchedule'/${id}`,
+      `${this.gateway}/DeleteSeminarFromSchedule/${id}`,
       token,
       RequestMethod.DELETE
     );
@@ -65,7 +65,7 @@ export class SeminarDataProvider {
 
   public static async insertAppointment(a:Appointment, token: string) {
     return RequestWrapper.fetchPrivateData(
-      `${this.gateway}/AddSeminarToSchedule/`,
+      `${this.gateway}/AddSeminarToSchedule`,
       token,
       RequestMethod.POST,
       a

@@ -35,7 +35,7 @@ public class ScheduleRepository : IScheduleRepository
         return await _context.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool> delete(Guid userId, Guid seminarId)
+    public async Task<bool> delete(Guid seminarId, Guid userId = default(Guid))
     {
         await _context.Seminars.Where(seminar => seminar.Id == seminarId).ExecuteDeleteAsync();
         _logger.LogInformation($"Deleting seminar for user with userId:{userId}");
