@@ -20,9 +20,9 @@ public class InvitesRepository : IInvitesRepository
         _mapper = mapper;
     }
 
-    public async Task<bool> UpsertInvite(Invite invite)
+    public async Task<bool> UpsertInvite(Invite invite, bool exists)
     {
-        if (invite.Id != null)
+        if (exists)
         {
             Invite inviteDb = await _context.Invites.SingleAsync(it => it.Id == invite.Id);
             inviteDb.Status = invite.Status;

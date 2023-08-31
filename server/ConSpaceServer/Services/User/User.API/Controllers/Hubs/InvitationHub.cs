@@ -37,7 +37,7 @@ public class InvitationHub : Hub
             }
         };
         var inviteDto = JsonSerializer.Deserialize<InviteDto>(invite, options);
-        await _invitesRepository.UpsertInvite(_mapper.Map<Invite>(inviteDto));
+        await _invitesRepository.UpsertInvite(_mapper.Map<Invite>(inviteDto), inviteDto.Id != null);
         string connectionId;
         string recipient = inviteDto.UserEmail == ClaimExtractor.ExtractEmail(Context.User.Claims)
             ? inviteDto.InviteeEmail
