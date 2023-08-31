@@ -7,11 +7,15 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch: 
 
 jobs:
-  run-linters:
-    name: Run linters
+  lint-server:
+    name: Lint check server
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server/ConSpaceServer/
 
     steps:
       - name: Check out Git repository
@@ -33,6 +37,13 @@ jobs:
           dotnet_format: true
           dotnet_format_dir: server/ConSpace
 
+  lint-client:
+    name: Lint check client
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
