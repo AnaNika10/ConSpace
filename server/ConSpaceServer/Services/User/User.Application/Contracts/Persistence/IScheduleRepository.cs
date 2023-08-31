@@ -9,7 +9,7 @@ namespace User.Application.Contracts.Persistence;
 public interface IScheduleRepository
 {
     Task<bool> create(Guid userId, Seminar seminar);
-    Task<bool> delete(Guid userId, Guid seminarId);
+    Task<bool> delete( Guid seminarId, Guid userId = default(Guid));
 
     Task<bool> update(Seminar seminar);
 

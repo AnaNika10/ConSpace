@@ -11,12 +11,21 @@ import { DateFormatUtil } from "../Common/DateFormatUtil";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import AddIcon from "@mui/icons-material/Add";
 import { EventInformation } from "./EventInformation";
+import { Appointment } from "../../models/Appointment";
+import useAuth from "../../hooks/useAuth";
 
-export function SeminarListItem({ seminar }: { seminar: Seminar }) {
-  const [isAddedToSchedule, addSchedule] = useState(false);
-  const updateSchedule = (isAdded: boolean) => {
-    addSchedule(!isAdded);
+export function SeminarListItem({ seminar,userAppointements,isAdmin }: { seminar: Seminar,userAppointements : Appointment[],isAdmin:boolean }) {
+  // console.error('userAppointements',userAppointements.map(x=>x.id));
+  // console.error('Seminar seminarId',seminar.seminarId);
+  const isInSchedule = () => {
+   let checkSchedule = userAppointements.map(x=>x.id).includes(seminar.seminarId!);
+   return checkSchedule;
   };
+  const { auth } = useAuth();
+  const [isAddedToSchedule, addSchedule] = useState(!isAdmin ? isInSchedule() : false);
+ 
+  const [isAddedToSchedule1, addSchedule1] = useState(false); 
+
   const [infoIsDisplayed, displayEventInfo] = useState(false);
   const setOpen = (_isOpened: boolean) => {
     displayEventInfo(!infoIsDisplayed);
@@ -35,9 +44,10 @@ export function SeminarListItem({ seminar }: { seminar: Seminar }) {
             }
             secondary={"Hall: " + seminar.hall}
           />
+          { !isAdmin && auth.accessToken &&
           <ListItemIcon sx={{ display: "flex", justifyContent: "flex-end" }}>
             {isAddedToSchedule ? <TaskAltIcon /> : <AddIcon />}
-          </ListItemIcon>
+          </ListItemIcon>}
         </ListItemButton>
       </Stack>
       <EventInformation
@@ -45,9 +55,9 @@ export function SeminarListItem({ seminar }: { seminar: Seminar }) {
         // date={DateFormatUtil.extractTime(seminar.startDateTime)}
         isOpened={infoIsDisplayed}
         setOpen={setOpen}
-
         isAdded={isAddedToSchedule}
-        updateSchedule={updateSchedule}
+        addSchedule={addSchedule}
+        isAdmin={isAdmin}
       />
     </ListItem>
   );

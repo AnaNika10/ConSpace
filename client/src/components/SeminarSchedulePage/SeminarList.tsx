@@ -8,18 +8,29 @@ import useAuth from "../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import withSnackbar from "../Common/SnackBarWrapper";
+import jwtDecode from "jwt-decode";
 import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
+import { Appointment } from "../../models/Appointment";
 
 
 function SeminarList() {
   const [data, setData] = useState([]);
+  const [userData, setUserData] = useState<Appointment[]>([]);
   const [isLoading, setLoading] = useState(true);
+  const [isLoadingUserData, setLoadingUserData] = useState(true);
+  const [errorUserData, setErrorLoadingUserData] = useState(null);
   const [, setError] = useState(null);
   const [dayOfSeminar, setDay] = useState(1);
   const { auth } = useAuth();
+  const decoded: any = auth?.accessToken
+    ? jwtDecode(auth.accessToken)
+    : undefined;
+  const role = decoded?.Role || "";
+  const isAdmin = role === "Administrator";
   const setDayOfSeminar = (day: number) => {
     setDay(day);
   };
+ 
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
@@ -39,30 +50,50 @@ function SeminarList() {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
-
+ 
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
 
+    
     const getAllSeminars = async () => {
       try {
         const response = await axiosPrivate.get('/Seminar', {
           signal: controller.signal,
         });
-
-        isMounted && setLoading(false);
-        isMounted && setError(null);
-        isMounted && setData(response.data);
+        setLoading(false);
+        setError(null);
+        setData(response?.data);
       } catch (err: any) {
-        isMounted && setError(err.message);
-        isMounted && setData([]);
+        setError(err.message);
+        setData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if(!isAdmin && auth.accessToken) {
+    const getAllUserSeminars = async () => {
+      try {
+        const response = await axiosPrivate.get('/GetSchedule', {
+          signal: controller.signal,
+        });
+        
+        isMounted && setLoadingUserData(false);
+        isMounted && setErrorLoadingUserData(null);
+        isMounted && setUserData(response.data);
+      } catch (err: any) {
+        isMounted && setErrorLoadingUserData(err.message);
+        isMounted && setUserData([]);
         navigate("/sign-in", { state: { from: location }, replace: true });
       } finally {
         isMounted && setLoading(false);
       }
     };
+    getAllUserSeminars();
+   }
 
     getAllSeminars();
+       
     console.log(data);
     return () => {
       isMounted = false;
@@ -71,7 +102,7 @@ function SeminarList() {
         controller.abort();
       }
     };
-  }, [location.pathname, data, auth]);
+  }, [location.pathname, data, userData, auth]);
 
   const getSeminarsForSelectedDay = () => {
     return ConferenceDateUtil.filterSeminarsByDay(data, dayOfSeminar);
@@ -88,12 +119,12 @@ function SeminarList() {
       paddingBottom={15}
     >
       <Paper elevation={3}>
-        <SeminarTabs setDay={setDayOfSeminar} dayOfSeminar={getDays()} />
+        <SeminarTabs setDay={setDayOfSeminar} dayOfSeminar={getDays()} isAdmin={isAdmin} />
         <List>
-          {!isLoading &&
+          { ((!isLoading && !isAdmin && !isLoadingUserData ) || (!isLoading && isAdmin) ) &&
             getSeminarsForSelectedDay().map((seminar: Seminar) => {
               return (
-                <SeminarListItem seminar={seminar} key={seminar.seminarId} />
+                <SeminarListItem seminar={seminar} key={seminar.seminarId} userAppointements={userData} isAdmin={isAdmin} />
               );
             })}
         </List>
@@ -103,3 +134,5 @@ function SeminarList() {
 }
 
 export default withSnackbar(SeminarList);
+
+

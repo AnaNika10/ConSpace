@@ -4,7 +4,7 @@ export interface Seminar {
     hall: string,
     speakers: number[],
     speakerNames: string[],
-    exhibitors: number,
+    exhibitors: number | null,
     description: string,
     startDateTime: string,
     endDateTime: string
