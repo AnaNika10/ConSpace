@@ -21,11 +21,11 @@
     "@mui/material": "^5.14.4",
     "@mui/x-date-pickers": "^5.0.15",
     "axios": "^1.4.0",
-      
     "bootstrap": "^5.2.3",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
     "jwt-decode": "^3.1.2",
+    "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.4",
