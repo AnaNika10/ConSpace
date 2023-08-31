@@ -89,7 +89,6 @@ export function EventInformation({
   const onChange = (e: any) => {
     const value = e.target.value;
     if (e.target.name === "duration") {
-   
       const newEnd = ConferenceDateUtil.calculateEndDateTime(
         currentSeminar.startDateTime,
         e.target.value
@@ -109,7 +108,7 @@ export function EventInformation({
 
   const handleChangeDateTime = (value: Dayjs | null) => {
     const x = dayjs(value).format("YYYY-MM-DDTHH:mm:ss");
-    let currentTime = ConferenceDateUtil.calculateDuration(
+    const currentTime = ConferenceDateUtil.calculateDuration(
       currentSeminar.startDateTime,
       currentSeminar.endDateTime
     );
@@ -154,7 +153,7 @@ export function EventInformation({
     }
   }
   async function insertAppointment(seminar: Seminar) {
-    let appointment: Appointment = {
+    const appointment: Appointment = {
       id: seminar.seminarId!,
       speakers: seminar.speakerNames,
       speakerIds: seminar.speakers,
@@ -171,14 +170,13 @@ export function EventInformation({
         ...currentSeminar,
         exhibitors: null,
       });
-    }
-    else if ("exhibitorId" in values) {
+    } else if ("exhibitorId" in values) {
       setCurrentSeminar({
         ...currentSeminar,
         exhibitors: values.exhibitorId,
       });
     } else if (Array.isArray(values)) {
-      let x = values.map((x) => x.speakerId!);
+      const x = values.map((x) => x.speakerId!);
       setCurrentSeminar({
         ...currentSeminar,
         speakers: x,
@@ -196,7 +194,6 @@ export function EventInformation({
   const SaveSeminar = async () => {
     if (
       currentSeminar.speakers.length > 0 &&
-   
       currentSeminar.name &&
       currentSeminar.hall &&
       currentSeminar.startDateTime &&
@@ -214,6 +211,7 @@ export function EventInformation({
   const handleClose = (event: object, reason: string) => {
     if (reason && reason == "backdropClick") return;
   };
+
   const location = useLocation();
 
   useEffect(() => {

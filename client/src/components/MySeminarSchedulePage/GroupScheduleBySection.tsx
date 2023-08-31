@@ -12,14 +12,8 @@ import {
 import { useState } from "react";
 
 const mainGroupingBy = {
-  byLocation: [
-    { resourceName: "conferenceRoomId" },
-    { resourceName: "speakerIds" },
-  ],
-  bySpeakers: [
-    { resourceName: "speakerIds" },
-    { resourceName: "conferenceRoomId" },
-  ],
+  byLocation: [{ resourceName: "location" }, { resourceName: "speakerIds" }],
+  bySpeakers: [{ resourceName: "speakerIds" }, { resourceName: "location" }],
 };
 
 function SelectGrouping({
@@ -35,8 +29,8 @@ function SelectGrouping({
 }) {
   const groupings = [
     { value: "Speakers", resourceName: "speakerIds" },
-    { value: "Location", resourceName: "conferenceRoomId" },
-    { value: "Location and Speakers", resourceName: "conferenceRoomId" },
+    { value: "Location", resourceName: "location" },
+    { value: "Location and Speakers", resourceName: "location" },
   ];
   const handleChange = (event: SelectChangeEvent) => {
     const selected = groupings.find((it) => it.value === event.target.value);
@@ -47,7 +41,7 @@ function SelectGrouping({
         grouping = [{ resourceName: "speakerIds" }];
         break;
       case "Location":
-        grouping = [{ resourceName: "conferenceRoomId" }];
+        grouping = [{ resourceName: "location" }];
         break;
       case "Location and Speakers":
         setMain(true);
