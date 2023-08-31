@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Grpc.Core;
-using User.Common.DTOs;
-using User.Common.Repositories;
+using User.API.DTOs;
+using User.Application.Contracts.Persistence;
+using User.Domain.Entities;
 using User.GRPC.Protos;
+using AttendeeType = User.API.DTOs.AttendeeType;
 
 namespace User.GRPC.Services;
 
@@ -26,7 +28,7 @@ public class UserService : UserProtoService.UserProtoServiceBase
         if (Guid.TryParse(request.Id, out var id) && Enum.TryParse<AttendeeType>(requestType, out var attendeeType))
         {
             var attendee = new AttendeeDto(id, request.Name, attendeeType, request.Email);
-            var response = await _attendeeRepository.create(attendee);
+            var response = await _attendeeRepository.create(_mapper.Map<Attendee>(attendee));
             UserCreationDto userCreationDto = new UserCreationDto
             {
                 isSuccessful = response

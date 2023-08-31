@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using EventBus.Messages.Events;
 using MassTransit;
-using User.API.Commands;
-using User.Common.DTOs;
-using User.Common.Repositories;
+using User.API.DTOs;
+using User.Application.Contracts.Persistence;
+using User.Domain.Entities;
 
 namespace User.API.EventBusConsumers
 {
@@ -25,8 +25,9 @@ namespace User.API.EventBusConsumers
         {
            var command = _mapper.Map<SeminarDto>(context.Message);
 
-           _logger.LogInformation($"{typeof(SeminarChangeEvent).Name} consumed successfully. Seminar {command.title} - {command.id}, start : {command.startDate} end : {command.endDate}");
-            await _scheduleRepository.update(command);
+
+           _logger.LogInformation($"{typeof(SeminarChangeEvent).Name} consumed successfully. Seminar {command.Title} - {command.Id}, start : {command.StartDate} end : {command.EndDate}");
+            await _scheduleRepository.update(_mapper.Map<Seminar>(command));
 
             await Task.CompletedTask;
 

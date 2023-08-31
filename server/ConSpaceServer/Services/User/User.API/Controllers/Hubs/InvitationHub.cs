@@ -1,12 +1,14 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AutoMapper;
 using Common.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using User.API.Controllers.Authorization;
-using User.Common.DTOs;
-using User.Common.Repositories;
+using User.API.DTOs;
+using User.Application.Contracts.Persistence;
+using User.Domain.Entities;
 
 namespace User.API.Controllers.Hubs;
 
@@ -15,14 +17,16 @@ public class InvitationHub : Hub
 {
     private readonly ILogger<InvitationHub> _logger;
     private readonly IInvitesRepository _invitesRepository;
+    private readonly IMapper _mapper;
     private static ConcurrentDictionary<string, string> Connections = new ConcurrentDictionary<string, string>();
 
-    public InvitationHub(ILogger<InvitationHub> logger, IInvitesRepository invitesRepository)
+    public InvitationHub(ILogger<InvitationHub> logger, IInvitesRepository invitesRepository, IMapper mapper)
     {
         _logger = logger;
         _invitesRepository = invitesRepository;
+        _mapper = mapper;
     }
-    
+
     public async Task NotifyInvitee(string invite, string message)
     {
         var options = new JsonSerializerOptions
@@ -33,11 +37,11 @@ public class InvitationHub : Hub
             }
         };
         var inviteDto = JsonSerializer.Deserialize<InviteDto>(invite, options);
-        await _invitesRepository.UpsertInvite(inviteDto);
+        await _invitesRepository.UpsertInvite(_mapper.Map<Invite>(inviteDto), inviteDto.Id != null);
         string connectionId;
-        string recipient = inviteDto.userEmail == ClaimExtractor.ExtractEmail(Context.User.Claims) 
-            ? inviteDto.inviteeEmail
-            : inviteDto.userEmail; 
+        string recipient = inviteDto.UserEmail == ClaimExtractor.ExtractEmail(Context.User.Claims)
+            ? inviteDto.InviteeEmail
+            : inviteDto.UserEmail;
         Connections.TryGetValue(recipient, out connectionId);
         await Clients.Client(connectionId).SendAsync("InviteReceived", invite, message);
     }
