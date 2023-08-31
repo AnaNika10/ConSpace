@@ -25,8 +25,8 @@ import useAuth from "../../hooks/useAuth";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { useNavigate, useLocation } from "react-router-dom";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useLocation } from "react-router-dom";
+
 
 import { Exhibitor } from "../../models/Exhibitor";
 import { Speaker } from "../../models/Speaker";
@@ -86,7 +86,6 @@ export function EventInformation({
   const isInsert =
     seminar.seminarId === null || seminar.seminarId === undefined;
   const onChange = (e: any) => {
-    console.log(e);
     const value = e.target.value;
     if (e.target.name === "duration") {
    
@@ -186,7 +185,6 @@ export function EventInformation({
     }
   };
   const DeleteSeminar = async () => {
-    console.log("clicked" + currentSeminar.seminarId);
 
     SeminarDataProvider.deleteSeminar(
       currentSeminar.seminarId!,
@@ -215,8 +213,6 @@ export function EventInformation({
   const handleClose = (event: object, reason: string) => {
     if (reason && reason == "backdropClick") return;
   };
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {

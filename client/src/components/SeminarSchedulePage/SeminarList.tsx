@@ -30,23 +30,6 @@ function SeminarList() {
   const setDayOfSeminar = (day: number) => {
     setDay(day);
   };
- 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(GET_CONFERENCES_URL);
-  //       setLoading(false);
-  //       setError(null);
-  //       setData(response.data);
-  //     } catch (err: any) {
-  //       setError(err.message);
-  //       setData([]);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
@@ -94,7 +77,6 @@ function SeminarList() {
 
     getAllSeminars();
        
-    console.log(data);
     return () => {
       isMounted = false;
 

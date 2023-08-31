@@ -69,53 +69,6 @@ import { SpeakerForm } from "./SpeakerForm";
 
         /> }
       </ListItem>
-
-//     <form>
-// <Grid container>
-// <Grid item xs={6}>
-
-//     <TextField>
-
-//         varient="outlined"
-//         label = "Name"
-//         name = "fullname"
-//         value={values.fullname}
-//     </TextField>
-
-    
-//     <TextField>
-
-//         varient="outlined"
-//         label = "Job title"
-//         name = "title"
-//         value={values.title}
-//     </TextField>
-
-    
-//     <TextField>
-
-//         varient="outlined"
-//         label = "Company"
-//         name = "company"
-//         value={values.company}
-//     </TextField>
-
-    
-//     <TextField>
-
-//         varient="outlined"
-//         label = "About speaker"
-//         name = "bioinfo"
-//         value={values.bioinfo}
-//     </TextField>
-// </Grid>
-// <Grid item xs={6}>
-
-// </Grid>
-    
-// </Grid>
-
-//     </form>
     );
   }
   
