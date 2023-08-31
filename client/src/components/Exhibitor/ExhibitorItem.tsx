@@ -27,8 +27,8 @@ import { ExhibitorForm } from "./ExhibitorForm";
     };
     return (
       <>
-      <Box onClick={() => displayEventInfo(true)} >
-        <Card key={exhibitor.exhibitorId} sx={{ maxWidth: 275 }}>
+      <Box onClick={() => displayEventInfo(true)}  >
+        <Card key={exhibitor.exhibitorId} sx={{ minWidth: 275 ,minHeight: 200}}>
         <CardContent>
           <Typography variant="h5" component="div">
             {`Stand ${exhibitor.stand}: ${exhibitor.name}`}
@@ -36,15 +36,7 @@ import { ExhibitorForm } from "./ExhibitorForm";
           <Typography variant="body2">{exhibitor.description}</Typography>
         </CardContent>
         <CardActions>
-          {/* <Stack direction={"row"} spacing={12}>
-            <Button size="small" startIcon={<Edit />} onClick={handleEdit}>
-              Edit
-            </Button>
-            <Button size="small" startIcon={<Delete />} onClick={handleDelete}>
-              Delete
-            </Button>
-          </Stack>
-             </ListItem> */}
+      
         </CardActions>
       </Card>
      </Box>
@@ -58,11 +50,3 @@ import { ExhibitorForm } from "./ExhibitorForm";
     
     );
   }
-  
-    // <ListItem alignItems="flex-start" key={exhibitor.exhibitorId}>
-        // <Stack spacing={2} direction={"row"}>
-
-        //   <ListItemButton >
-        //      <ListItemText sx={{ width: 500 }} id={exhibitor.exhibitorId?.toString()} primary={exhibitor.name} />
-        //     </ListItemButton>
-        // </Stack>

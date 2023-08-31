@@ -2,25 +2,14 @@ CREATE TABLE IF NOT EXISTS public."Seminar"
 (
     "SeminarId" UUID DEFAULT gen_random_uuid(),
     "Name" text COLLATE pg_catalog."default" NOT NULL,
-    "Hall" text NOT NULL UNIQUE,
+    "Hall" text NOT NULL,
     "StartDateTime" timestamp without time zone NOT NULL,
     "EndDateTime" timestamp without time zone NOT NULL,
-	"Exhibitors" int  NOT NULL,
+    "Exhibitors" int,
     "Description" text COLLATE pg_catalog."default",
     "FilesUrls" text[] COLLATE pg_catalog."default",
     CONSTRAINT "Seminar_pkey" PRIMARY KEY ("SeminarId")
 );
-
-INSERT INTO public."Seminar"(
-	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
-VALUES ('Future of microservices', 'Arena 1', '2023-08-30T12:30:41','2023-08-30T14:30:41', 1,'Matf', ARRAY ['htpp://blabla']);
-    
-INSERT INTO public."Seminar"(
-	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
-VALUES ('Death', 'Arena 2', '2023-08-29T14:30:41','2023-08-29T16:30:41',2, 'aaaaa',ARRAY ['htpp://aaaa']);
-
-	
-
 CREATE TABLE IF NOT EXISTS public."Speakers"
 (
          "SpeakerId" SERIAL PRIMARY KEY ,
@@ -30,17 +19,6 @@ CREATE TABLE IF NOT EXISTS public."Speakers"
          "Company" text NOT NULL,
          "BioInfo" text
 );
-INSERT INTO public."Speakers"(
-	"Name", "Position","Company", "Email","BioInfo")
-	VALUES ('Ana Nikacevic','FS','a1', 'ana@gmail.com','bla1');
-INSERT INTO public."Speakers"(
-   "Name", "Position","Company", "Email","BioInfo")
-	VALUES ('Marija Lakic','BE','a2', 'marija@gmail.com','bla2');
-INSERT INTO public."Speakers"(
-    "Name", "Position","Company","Email", "BioInfo")
-	VALUES ('Milica Radojicic','DA','a3', 'milica@gmail.com','bla3'); 
-
-
 CREATE TABLE IF NOT EXISTS public."Exhibitors"
 (
          "ExhibitorId" SERIAL PRIMARY KEY ,
@@ -48,32 +26,113 @@ CREATE TABLE IF NOT EXISTS public."Exhibitors"
 		 "Stand" int NOT NULL,
          "Description" text
 );
-INSERT INTO public."Exhibitors"(
-	"Name", "Stand", "Description")
-	VALUES ('Company1', 123,'desc1');
-INSERT INTO public."Exhibitors"(
-	"Name", "Stand", "Description")
-	VALUES ('Company2', 124,'desc2');
-INSERT INTO public."Exhibitors"(
-	"Name", "Stand", "Description")
-	VALUES ('Company3', 125,'desc3'); 
 
 CREATE TABLE IF NOT EXISTS public."FAQ"
 (
          "QuestionId" SERIAL PRIMARY KEY ,
          "Question" text NOT NULL,
-		 "Answer" text NOT NULL
+         "Answer" text NOT NULL
 );
+ALTER TABLE "Seminar"
+ADD CONSTRAINT  "constraint_fk_sem_ex"
+FOREIGN KEY ("Exhibitors")
+REFERENCES "Exhibitors"("ExhibitorId")
+ON DELETE SET NULL;
+TRUNCATE TABLE "Speakers"   RESTART IDENTITY  CASCADE;
+TRUNCATE TABLE "Exhibitors"   RESTART IDENTITY  CASCADE;
+TRUNCATE TABLE "FAQ"   RESTART IDENTITY  CASCADE;
+INSERT INTO public."Speakers"(
+	"Name", "Position","Company", "Email","BioInfo")
+	VALUES ('Ana Nikacevic','Full stack','Company', 'ana@gmail.com','Short description for Ana Nikacevic');
+INSERT INTO public."Speakers"(
+   "Name", "Position","Company", "Email","BioInfo")
+	VALUES ('Marija Lakic','Back end','Company1', 'marija@gmail.com','Short description for Marija Lakic');
+INSERT INTO public."Speakers"(
+    "Name", "Position","Company","Email", "BioInfo")
+	VALUES ('Milica Radojicic','Data anylist','Company1', 'milica@gmail.com','Short description for Milica Radojicic'); 
+INSERT INTO public."Speakers"(
+    "Name", "Position","Company","Email", "BioInfo")
+	VALUES ('John Doe','Project manager','Company1', 'john@gmail.com','Short description for John Doe'); 
+INSERT INTO public."Speakers"(
+    "Name", "Position","Company","Email", "BioInfo")
+	VALUES ('Jane Doe','Team lead','Company', 'jane@gmail.com','Short description for Jane Doe'); 
+
+INSERT INTO public."Exhibitors"(
+	"Name", "Stand", "Description")
+	VALUES ('Google', 155,'Description for Google');
+INSERT INTO public."Exhibitors"(
+	"Name", "Stand", "Description")
+	VALUES ('Microsoft', 100,'Description for Microsoft');
+INSERT INTO public."Exhibitors"(
+	"Name", "Stand", "Description")
+	VALUES ('Cisco', 161,'Description for Cisco'); 
+INSERT INTO public."Exhibitors"(
+	"Name", "Stand", "Description")
+	VALUES ('Apple', 143,'Description for Apple');
+INSERT INTO public."Exhibitors"(
+	"Name", "Stand", "Description")
+	VALUES ('Amazon', 180,'Description for Amazon');
+INSERT INTO public."Exhibitors"(
+	"Name", "Stand", "Description")
+	VALUES ('Meta', 125,'Description for Meta'); 
+INSERT INTO public."Exhibitors"(
+	"Name", "Stand", "Description")
+	VALUES ('Company', 123,'Description for Company');
+INSERT INTO public."Exhibitors"(
+	"Name", "Stand", "Description")
+	VALUES ('Company1', 124,'Description for Company1');
+INSERT INTO public."Exhibitors"(
+	"Name", "Stand", "Description")
+	VALUES ('Tencent', 137,'Description for Tencent'); 
+
+
+INSERT INTO public."Seminar"(
+	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
+VALUES ('Future of microservices', 'Arena 1', '2023-08-27T10:30:41','2023-08-27T14:30:41', 1,'Description for this seminar', ARRAY ['htpp://blabla']);
+    
+INSERT INTO public."Seminar"(
+	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
+VALUES ('Git for beginners', 'Arena 2', '2023-08-27T15:00:41','2023-08-27T16:30:41',6, 'Description for this seminar',ARRAY ['htpp://aaaa']);
+
+INSERT INTO public."Seminar"(
+	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
+VALUES ('Wireless Mesh Networks', 'Arena 3', '2023-08-28T09:30:41','2023-08-28T11:30:41',null, 'Description for this seminar',ARRAY ['htpp://aaaa']);
+
+INSERT INTO public."Seminar"(
+	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
+VALUES ('Optical Data Security', 'Arena 4', '2023-08-28T14:30:41','2023-08-28T16:30:41',4, 'Description for this seminar',ARRAY ['htpp://aaaa']);
+
+INSERT INTO public."Seminar"(
+	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
+VALUES ('Design patterns', 'Arena 1', '2023-08-29T12:30:41','2023-08-29T14:30:41',4, 'Description for this seminar',ARRAY ['htpp://aaaa']);
+
+INSERT INTO public."Seminar"(
+	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
+VALUES ('Future of microservices - intermediate', 'Arena 2', '2023-08-29T15:30:41','2023-08-29T18:30:41',5, 'Description for this seminar',ARRAY ['htpp://aaaa']);
+
+INSERT INTO public."Seminar"(
+	"Name", "Hall", "StartDateTime","EndDateTime","Exhibitors" , "Description", "FilesUrls")
+VALUES ('Introduction to AI', 'Arena 3', '2023-08-30T12:00:41','2023-08-30T16:00:41',3, 'Description for this seminar',ARRAY ['htpp://aaaa']);
+
+	
+
+
+
+
+
+
 INSERT INTO public."FAQ"(
 	"Question", "Answer")
-	VALUES ('Qustion1?', 'Answer1');
+	VALUES ('Can I take notes?', 'Yes, in the notes section you write and later edit your notes.');
 INSERT INTO public."FAQ"(
 	"Question", "Answer")
-	VALUES ('Qustion2?', 'Answer2');
+	VALUES ('How do I contact my favourite speaker?', 'Simple, just invite him and suggest a meeting time and place');
 INSERT INTO public."FAQ"(
 	"Question", "Answer")
-	VALUES ('Qustion3?', 'Answer3'); 
-	CREATE TABLE IF NOT EXISTS public."Seminar_Speakers"
+	VALUES ('Will I be charged for this service at the conference?', 'No, our goal is to bring together all curious learners of the world!'); 
+
+
+CREATE TABLE IF NOT EXISTS public."Seminar_Speakers"
 (
     "SeminarId" UUID NOT NULL,
     "SpeakerId" INT NOT NULL,
@@ -99,6 +158,12 @@ SELECT
                 THEN 1
             WHEN "Exhibitors" = 2
                 THEN 3
-			ELSE 
-			   2
+           WHEN "Exhibitors" = 6 
+                THEN 3
+           WHEN "Exhibitors" =  4 
+                THEN 2
+           WHEN "Exhibitors" = 5
+                THEN 5
+	    ELSE 
+		2
        END "SpeakerId" FROM  "Seminar";

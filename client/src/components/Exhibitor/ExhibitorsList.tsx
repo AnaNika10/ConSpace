@@ -75,6 +75,7 @@ export function ExhibitorsList()
     <Grid
     container
     spacing={5}
+    marginTop={5}
     justifyContent="space-around"
     paddingLeft={25}
     paddingRight={15}
