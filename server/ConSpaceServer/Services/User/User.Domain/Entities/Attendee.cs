@@ -10,6 +10,10 @@ namespace User.Domain.Entities;
 [Table("attendee")]
 public class Attendee
 {
+    public Attendee()
+    {
+    }
+
     public Attendee(Guid id, string name, AttendeeType type, string email)
     {
         Id = id;
