@@ -30,7 +30,7 @@ export default function Faqs() {
   const [newAnswer, setNewAnswer] = useState("");
 
   useEffect(() => {
-    const getAllNotes = async () => {
+    const getAllFAQs = async () => {
       try {
         const response = await SpeakerDataProvider.fetchFAQs();
 
@@ -45,7 +45,7 @@ export default function Faqs() {
       }
     };
 
-    getAllNotes();
+    getAllFAQs();
   }, [data]);
 
   const handleSaveClick = async () => {

@@ -97,7 +97,7 @@ export default function FaqList({ faqs }: FaqProps) {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            width: "80%",
+            width: "60%",
             margin: "0 auto",
             marginBottom: "16px",
           }}
