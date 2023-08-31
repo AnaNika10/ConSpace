@@ -18,6 +18,7 @@ import HomePage from "./components/Common/HomePage";
 import Floorplan from "./components/Floorplan/Floorplan";
 import Notifications from "./components/NotificationsPage/Notifications";
 import SpeakerList from "./components/Speaker/SpeakerList";
+import { ExhibitorsList } from "./components/Exhibitor/ExhibitorsList";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
                   }
                 >
                   <Route path="/speakers" element={<SpeakerList />} />
+                  <Route path="/exhibitors" element={<ExhibitorsList />} />
                 </Route>
               </Route>
 
