@@ -31,8 +31,8 @@ export function EmptyNotesList({ token }: { token: string }) {
       return;
     }
     const note: Note = {
-      Title: title!,
-      Content: content!,
+      title: title!,
+      content: content!,
     };
 
     await UserDataProvider.addNote(note, token);

@@ -1,5 +1,5 @@
 export interface Note{
-    Id?: string | null,
-    Title: string,
-    Content: string
+    id?: string | null,
+    title: string,
+    content: string
 }
