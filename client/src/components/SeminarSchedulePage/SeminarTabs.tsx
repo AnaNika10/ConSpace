@@ -3,19 +3,19 @@ import { Grid, Tabs, Tab, Fab } from "@mui/material";
 import { useState } from "react";
 import { EventInformation } from "./EventInformation";
 import { Seminar } from "../../models/Seminar";
-const emptySeminar : Seminar = {
-
-  seminarId : "",
-  name : "",
+import useAuth from "../../hooks/useAuth";
+import jwtDecode from "jwt-decode";
+const emptySeminar: Seminar = {
+  seminarId: "",
+  name: "",
   hall: "",
   speakers: [],
   speakerNames: [],
   exhibitors: 0,
   description: "",
   startDateTime: "",
-  endDateTime: ""
-
-}
+  endDateTime: "",
+};
 const fabStyle = {
   position: "absolute",
   bottom: 16,
@@ -24,10 +24,13 @@ const fabStyle = {
 export function SeminarTabs({
   setDay,
   dayOfSeminar,
+  isAdmin
 }: {
   setDay: (a: number) => void;
   dayOfSeminar: { day: number }[];
+  isAdmin:boolean ;
 }) {
+
   const [value, setValue] = useState(1);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -44,17 +47,19 @@ export function SeminarTabs({
             return <Tab key={it.day} label={"Day " + it.day} value={it.day} />;
           })}
       </Tabs>
-      <Fab sx={fabStyle} color="primary" aria-label="add">
-        <Add onClick={handleOpen} />
-      </Fab>
+      {isAdmin && (
+        <Fab sx={fabStyle} color="primary" aria-label="add">
+          <Add onClick={handleOpen} />
+        </Fab>
+      )}
       <EventInformation
         seminar={emptySeminar}
         isOpened={open}
         setOpen={setOpen}
         isAdded={false}
-        updateSchedule={()=>void 0}
+        isAdmin={isAdmin}
+        addSchedule={() => void 0}
       />
     </Grid>
-    
   );
 }

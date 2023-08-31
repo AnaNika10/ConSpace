@@ -49,7 +49,7 @@ public class ScheduleController : ControllerBase
     public async Task<ActionResult<bool>> DeleteSeminarFromSchedule(Guid seminarId)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
-        return await _scheduleRepository.delete(userId, seminarId);
+        return await _scheduleRepository.delete(seminarId, userId);
     }
 
     [Route("[action]")]
