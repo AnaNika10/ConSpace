@@ -56,13 +56,15 @@ export function EventInformation({
   isOpened,
   setOpen,
   isAdded,
-  updateSchedule,
+  addSchedule,
+  isAdmin
 }: {
   seminar: Seminar;
   isOpened: boolean;
   setOpen: (a: boolean) => void;
   isAdded: boolean;
-  updateSchedule: (a: boolean) => void;
+  addSchedule: (a: boolean) => void;
+  isAdmin: boolean;
 }) {
   const { auth } = useAuth();
   const original: Seminar = JSON.parse(
@@ -72,13 +74,14 @@ export function EventInformation({
 
   const [allSpeakers, setAllSpeakers] = useState<Speaker[]>([]);
   const [allExhibitors, setAllExhibitors] = useState<Exhibitor[]>([]);
-  const [isLoading, setLoading] = useState(true);
-  const [, setError] = useState(null);
+  const [isLoadingSpeakers, setLoadingSpeakers] = useState(true);
+  const [, setErrorSpeakers] = useState(null);
+  const [isLoadingExhibitors, setLoadingExhibitors] = useState(true);
+  const [, setErrorExhibitors] = useState(null);
   const decoded: any = auth?.accessToken
     ? jwtDecode(auth.accessToken)
     : undefined;
   const role = decoded?.Role || "";
-  const isAdmin = role === "Administrator";
   const isSpeaker = role === "Speaker";
   const isInsert =
     seminar.seminarId === null || seminar.seminarId === undefined;
@@ -86,21 +89,7 @@ export function EventInformation({
     console.log(e);
     const value = e.target.value;
     if (e.target.name === "duration") {
-      // if (value === '' || value < 0)
-      // {
-      //   setErrorValidation({
-      //     ...errorValidation,
-      //     duration: true
-      //   });
-      //   return;
-      // }
-      // else
-      // {
-      //   setErrorValidation({
-      //     ...errorValidation,
-      //     duration: false
-      //   });
-      // }
+   
       const newEnd = ConferenceDateUtil.calculateEndDateTime(
         currentSeminar.startDateTime,
         e.target.value
@@ -111,21 +100,7 @@ export function EventInformation({
       });
       return;
     }
-    // if (value === '')
-    // {
-    //   setErrorValidation({
-    //     ...errorValidation,
-    //     [e.target.name]: true
-    //   });
-    //   return;
-    // }
-    // else
-    // {
-    //   setErrorValidation({
-    //     ...errorValidation,
-    //     [e.target.name]: false
-    //   });
-    // }
+   
     setCurrentSeminar({
       ...currentSeminar,
       [e.target.name]: value,
@@ -133,21 +108,6 @@ export function EventInformation({
   };
 
   const handleChangeDateTime = (value: Dayjs | null) => {
-    // if (value === null)
-    // {
-    //   setErrorValidation({
-    //     ...errorValidation,
-    //     startDateTime: true
-    //   });
-    //   return;
-    // }
-    // else
-    // {
-    //   setErrorValidation({
-    //     ...errorValidation,
-    //     startDateTime: false
-    //   });
-    // }
     const x = dayjs(value).format("YYYY-MM-DDTHH:mm:ss");
     let currentTime = ConferenceDateUtil.calculateDuration(
       currentSeminar.startDateTime,
@@ -161,7 +121,7 @@ export function EventInformation({
     });
   };
 
-  const getFromExhibitorId = (id: number) => {
+  const getFromExhibitorId = (id: number | null) => {
     const x = allExhibitors.find((x) => x.exhibitorId === id);
     return x;
   };
@@ -175,6 +135,9 @@ export function EventInformation({
       setCurrentSeminar(original);
     }
   };
+  const updateSchedule = (isAdded: boolean) => {
+    addSchedule(!isAdded);
+  };
   const updateUserSchedule = () => {
     updateSchedule(isAdded);
     if (isAdded) {
@@ -187,7 +150,7 @@ export function EventInformation({
   };
   async function deleteAppointment(deleted: string) {
     if (deleted !== undefined) {
-      SeminarDataProvider.deleteAppointment(deleted, auth.accessToken);
+      await SeminarDataProvider.deleteAppointment(deleted, auth.accessToken);
     }
   }
   async function insertAppointment(seminar: Seminar) {
@@ -200,15 +163,16 @@ export function EventInformation({
       endDate: seminar.endDateTime,
       location: seminar.hall,
     };
-    SeminarDataProvider.insertAppointment(appointment, auth.accessToken);
+   await SeminarDataProvider.insertAppointment(appointment, auth.accessToken);
   }
   const onAutocompleteChange = (event: any, values: any) => {
     if (values === null) {
       setCurrentSeminar({
         ...currentSeminar,
-        exhibitors: 0,
+        exhibitors: null,
       });
-    } else if ("exhibitorId" in values) {
+    }
+    else if ("exhibitorId" in values) {
       setCurrentSeminar({
         ...currentSeminar,
         exhibitors: values.exhibitorId,
@@ -233,7 +197,7 @@ export function EventInformation({
   const SaveSeminar = async () => {
     if (
       currentSeminar.speakers.length > 0 &&
-      currentSeminar.exhibitors != 0 &&
+   
       currentSeminar.name &&
       currentSeminar.hall &&
       currentSeminar.startDateTime &&
@@ -260,14 +224,14 @@ export function EventInformation({
       try {
         const response = await SeminarDataProvider.fetchAllExhibitors();
 
-        setLoading(false);
-        setError(null);
+        setLoadingExhibitors(false);
+        setErrorExhibitors(null);
         setAllExhibitors(response?.data);
       } catch (err: any) {
-        setError(err.message);
+        setErrorExhibitors(err.message);
         setAllExhibitors([]);
       } finally {
-        setLoading(false);
+        setLoadingExhibitors(false);
       }
     };
 
@@ -275,14 +239,14 @@ export function EventInformation({
       try {
         const response = await SeminarDataProvider.fetchAllSpeakers();
 
-        setLoading(false);
-        setError(null);
+        setLoadingSpeakers(false);
+        setErrorSpeakers(null);
         setAllSpeakers(response?.data);
       } catch (err: any) {
-        setError(err.message);
+        setErrorSpeakers(err.message);
         setAllSpeakers([]);
       } finally {
-        setLoading(false);
+        setLoadingSpeakers(false);
       }
     };
 
@@ -292,6 +256,7 @@ export function EventInformation({
 
   return (
     <div>
+      { !isLoadingExhibitors && !isLoadingSpeakers &&
       <Dialog onClose={handleClose} open={isOpened}>
         <CloseButton setClose={() => setClose(false)} />
         <DialogContent>
@@ -402,7 +367,6 @@ export function EventInformation({
                         {...params}
                         variant="outlined"
                         label="Exhibitors"
-                        required
                       />
                     )}
                   />
@@ -482,7 +446,7 @@ export function EventInformation({
             </Button>
           )}
         </DialogActions>
-      </Dialog>
+      </Dialog> }
     </div>
   );
 }

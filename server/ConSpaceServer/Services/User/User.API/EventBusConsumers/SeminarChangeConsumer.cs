@@ -25,10 +25,16 @@ namespace User.API.EventBusConsumers
         {
            var command = _mapper.Map<SeminarDto>(context.Message);
 
-
-           _logger.LogInformation($"{typeof(SeminarChangeEvent).Name} consumed successfully. Seminar {command.Title} - {command.Id}, start : {command.StartDate} end : {command.EndDate}");
-            await _scheduleRepository.update(_mapper.Map<Seminar>(command));
-
+            if (command.Title != null)
+            {
+                _logger.LogInformation($"{typeof(SeminarChangeEvent).Name} consumed successfully. Seminar {command.Title} - {command.Id}, start : {command.StartDate} end : {command.EndDate}");
+                await _scheduleRepository.update(_mapper.Map<Seminar>(command));
+            }
+            else
+            {
+                _logger.LogInformation($"{typeof(SeminarChangeEvent).Name} consumed successfully. Deleted seminar {command.Id}");
+                await _scheduleRepository.delete(command.Id);
+            }
             await Task.CompletedTask;
 
         }

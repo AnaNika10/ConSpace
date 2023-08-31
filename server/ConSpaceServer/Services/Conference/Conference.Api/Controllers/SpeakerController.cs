@@ -3,6 +3,8 @@ using Conference.Api.Repositories;
 using Conference.Api.DTOs.Speakers;
 using Microsoft.AspNetCore.Authorization;
 using Common.Security;
+using Conference.Api.DTOs.Seminars;
+using Conference.Api.DTOs.Seminar;
 
 namespace Conference.Api.Controllers
 {
@@ -12,9 +14,11 @@ namespace Conference.Api.Controllers
     public class SpeakerController : ControllerBase
     {
         private readonly ISpeakersRepository _repository;
-        public SpeakerController(ISpeakersRepository repository)
+        private readonly ISeminarRepository _SeminarRepository;
+        public SpeakerController(ISpeakersRepository repository, ISeminarRepository SeminarRepository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _SeminarRepository = SeminarRepository ?? throw new ArgumentNullException(nameof(SeminarRepository));
         }
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<SpeakerDTO>), StatusCodes.Status200OK)]
@@ -70,9 +74,23 @@ namespace Conference.Api.Controllers
 
         public async Task<ActionResult<bool>> DeleteSpeaker(int speakerId)
         {
+            int[] array = new int[1] { speakerId };
+            var toBeDeleted = new FilterSeminarDTO { Speakers = array };
+            var seminars = await _SeminarRepository.GetSeminarsWithFilter(toBeDeleted);
             var success = await _repository.DeleteSpeaker(speakerId);
+
             if (success)
             {
+                foreach (var seminar in seminars)
+                {
+                    var speakers = await _SeminarRepository.GetSeminarSpeakers(seminar.SeminarId);
+
+                    if (speakers.Count == 0)
+                    {
+                        await _SeminarRepository.DeleteSeminar(seminar.SeminarId);
+                    }
+                }
+
                 return Ok();
             }
             else

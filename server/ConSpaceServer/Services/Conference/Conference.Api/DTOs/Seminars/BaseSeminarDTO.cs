@@ -9,7 +9,7 @@
 
         public List<string> SpeakerNames { get; set; } = new List<string>();
 
-        public int Exhibitors { get; set; }
+        public int? Exhibitors { get; set; }
         public string? Description { get; set; }
         public string[]? FilesUrls { get; set; }
 
