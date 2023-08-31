@@ -11,7 +11,7 @@ import withSnackbar from "../Common/SnackBarWrapper";
 import jwtDecode from "jwt-decode";
 import { SeminarDataProvider } from "../../dataProviders/SeminarDataProvider";
 import { Appointment } from "../../models/Appointment";
-
+import { UserDataProvider } from "../../dataProviders/UserDataProvider";
 
 function SeminarList() {
   const [data, setData] = useState([]);
@@ -30,7 +30,7 @@ function SeminarList() {
   const setDayOfSeminar = (day: number) => {
     setDay(day);
   };
- 
+
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
@@ -47,20 +47,13 @@ function SeminarList() {
   //   };
   //   fetchData();
   // }, []);
-  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
- 
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
 
-    
+  useEffect(() => {
     const getAllSeminars = async () => {
       try {
-        const response = await axiosPrivate.get('/Seminar', {
-          signal: controller.signal,
-        });
+        const response = await SeminarDataProvider.fetchAllSeminars();
         setLoading(false);
         setError(null);
         setData(response?.data);
@@ -71,37 +64,31 @@ function SeminarList() {
         setLoading(false);
       }
     };
-    if(!isAdmin && auth.accessToken) {
-    const getAllUserSeminars = async () => {
-      try {
-        const response = await axiosPrivate.get('/GetSchedule', {
-          signal: controller.signal,
-        });
-        
-        isMounted && setLoadingUserData(false);
-        isMounted && setErrorLoadingUserData(null);
-        isMounted && setUserData(response.data);
-      } catch (err: any) {
-        isMounted && setErrorLoadingUserData(err.message);
-        isMounted && setUserData([]);
-        navigate("/sign-in", { state: { from: location }, replace: true });
-      } finally {
-        isMounted && setLoading(false);
+    const getUserSchedule = () => {
+      if (!isAdmin && auth.accessToken) {
+        const getAllUserSeminars = async () => {
+          try {
+            const response = await UserDataProvider.fetchUserSchedule(
+              auth.accessToken
+            );
+
+            setLoadingUserData(false);
+            setErrorLoadingUserData(null);
+            setUserData(response?.data);
+          } catch (err: any) {
+            setErrorLoadingUserData(err.message);
+            setUserData([]);
+            navigate("/sign-in", { state: { from: location }, replace: true });
+          } finally {
+            setLoadingUserData(false);
+          }
+        };
+        getAllUserSeminars();
       }
     };
-    getAllUserSeminars();
-   }
 
     getAllSeminars();
-       
-    console.log(data);
-    return () => {
-      isMounted = false;
-
-      if (!location.pathname.startsWith("/seminar-schedule")) {
-        controller.abort();
-      }
-    };
+    getUserSchedule();
   }, [location.pathname, data, userData, auth]);
 
   const getSeminarsForSelectedDay = () => {
@@ -119,12 +106,26 @@ function SeminarList() {
       paddingBottom={15}
     >
       <Paper elevation={3}>
-        <SeminarTabs setDay={setDayOfSeminar} dayOfSeminar={getDays()} isAdmin={isAdmin} />
+        <SeminarTabs
+          setDay={setDayOfSeminar}
+          dayOfSeminar={getDays()}
+          isAdmin={isAdmin}
+        />
         <List>
-          { ((!isLoading && !isAdmin && !isLoadingUserData ) || (!isLoading && isAdmin) ) &&
+          {((!isLoading &&
+            !isAdmin &&
+            !isLoadingUserData &&
+            auth.accessToken) ||
+            (!isLoading && isAdmin) ||
+            (!auth.accessToken && !isLoading)) &&
             getSeminarsForSelectedDay().map((seminar: Seminar) => {
               return (
-                <SeminarListItem seminar={seminar} key={seminar.seminarId} userAppointements={userData} isAdmin={isAdmin} />
+                <SeminarListItem
+                  seminar={seminar}
+                  key={seminar.seminarId}
+                  userAppointements={userData}
+                  isAdmin={isAdmin}
+                />
               );
             })}
         </List>
@@ -134,5 +135,3 @@ function SeminarList() {
 }
 
 export default withSnackbar(SeminarList);
-
-

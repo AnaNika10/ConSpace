@@ -494,10 +494,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "UpstreamPathTemplate": "/Seminar",
       "UpstreamHttpMethod": [ "Get" ]
     },
@@ -741,10 +737,6 @@
           "Port": 80
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "UpstreamPathTemplate": "/Speaker/{id}",
       "UpstreamHttpMethod": [ "Get" ]
     },

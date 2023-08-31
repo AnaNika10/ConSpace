@@ -5,15 +5,6 @@ import { RequestMethod, RequestWrapper } from "./RequestWrapper";
 
 export class SeminarDataProvider {
   private static readonly gateway = config.API_GATEWAY;
-  private static readonly GET_CONFERENCES_URL = "/Seminar";
-
-  public static async fetchSeminarSchedule(token: string) {
-    return await RequestWrapper.fetchPrivateData(
-      `${this.gateway}${this.GET_CONFERENCES_URL}`,
-      token,
-      RequestMethod.GET
-    );
-  }
 
   public static async fetchAllExhibitors() {
     return await RequestWrapper.fetchPublicData(
@@ -53,8 +44,6 @@ export class SeminarDataProvider {
     );
   }
 
-
-
   public static async deleteAppointment(id: string, token: string) {
     return RequestWrapper.fetchPrivateData(
       `${this.gateway}/DeleteSeminarFromSchedule/${id}`,
@@ -63,7 +52,7 @@ export class SeminarDataProvider {
     );
   }
 
-  public static async insertAppointment(a:Appointment, token: string) {
+  public static async insertAppointment(a: Appointment, token: string) {
     return RequestWrapper.fetchPrivateData(
       `${this.gateway}/AddSeminarToSchedule`,
       token,
@@ -72,7 +61,10 @@ export class SeminarDataProvider {
     );
   }
 
-
-  
-  
+  public static async fetchAllSeminars() {
+    return RequestWrapper.fetchPublicData(
+      `${this.gateway}/Seminar`,
+      RequestMethod.GET
+    );
+  }
 }

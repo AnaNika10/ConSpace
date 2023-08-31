@@ -1,50 +1,54 @@
 import { Appointment } from "../../models/Appointment";
 
-type ReduceReturnType = {
-  speakers: string[];
-  speakerIds: string[];
-};
-
+interface SpeakerWithId {
+  text: string;
+  id: number;
+}
 export abstract class ResourceUtil {
-  public static getSpeakers(data: Appointment[]) {
-    const dict: { [id: string]: string } = {};
-    const speakersWithIds = data
-      .map((it: Appointment) => {
-        return { speakers: it.speakers, speakerIds: it.speakerIds };
-      })
-      .reduce<ReduceReturnType>(
-        (acc, curr) => {
-          return {
-            speakers: acc.speakers.concat(curr.speakers),
-            speakerIds: acc.speakerIds.concat(curr.speakerIds),
-          };
-        },
-        { speakers: [], speakerIds: [] }
-      );
+  public static getLocations(
+    data: Appointment[]
+  ): { text: string; id: string }[] {
+    const uniqueSet = new Set<string>();
+    const uniqueObjects: { text: string; id: string }[] = [];
 
-    speakersWithIds.speakerIds.forEach((id, index) => {
-      if (dict[id] === undefined) {
-        dict[id] = speakersWithIds.speakers[index];
+    data.forEach((it: Appointment) => {
+      if (!uniqueSet.has(it.location)) {
+        uniqueSet.add(it.location);
+        uniqueObjects.push({ text: it.location, id: it.location });
       }
     });
-    const result = [];
-    for (const key in dict) {
-      result.push({ text: dict[key], id: key });
-    }
-    return [...new Set(result)];
+
+    return uniqueObjects;
+  }
+
+  public static getSpeakers(appointments: Appointment[]): SpeakerWithId[] {
+    const speakerDict: { [id: number]: string } = {};
+
+    appointments.forEach((appointment) => {
+      appointment.speakerIds.forEach((id, index) => {
+        if (!speakerDict[id]) {
+          speakerDict[id] = appointment.speakers[index];
+        }
+      });
+    });
+
+    const uniqueSpeakerObjects: SpeakerWithId[] = Object.keys(speakerDict).map(
+      (id) => ({
+        text: speakerDict[parseInt(id, 10)],
+        id: parseInt(id, 10),
+      })
+    );
+
+    return uniqueSpeakerObjects;
   }
   public static mapResources(data: Appointment[]) {
+    console.log(this.getLocations(data));
+    console.log(this.getSpeakers(data));
     return [
       {
         id: 0,
-        fieldName: "conferenceRoomId",
-        instances: [
-          ...new Set(
-            data.map((it: Appointment) => {
-              return { text: it.location, id: it.conferenceRoomId };
-            })
-          ),
-        ],
+        fieldName: "location",
+        instances: this.getLocations(data),
         title: "Location",
       },
       {
