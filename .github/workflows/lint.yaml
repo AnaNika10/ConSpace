@@ -31,6 +31,7 @@ jobs:
         uses: wearerequired/lint-action@v1
         with:
           dotnet_format: true
+          dotnet_format_dir: server
 
       - name: Set up Node.js
         uses: actions/setup-node@v1
@@ -44,3 +45,4 @@ jobs:
         uses: wearerequired/lint-action@v1
         with:
           prettier: true
+          prettier_dir: client
