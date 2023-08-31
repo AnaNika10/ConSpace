@@ -1,11 +1,13 @@
 #region
 
+using AutoMapper;
 using Common.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using User.API.Controllers.Authorization;
-using User.Common.DTOs;
-using User.Common.Repositories;
+using User.API.DTOs;
+using User.Application.Contracts.Persistence;
+using User.Domain.Entities;
 
 #endregion
 
@@ -18,11 +20,13 @@ public class NoteController : ControllerBase
 {
     private readonly ILogger<NoteController> _logger;
     private readonly INoteRepository _repository;
+    private readonly IMapper _mapper;
 
-    public NoteController(ILogger<NoteController> logger, INoteRepository repository)
+    public NoteController(ILogger<NoteController> logger, INoteRepository repository, IMapper mapper)
     {
         _logger = logger;
         _repository = repository;
+        _mapper = mapper;
     }
 
     [Route("[action]")]
@@ -33,7 +37,7 @@ public class NoteController : ControllerBase
     public async Task<ActionResult<bool>> CreateNote(NoteDto note)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
-        return await _repository.CreateNote(note, userId);
+        return await _repository.CreateNote(_mapper.Map<Note>(note), userId);
     }
 
     [Route("[action]/{id}")]
@@ -55,7 +59,7 @@ public class NoteController : ControllerBase
     public async Task<ActionResult<bool>> EditNote(NoteDto updatedNote)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
-        return await _repository.UpdateNote(updatedNote, userId);
+        return await _repository.UpdateNote(_mapper.Map<Note>(updatedNote), userId);
     }
 
     [Route("[action]")]
@@ -68,7 +72,7 @@ public class NoteController : ControllerBase
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
         var notes = await _repository.FindAll(userId);
         var result = new List<NoteDto>();
-        foreach (var note in notes) result.Add(new NoteDto(note.id, note.Title, note.Content));
+        foreach (var note in notes) result.Add(new NoteDto(note.Id, note.Title, note.Content));
         return result;
     }
 
@@ -81,6 +85,6 @@ public class NoteController : ControllerBase
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
         var note = await _repository.FindOne(id, userId);
-        return new NoteDto(note.id, note.Title, note.Content);
+        return new NoteDto(note.Id, note.Title, note.Content);
     }
 }

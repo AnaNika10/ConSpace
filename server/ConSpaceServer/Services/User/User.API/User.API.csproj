@@ -6,10 +6,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>..\..\..</DockerfileContext>
+        <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="12.0.1" />
+        <PackageReference Include="AutoMapper.Extensions.EnumMapping" Version="3.1.0" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
         <PackageReference Include="MassTransit" Version="8.0.16" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.16" />
@@ -22,8 +24,8 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-        <PackageReference Include="Npgsql" Version="8.0.0-preview.2" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-preview.2" />
+        <PackageReference Include="Npgsql" Version="7.0.4" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
         <PackageReference Include="Polly" Version="7.2.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="System.Net.Http" Version="4.3.4" />
@@ -31,8 +33,9 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Common\Security\Security.csproj" />
-      <ProjectReference Include="..\User.Common\User.Common.csproj" />
+      <ProjectReference Include="..\User.Application\User.Application.csproj" />
       <ProjectReference Include="..\..\..\Common\EventBus\EventBus.Messages\EventBus.Messages.csproj" />
+      <ProjectReference Include="..\User.Infrastructure\User.Infrastructure.csproj" />
     </ItemGroup>
 
 
@@ -40,5 +43,9 @@
       <Compile Remove="Controllers\Hubs\RegisterConnectionFilter.cs" />
       <Compile Remove="Controllers\Hubs\IInviteClient.cs" />
     </ItemGroup>
+
+
+
+
 
 </Project>

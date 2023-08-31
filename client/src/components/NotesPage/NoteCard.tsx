@@ -16,8 +16,8 @@ export function NoteCard({ note, token }: { note: Note; token: string }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState(false);
   const handleDelete = async () => {
-    console.log(note.id);
-    await UserDataProvider.deleteNote(note.id!, token);
+    console.log(note.Id);
+    await UserDataProvider.deleteNote(note.Id!, token);
   };
   const handleEdit = () => {
     setOpen(true);
@@ -38,9 +38,9 @@ export function NoteCard({ note, token }: { note: Note; token: string }) {
       return;
     }
     const updatedNote: Note = {
-      id: note.id,
-      title: title!,
-      content: content!,
+      Id: note.Id,
+      Title: title!,
+      Content: content!,
     };
     await UserDataProvider.editNote(updatedNote, token);
     setOpen(false);
@@ -52,12 +52,12 @@ export function NoteCard({ note, token }: { note: Note; token: string }) {
   };
   return (
     <>
-      <Card key={note.id} sx={{ maxWidth: 275 }}>
+      <Card key={note.Id} sx={{ maxWidth: 275 }}>
         <CardContent>
           <Typography variant="h5" component="div">
-            {note.title}
+            {note.Title}
           </Typography>
-          <Typography variant="body2">{note.content}</Typography>
+          <Typography variant="body2">{note.Content}</Typography>
         </CardContent>
         <CardActions>
           <Stack direction={"row"} spacing={12}>

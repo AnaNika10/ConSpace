@@ -1,7 +1,8 @@
-using User.Common.DTOs;
-using User.Common.Extensions;
+using User.API.DTOs;
+using User.API.Mappers;
 using User.GRPC.Protos;
 using User.GRPC.Services;
+using User.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
 
 // Add services to the container.
+builder.Services.RegisterMappings();
 builder.Services.AddGrpc();
 builder.Services.RegisterServices();
 builder.Services.AddAutoMapper(configuration =>

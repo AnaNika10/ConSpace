@@ -1,11 +1,13 @@
 #region
 
+using AutoMapper;
 using Common.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using User.API.Controllers.Authorization;
-using User.Common.DTOs;
-using User.Common.Repositories;
+using User.API.DTOs;
+using User.Application.Contracts.Persistence;
+using User.Domain.Entities;
 
 #endregion
 
@@ -18,11 +20,14 @@ public class ScheduleController : ControllerBase
 {
     private readonly ILogger<ScheduleController> _logger;
     private readonly IScheduleRepository _scheduleRepository;
+    private readonly IMapper _mapper;
 
-    public ScheduleController(ILogger<ScheduleController> logger, IScheduleRepository scheduleRepository)
+    public ScheduleController(ILogger<ScheduleController> logger, IScheduleRepository scheduleRepository,
+        IMapper mapper)
     {
         _logger = logger;
         _scheduleRepository = scheduleRepository;
+        _mapper = mapper;
     }
 
     [Route("[action]")]
@@ -33,7 +38,7 @@ public class ScheduleController : ControllerBase
     public async Task<ActionResult<bool>> AddSeminarToSchedule(SeminarDto seminar)
     {
         var userId = ClaimExtractor.ExtractUserId(User.Claims);
-        return await _scheduleRepository.create(userId, seminar);
+        return await _scheduleRepository.create(userId, _mapper.Map<Seminar>(seminar));
     }
 
     [Route("[action]/{seminarId}")]
@@ -58,13 +63,13 @@ public class ScheduleController : ControllerBase
         var result = await _scheduleRepository.getSchedule(userId);
         return result.Select(it =>
             new SeminarDto(
-                    it.Id, 
-                    it.Speakers, 
-                    it.SpeakerIds,
-                    it.Title,
-                    it.StartDateTime.DateTime,
-                    it.EndDateTime.DateTime,
-                    it.Location
-                ));
+                it.Id,
+                it.Speakers,
+                it.SpeakerIds,
+                it.Title,
+                it.StartDate.DateTime,
+                it.EndDate.DateTime,
+                it.Location
+            ));
     }
 }

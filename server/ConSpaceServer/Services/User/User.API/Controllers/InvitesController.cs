@@ -1,10 +1,10 @@
+using AutoMapper;
 using Common.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using User.API.Controllers.Authorization;
-using User.Common.DTOs;
-using User.Common.Extensions;
-using User.Common.Repositories;
+using User.API.DTOs;
+using User.Application.Contracts.Persistence;
 
 namespace User.API.Controllers;
 
@@ -15,11 +15,13 @@ public class InvitesController : ControllerBase
 {
     private readonly ILogger<InvitesController> _logger;
     private readonly IInvitesRepository _repository;
-    
-    public InvitesController(ILogger<InvitesController> logger, IInvitesRepository repository)
+    private readonly IMapper _mapper;
+
+    public InvitesController(ILogger<InvitesController> logger, IInvitesRepository repository, IMapper mapper)
     {
         _logger = logger;
         _repository = repository;
+        _mapper = mapper;
     }
 
     [Route("[action]")]
@@ -34,7 +36,7 @@ public class InvitesController : ControllerBase
         var result = new List<InviteDto>();
         foreach (var invite in invites)
             result.Add(new InviteDto(invite.id, invite.userEmail, invite.userName, invite.inviteeEmail,
-                invite.inviteeName, invite.timestamp, EnumConversionExtension.mapToDto(invite.status),
+                invite.inviteeName, invite.timestamp, _mapper.Map<InviteStatusDto>(invite.status),
                 invite.time, invite.place));
         return result;
     }

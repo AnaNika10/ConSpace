@@ -7,7 +7,9 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Services/User/User.GRPC/User.GRPC.csproj", "Services/User/User.GRPC/"]
-COPY ["Services/User/User.Common/User.Common.csproj", "Services/User/User.Common/"]
+COPY ["Services/User/User.Application/User.Application.csproj", "Services/User/User.Application/"]
+COPY ["Services/User/User.Domain/User.Domain.csproj", "Services/User/User.Domain/"]
+COPY ["Services/User/User.Infrastructure/User.Infrastructure.csproj", "Services/User/User.Infrastructure/"]
 RUN dotnet restore "Services/User/User.GRPC/User.GRPC.csproj"
 COPY . .
 WORKDIR "/src/Services/User/User.GRPC"

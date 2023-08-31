@@ -40,8 +40,8 @@ function AddNote({ token }: { token: string }) {
       return;
     }
     const note: Note = {
-      title: title!,
-      content: content!,
+      Title: title!,
+      Content: content!,
     };
 
     await UserDataProvider.addNote(note, token);
@@ -126,7 +126,7 @@ function Notes() {
           {!isLoading &&
             data.map((note) => {
               return (
-                <Grid key={note.id} item xs={4}>
+                <Grid key={note.Id} item xs={4}>
                   <NoteCard note={note} token={auth.accessToken} />
                 </Grid>
               );
