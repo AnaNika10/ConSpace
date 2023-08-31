@@ -62,6 +62,8 @@ export function InviteItem({
         inviteId={invite.id!}
         status={invite.status}
         isInitiator={username === invite.userName}
+        inviteeName={invite.inviteeName}
+        inviteeEmail={invite.inviteeEmail}
       ></ConfirmMeetForm>
     </>
   );

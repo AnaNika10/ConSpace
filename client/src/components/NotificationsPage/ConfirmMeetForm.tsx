@@ -11,52 +11,27 @@ export function ConfirmMeetForm({
   open,
   handleClose,
   setMessage,
-  inviteId,
-  status,
+  invite,
   isInitiator,
 }: {
   open: boolean;
   handleClose: () => void;
   setMessage: (msg: string) => void;
-  inviteId: string;
-  status: InviteStatus;
+  invite: Invite;
   isInitiator: boolean;
 }) {
   const { auth } = useAuth();
-  const decodedToken: { Name: string } = jwt_decode(auth.accessToken)!;
   const [openRequest, setOpenRequest] = useState(false);
-  const username = decodedToken.Name;
-  const mejl = "promeni@mail.com";
   const handleConfirm = () => {
-    if (status !== InviteStatus.MEET_SCHEDULED && !isInitiator) {
-      const invite: Invite = {
-        id: inviteId,
-        userEmail: "anchy@gmail.com",
-        userName: username,
-        inviteeEmail: "snape@gmail.com",
-        inviteeName: "snape",
-        status: InviteStatus.MEET_SCHEDULED,
-        timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
-        time: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
-        place: "Hogwarts",
-      };
+    if (invite.status !== InviteStatus.MEET_SCHEDULED && !isInitiator) {
+      invite.status = InviteStatus.MEET_SCHEDULED;
       inviteUser(auth.accessToken, { setMessage }, invite)();
     }
     handleClose();
   };
   const handleDecline = () => {
     if (status !== InviteStatus.MEET_SCHEDULED && !isInitiator) {
-      const invite: Invite = {
-        id: inviteId,
-        userEmail: "anchy@gmail.com",
-        userName: username,
-        inviteeEmail: "snape@gmail.com",
-        inviteeName: "snape",
-        status: InviteStatus.DECLINED,
-        timestamp: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
-        time: DateFormatUtil.getCurrentDateTimeOffset().toISOString(),
-        place: "Hogwarts",
-      };
+      invite.status = InviteStatus.DECLINED;
       inviteUser(auth.accessToken, { setMessage }, invite)();
     }
     handleClose();
@@ -80,10 +55,10 @@ export function ConfirmMeetForm({
           <RequestTimePlaceForm
             open={openRequest}
             setOpen={setOpenRequest}
-            status={status}
-            inviteId={inviteId}
-            inviteeEmail={mejl}
-            username={username}
+            status={invite.status}
+            inviteId={invite.id}
+            inviteeEmail={invite.inviteeEmail}
+            username={invite.userName}
             token={auth.accessToken}
             setMessage={setMessage}
           ></RequestTimePlaceForm>
