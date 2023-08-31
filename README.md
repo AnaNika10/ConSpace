@@ -6,7 +6,7 @@
 ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)
 ![License](https://img.shields.io/github/license/VladimirV99/Projektor?style=for-the-badge)
 
-ConSpace is a microservice application for managing conferences. It supports showing all conference details and giving you the option to track your chosen seminars and network with other attendees.
+ConSpace is a microservice application for managing conferences. It supports showing all conference details and giving you the option to track your chosen seminars and network with conference speakers.
 
 ## Required software
 - .NET 6
