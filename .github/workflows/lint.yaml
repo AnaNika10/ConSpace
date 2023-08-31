@@ -31,7 +31,7 @@ jobs:
         uses: wearerequired/lint-action@v1
         with:
           dotnet_format: true
-          dotnet_format_dir: server
+          dotnet_format_dir: server/ConSpace
 
       - name: Set up Node.js
         uses: actions/setup-node@v1
@@ -39,7 +39,7 @@ jobs:
           node-version: 16
           
       - name: Install Node.js dependencies
-        run: cd ./client && npm ci
+        run: cd ./client && ls && npm ci
 
       - name: Run linters on client app
         uses: wearerequired/lint-action@v1
