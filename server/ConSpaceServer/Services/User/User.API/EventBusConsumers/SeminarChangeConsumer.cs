@@ -21,16 +21,15 @@ namespace User.API.EventBusConsumers
 
         }
 
-        public  Task Consume(ConsumeContext<SeminarChangeEvent> context)
+        public async  Task Consume(ConsumeContext<SeminarChangeEvent> context)
         {
            var command = _mapper.Map<SeminarDto>(context.Message);
 
-           _logger.LogInformation($"{typeof(SeminarChangeEvent).Name} consumed successfully. Created order id: {command.StartDate}");
-            _scheduleRepository.update(_mapper.Map<Seminar>(command));
 
+           _logger.LogInformation($"{typeof(SeminarChangeEvent).Name} consumed successfully. Seminar {command.Title} - {command.Id}, start : {command.StartDate} end : {command.EndDate}");
+            await _scheduleRepository.update(_mapper.Map<Seminar>(command));
 
-
-            return Task.CompletedTask;
+            await Task.CompletedTask;
 
         }
     }

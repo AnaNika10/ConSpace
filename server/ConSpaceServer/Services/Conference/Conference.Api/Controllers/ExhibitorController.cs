@@ -8,7 +8,6 @@ namespace Conference.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Authorize]
     public class ExhibitorController : ControllerBase
     {
         private readonly IExhibitorsRepository _repository;
@@ -19,7 +18,7 @@ namespace Conference.Api.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ExhibitorDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [Authorize]
+
         public async Task<ActionResult<IEnumerable<ExhibitorDTO>>> GetAllExhibitors()
         {
             var exhibitors = await _repository.GetAllExhibitors();
@@ -32,7 +31,7 @@ namespace Conference.Api.Controllers
         [HttpGet("{exhibitorId}", Name = nameof(GetExhibitorById))]
         [ProducesResponseType(typeof(ExhibitorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [Authorize]
+
         public async Task<ActionResult<ExhibitorDTO>> GetExhibitorById(int exhibitorId)
         {
             var exhibitor = await _repository.GetExhibitor(exhibitorId);

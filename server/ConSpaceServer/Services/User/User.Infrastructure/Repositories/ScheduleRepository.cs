@@ -44,16 +44,20 @@ public class ScheduleRepository : IScheduleRepository
 
     public async Task<IEnumerable<Seminar>> getSchedule(Guid userId)
     {
-        _logger.LogInformation($"Fetching user's schedule for user with id: {userId}");
+        //_logger.LogInformation($"Fetching user's schedule for user with id: {userId}");
         List<Seminar> result = await _context.Seminars.Where(seminar => seminar.UserId == userId).ToListAsync();
         return result;
     }
 
     public async Task<bool> update(Seminar seminar)
     {
-        await _context.Seminars.Where(s => s.Id == seminar.Id).ExecuteUpdateAsync(setters => setters
-            .SetProperty(b => b.Location, seminar.Location)
-            .SetProperty(b => b.StartDate, seminar.StartDate));
+        await _context.Seminars.Where(seminar => seminar.Id == seminar.Id).ExecuteUpdateAsync(setters => setters
+                                                                                              .SetProperty(b => b.Location, seminar.Location)
+                                                                                              .SetProperty(b => b.StartDate, seminar.StartDate)
+                                                                                              .SetProperty(b => b.EndDate, seminar.EndDate)
+                                                                                              .SetProperty(b => b.Speakers, seminar.Speakers)
+                                                                                              .SetProperty(b => b.SpeakerIds, seminar.SpeakerIds)
+                                                                                              .SetProperty(b => b.Title, seminar.Title));
         return await _context.SaveChangesAsync() > 0;
     }
 }

@@ -48,11 +48,12 @@ export function SpeakerForm({
 }) {
   const { auth } = useAuth();
   const [openRequest, setOpenRequest] = useState(false);
-  const [error, setError] = useState({name:false, email:false, position:false,company:false, bioinfo:false});
+
   const original: Speaker = JSON.parse(
     JSON.stringify(speaker)
   ) as typeof speaker;
   const [currentSpeaker, setCurrentSpeaker] = useState(original);
+  const [error, setError] = useState({name:false,email:false});
   const decoded: any = auth?.accessToken
     ? jwtDecode(auth.accessToken)
     : undefined;
@@ -80,11 +81,10 @@ export function SpeakerForm({
     setClose(true);
   };
   const UpdateSpeaker = async () => {
-    var result = Object.values(error);
-    if (result.includes(true))
+    if (currentSpeaker.name  && currentSpeaker.email && 
+      currentSpeaker.position && currentSpeaker.company)
     {
-      return;
-    }
+   
     if (!currentSpeaker.speakerId) {
       SpeakerDataProvider.insertSpeaker(currentSpeaker, auth.accessToken);
       setClose(false);
@@ -92,6 +92,7 @@ export function SpeakerForm({
       SpeakerDataProvider.updateSpeaker(currentSpeaker, auth.accessToken);
       setClose(true);
     }
+  }
   };
   const handleNewRequest = () => {
     setOpenRequest(true);
@@ -108,13 +109,6 @@ export function SpeakerForm({
       setError({
         ...error,
         email: true,
-      });
-      return;
-    }
-    if (e.target.value === "") {
-      setError({
-        ...error,
-        [e.target.name] : true
       });
       return;
     }
@@ -150,6 +144,7 @@ export function SpeakerForm({
                     id="speaker-name"
                     label="Full name"
                     error={error.name}
+                    required
                     defaultValue={currentSpeaker.name}
                     helperText="Enter the full name of the speaker"
                     name="name"
@@ -165,6 +160,7 @@ export function SpeakerForm({
                   <TextField
                     id="speaker-email"
                     label="Email"
+                    required
                     error={error.email}
                     helperText="Enter a valid email address"
                     defaultValue={currentSpeaker.email}
@@ -181,7 +177,7 @@ export function SpeakerForm({
                   <TextField
                     id="speaker-position"
                     label="Position"
-                    error={error.position}
+                    required
                     defaultValue={currentSpeaker.position}
                     name="position"
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -197,7 +193,7 @@ export function SpeakerForm({
                     id="speaker-company"
                     label="Company"
                     name="company"
-                    error={error.company}
+                    required
                     defaultValue={currentSpeaker.company}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                       onChange(event);
@@ -212,7 +208,6 @@ export function SpeakerForm({
                     fullWidth
                     multiline
                     name="bioInfo"
-                    error={error.bioinfo}
                     InputProps={{
                       readOnly: !isAdmin,
                     }}

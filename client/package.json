@@ -10,17 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@devexpress/dx-react-core": "^4.0.4",
-    "@devexpress/dx-react-scheduler": "^4.0.4",
-    "@devexpress/dx-react-scheduler-material-ui": "^4.0.4",
+    "@devexpress/dx-react-core": "^4.0.5",
+    "@devexpress/dx-react-scheduler": "^4.0.5",
+    "@devexpress/dx-react-scheduler-material-ui": "^4.0.5",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@hookform/resolvers": "^3.2.0",
     "@microsoft/signalr": "^7.0.10",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.14.4",
-    
+    "@mui/x-date-pickers": "^5.0.15",
     "axios": "^1.4.0",
+      
     "bootstrap": "^5.2.3",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",

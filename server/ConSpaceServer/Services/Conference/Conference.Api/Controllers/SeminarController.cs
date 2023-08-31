@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using EventBus.Messages.Events;
 using Common.Security;
+using System.Collections;
 
 namespace Conference.Api.Controllers
 {
@@ -83,23 +84,50 @@ namespace Conference.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status201Created)]
-
+        [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status400BadRequest)]
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<SeminarDTO>> CreateSeminar([FromBody] CreateSeminarDTO request)
         {
-            var Id = await _repository.CreateSeminar(request);
-            var seminar = await _repository.GetSeminar(Id);
-            
-            var changeSpeakersRequest = new ChangeSeminarSpeakersDTO { SeminarId = seminar.SeminarId, Speakers = request.Speakers};
-            
-            await _repository.ChangeSeminarSpeakers(changeSpeakersRequest);
-            return CreatedAtRoute("GetSeminarsById", new { seminar.SeminarId }, seminar);
+            if(request.StartDateTime > request.EndDateTime)
+            {
+                return BadRequest();
+            }
+            var allSeminars = await _repository.GetAllSeminars();
+
+            var sameHallIntersection = allSeminars.Where(x => x.Hall == request.Hall &&
+                                                              x.StartDateTime <= request.StartDateTime && x.EndDateTime >= request.StartDateTime).FirstOrDefault();
+
+            var sameHallUnion = allSeminars.Where(x => x.Hall == request.Hall && 
+                                                       x.StartDateTime >= request.StartDateTime && x.EndDateTime <= request.EndDateTime).FirstOrDefault();
+
+            var sameSpeakersIntersection = allSeminars.Where(x => StructuralComparisons.StructuralEqualityComparer.Equals(request.Speakers, x.Speakers) &&
+                                                                  x.StartDateTime <= request.StartDateTime && x.EndDateTime >= request.StartDateTime).FirstOrDefault();
+
+            var sameSpeakersUnion = allSeminars.Where(x => StructuralComparisons.StructuralEqualityComparer.Equals(request.Speakers, x.Speakers) &&
+                                                           x.StartDateTime >= request.StartDateTime && x.EndDateTime <= request.EndDateTime).FirstOrDefault();
+
+            if (sameHallIntersection is null && sameHallUnion is null && sameSpeakersIntersection is null && sameSpeakersUnion is null)
+            {
+                var Id = await _repository.CreateSeminar(request);
+
+
+                var seminar = await _repository.GetSeminar(Id);
+
+                var changeSpeakersRequest = new ChangeSeminarSpeakersDTO { SeminarId = seminar.SeminarId, Speakers = request.Speakers };
+                await _repository.ChangeSeminarSpeakers(changeSpeakersRequest);
+                return CreatedAtRoute("GetSeminarsById", new { seminar.SeminarId }, seminar);
+            }
+            else
+            {
+                return BadRequest();
+            }
 
         }
         [HttpPut]
         [ProducesResponseType(typeof(SeminarDTO), StatusCodes.Status200OK)]
-
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<SeminarDTO>> UpdateSeminar([FromBody] UpdateSeminarDTO request)
-        {
+        {            
 
             var speakers = await _repository.GetSeminarSpeakers(request.SeminarId);
             var toBeInserted = request.Speakers.ExceptBy(speakers, x => x).ToList();
@@ -125,7 +153,7 @@ namespace Conference.Api.Controllers
         }
         [HttpDelete("{seminarId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-
+        [Authorize(Policy = RolePolicy.ADMINISTRATOR)]
         public async Task<ActionResult<bool>> DeleteSeminar(Guid seminarId)
         {
             var success = await _repository.DeleteSeminar(seminarId);
