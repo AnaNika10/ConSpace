@@ -51,7 +51,7 @@ jobs:
           node-version: 16
           
       - name: Install Node.js dependencies
-        run: cd ./client && ls && npm ci
+        run: npm ci
 
       - name: Run linters on client app
         uses: wearerequired/lint-action@v1
