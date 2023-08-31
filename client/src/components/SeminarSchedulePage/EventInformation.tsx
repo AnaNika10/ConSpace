@@ -435,7 +435,7 @@ export function EventInformation({
             </Button>
           )}
 
-          {!isAdmin && !isSpeaker && auth.accessToken && (
+          {!isAdmin && auth.accessToken && (
             <Button onClick={updateUserSchedule} variant="contained">
               {isAdded ? "Remove from schedule" : "Add to schedule"}
             </Button>
