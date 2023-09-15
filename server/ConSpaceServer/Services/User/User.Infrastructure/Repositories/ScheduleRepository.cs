@@ -49,15 +49,15 @@ public class ScheduleRepository : IScheduleRepository
         return result;
     }
 
-    public async Task<bool> update(Seminar seminar)
+    public async Task<bool> update(Seminar seminarToUpdate)
     {
-        await _context.Seminars.Where(seminar => seminar.Id == seminar.Id).ExecuteUpdateAsync(setters => setters
-                                                                                              .SetProperty(b => b.Location, seminar.Location)
-                                                                                              .SetProperty(b => b.StartDate, seminar.StartDate)
-                                                                                              .SetProperty(b => b.EndDate, seminar.EndDate)
-                                                                                              .SetProperty(b => b.Speakers, seminar.Speakers)
-                                                                                              .SetProperty(b => b.SpeakerIds, seminar.SpeakerIds)
-                                                                                              .SetProperty(b => b.Title, seminar.Title));
-        return await _context.SaveChangesAsync() > 0;
+        await _context.Seminars.Where(seminar => seminar.Id == seminarToUpdate.Id).ExecuteUpdateAsync(setters => setters
+                                                                                              .SetProperty(b => b.Location, seminarToUpdate.Location)
+                                                                                              .SetProperty(b => b.StartDate, seminarToUpdate.StartDate)
+                                                                                              .SetProperty(b => b.EndDate, seminarToUpdate.EndDate)
+                                                                                              .SetProperty(b => b.Speakers, seminarToUpdate.Speakers)
+                                                                                              .SetProperty(b => b.SpeakerIds, seminarToUpdate.SpeakerIds)
+                                                                                              .SetProperty(b => b.Title, seminarToUpdate.Title));
+        return await _context.SaveChangesAsync() == 1;
     }
 }

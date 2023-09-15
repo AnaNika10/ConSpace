@@ -36,7 +36,7 @@ function App() {
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
-
+              <Route path="/floorplan" element={<Floorplan />} />
               <Route path="/faqs" element={<Faqs />} />
 
               {/* protected routes */}
@@ -52,8 +52,6 @@ function App() {
                   <Route path="/notes" element={<Notes />} />
 
                   <Route path="/notifications" element={<Notifications />} />
-
-                  <Route path="/floorplan" element={<Floorplan />} />
                 </Route>
 
                 <Route

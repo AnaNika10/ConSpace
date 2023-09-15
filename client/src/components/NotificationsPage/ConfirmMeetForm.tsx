@@ -23,13 +23,15 @@ export function ConfirmMeetForm({
   const handleConfirm = () => {
     if (invite.status !== InviteStatus.MEET_SCHEDULED && !isInitiator) {
       invite.status = InviteStatus.MEET_SCHEDULED;
+      console.log(invite);
       inviteUser(auth.accessToken, { setMessage }, invite)();
     }
     handleClose();
   };
   const handleDecline = () => {
-    if (status !== InviteStatus.MEET_SCHEDULED && !isInitiator) {
+    if (invite.status !== InviteStatus.MEET_SCHEDULED && !isInitiator) {
       invite.status = InviteStatus.DECLINED;
+      console.log(invite);
       inviteUser(auth.accessToken, { setMessage }, invite)();
     }
     handleClose();
