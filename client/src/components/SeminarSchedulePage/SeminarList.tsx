@@ -31,7 +31,7 @@ function SeminarList() {
   };
   const navigate = useNavigate();
   const location = useLocation();
- 
+
   useEffect(() => {
     const getAllSeminars = async () => {
       try {
@@ -79,7 +79,7 @@ function SeminarList() {
   const getDays = () => {
     return ConferenceDateUtil.mapToDay(data);
   };
-  console.log(getSeminarsForSelectedDay());
+
   return (
     <Grid
       container
@@ -117,5 +117,3 @@ function SeminarList() {
 }
 
 export default withSnackbar(SeminarList);
-
-

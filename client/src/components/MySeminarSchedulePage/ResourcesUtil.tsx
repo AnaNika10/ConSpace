@@ -42,8 +42,6 @@ export abstract class ResourceUtil {
     return uniqueSpeakerObjects;
   }
   public static mapResources(data: Appointment[]) {
-    console.log(this.getLocations(data));
-    console.log(this.getSpeakers(data));
     return [
       {
         id: 0,

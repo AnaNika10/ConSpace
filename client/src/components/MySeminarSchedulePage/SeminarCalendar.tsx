@@ -41,7 +41,7 @@ async function deleteAppointment(
   token: string
 ) {
   if (deleted !== undefined) {
-    await UserDataProvider.deleteSeminarFromSchedule(deleted,token);
+    await UserDataProvider.deleteSeminarFromSchedule(deleted, token);
 
     appointments = appointments.filter(
       (appointment: Appointment) => appointment.id !== deleted

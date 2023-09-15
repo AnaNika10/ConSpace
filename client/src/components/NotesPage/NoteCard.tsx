@@ -16,7 +16,6 @@ export function NoteCard({ note, token }: { note: Note; token: string }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState(false);
   const handleDelete = async () => {
-    console.log(note.id);
     await UserDataProvider.deleteNote(note.id!, token);
   };
   const handleEdit = () => {
