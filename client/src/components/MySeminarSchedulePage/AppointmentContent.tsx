@@ -33,13 +33,9 @@ export const AppointmentContent = ({
               <span>{appointmentData.location}</span>
             </Stack>
             <Divider />
-            <Link paddingLeft={5} color="primary">
-              "http://path-to-seminar-schedule-page"
-            </Link>
           </Grid>
         </Grid>
       </AppointmentTooltip.Content>
-      ;;
     </>
   );
 };
